@@ -82,6 +82,7 @@ fn set_window_visibility(window: WebviewWindow, visible: bool) -> Result<(), Str
                 unsafe {
                     let _ = ShowWindow(hwnd, SW_SHOWNOACTIVATE);
                 }
+                configure_pure_overlay_window(hwnd_raw.0 as isize, false);
             }
         }
     } else {
@@ -126,11 +127,19 @@ fn set_settings_window_mode(window: WebviewWindow, is_settings_open: bool, is_ra
             let _ = window.set_position(PhysicalPosition::new(0, 0));
             let _ = window.show();
             let _ = window.set_ignore_cursor_events(false);
+            #[cfg(target_os = "windows")]
+            if let Ok(hwnd_raw) = window.hwnd() {
+                configure_pure_overlay_window(hwnd_raw.0 as isize, false);
+            }
         } else if is_radio_open {
             let _ = window.set_size(PhysicalSize::new(screen_size.width, 340));
             let _ = window.set_position(PhysicalPosition::new(0, 0));
             let _ = window.show();
             let _ = window.set_ignore_cursor_events(false);
+            #[cfg(target_os = "windows")]
+            if let Ok(hwnd_raw) = window.hwnd() {
+                configure_pure_overlay_window(hwnd_raw.0 as isize, false);
+            }
         } else {
             let _ = window.hide();
             let _ = window.set_ignore_cursor_events(true);
@@ -261,6 +270,10 @@ pub fn run() {
                                         } else {
                                             IS_OVERLAY_OPEN.store(true, Ordering::SeqCst);
                                             let _ = main_win.show();
+                                            #[cfg(target_os = "windows")]
+                                            if let Ok(hwnd_raw) = main_win.hwnd() {
+                                                configure_pure_overlay_window(hwnd_raw.0 as isize, false);
+                                            }
                                             let _ = main_win.emit("global_overlay_show", ());
                                         }
                                     }
@@ -273,6 +286,10 @@ pub fn run() {
                                     HOTKEY_F10 => {
                                         if let Some(main_win) = hotkey_handle.get_webview_window("main") {
                                             let _ = main_win.show();
+                                            #[cfg(target_os = "windows")]
+                                            if let Ok(hwnd_raw) = main_win.hwnd() {
+                                                configure_pure_overlay_window(hwnd_raw.0 as isize, false);
+                                            }
                                             let _ = main_win.emit("global_open_settings", ());
                                         }
                                     }
