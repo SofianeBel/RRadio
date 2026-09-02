@@ -186,6 +186,49 @@ class YouTubeMusicService {
   }
 
   /**
+   * True when the stored access token is still usable (expiresAt is Unix seconds from Rust)
+   */
+  public hasValidToken(config: YouTubeMusicConfig): boolean {
+    if (!config.accessToken) return false;
+    if (!config.tokenExpiresAt) return true;
+    const expiryMs = config.tokenExpiresAt < 1e12 ? config.tokenExpiresAt * 1000 : config.tokenExpiresAt;
+    return Date.now() < expiryMs - 60_000;
+  }
+
+  /**
+   * Exchanges the stored refresh token for a fresh access token; returns the same config on failure
+   */
+  public async refreshAccessToken(config: YouTubeMusicConfig): Promise<YouTubeMusicConfig> {
+    if (!config.refreshToken || !config.clientId || !config.clientSecret) return config;
+    try {
+      const res = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          client_id: config.clientId,
+          client_secret: config.clientSecret,
+          refresh_token: config.refreshToken,
+          grant_type: 'refresh_token'
+        })
+      });
+      if (!res.ok) {
+        console.warn('YouTube token refresh failed (HTTP ' + res.status + ')');
+        return config;
+      }
+      const data = await res.json();
+      if (!data.access_token) return config;
+      return {
+        ...config,
+        accessToken: data.access_token,
+        tokenExpiresAt: Math.floor(Date.now() / 1000) + (data.expires_in || 3600)
+      };
+    } catch (e) {
+      console.warn('Error refreshing YouTube token:', e);
+      return config;
+    }
+  }
+
+  /**
    * Fetches user's playlists from YouTube Data API v3
    */
   public async fetchUserPlaylists(config: YouTubeMusicConfig): Promise<OnDemandPlaylist[]> {

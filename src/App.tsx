@@ -5,7 +5,7 @@ import { PROVIDERS, PLAYLISTS } from './data/ondemandProviders';
 import { youtubeMusicService, YTM_CURATED_MIXES } from './services/youtubeMusic';
 import { PlaybackMode } from './types/radio';
 import { OnDemandViewLevel, OnDemandTrack, OnDemandPlaylist } from './types/ondemand';
-import { AppSettings } from './types/settings';
+import { AppSettings, YouTubeMusicConfig } from './types/settings';
 import { loadSettings, saveSettings } from './utils/settingsStore';
 import { RadioWheel } from './components/RadioWheel';
 import { SettingsDialog } from './components/SettingsDialog';
@@ -54,22 +54,37 @@ export const App: React.FC = () => {
   const [activeLiveTrack, setActiveLiveTrack] = useState<RadioTrack | null>(null);
   const [ytmPlaylists, setYtmPlaylists] = useState<OnDemandPlaylist[]>(YTM_CURATED_MIXES);
 
+  // Refresh the YouTube access token when expired so user playlists keep loading
+  const ensureFreshYtmConfig = useCallback(async (): Promise<YouTubeMusicConfig> => {
+    const ytm = settings.services.youtubeMusic;
+    if (youtubeMusicService.hasValidToken(ytm) || !ytm.refreshToken) return ytm;
+    const fresh = await youtubeMusicService.refreshAccessToken(ytm);
+    if (fresh !== ytm) {
+      const next: AppSettings = { ...settings, services: { ...settings.services, youtubeMusic: fresh } };
+      setSettings(next);
+      saveSettings(next);
+    }
+    return fresh;
+  }, [settings]);
+
   // Fetch YouTube Music playlists whenever account/settings update
   useEffect(() => {
-    youtubeMusicService.fetchUserPlaylists(settings.services.youtubeMusic).then(lists => {
-      if (lists && lists.length > 0) {
-        setYtmPlaylists(lists);
-        // Pre-fetch tracks of the first 3 playlists so they are instantly accessible
-        lists.slice(0, 3).forEach(pl => {
-          if (!pl.tracks || pl.tracks.length === 0) {
-            youtubeMusicService.fetchPlaylistItems(pl.id, settings.services.youtubeMusic).then(tracks => {
-              if (tracks && tracks.length > 0) {
-                setYtmPlaylists(prev => prev.map(p => p.id === pl.id ? { ...p, tracks } : p));
-              }
-            });
-          }
-        });
-      }
+    ensureFreshYtmConfig().then(cfg => {
+      youtubeMusicService.fetchUserPlaylists(cfg).then(lists => {
+        if (lists && lists.length > 0) {
+          setYtmPlaylists(lists);
+          // Pre-fetch tracks of the first 3 playlists so they are instantly accessible
+          lists.slice(0, 3).forEach(pl => {
+            if (!pl.tracks || pl.tracks.length === 0) {
+              youtubeMusicService.fetchPlaylistItems(pl.id, cfg).then(tracks => {
+                if (tracks && tracks.length > 0) {
+                  setYtmPlaylists(prev => prev.map(p => p.id === pl.id ? { ...p, tracks } : p));
+                }
+              });
+            }
+          });
+        }
+      });
     });
   }, [settings.services.youtubeMusic]);
 
@@ -102,14 +117,16 @@ export const App: React.FC = () => {
     if (activePlaylist.tracks && activePlaylist.tracks.length > 0) return;
 
     let isMounted = true;
-    youtubeMusicService.fetchPlaylistItems(activePlaylist.id, settings.services.youtubeMusic).then(tracks => {
-      if (!isMounted || !tracks || tracks.length === 0) return;
-      setYtmPlaylists(prev => prev.map(pl => {
-        if (pl.id === activePlaylist.id) {
-          return { ...pl, tracks };
-        }
-        return pl;
-      }));
+    ensureFreshYtmConfig().then(cfg => {
+      youtubeMusicService.fetchPlaylistItems(activePlaylist.id, cfg).then(tracks => {
+        if (!isMounted || !tracks || tracks.length === 0) return;
+        setYtmPlaylists(prev => prev.map(pl => {
+          if (pl.id === activePlaylist.id) {
+            return { ...pl, tracks };
+          }
+          return pl;
+        }));
+      });
     });
 
     return () => {
