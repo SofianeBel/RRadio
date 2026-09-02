@@ -25,7 +25,7 @@ export const YTM_CURATED_MIXES: OnDemandPlaylist[] = [
         artist: 'Daryl Hall & John Oates',
         duration: 248,
         coverColor: '#FF2A85',
-        audioUrl: 'youtube:D00MXfl7GI8'
+        audioUrl: 'youtube:D00M2KZH1J0'
       },
       {
         id: 'ytm_tr_self_control',
@@ -33,7 +33,7 @@ export const YTM_CURATED_MIXES: OnDemandPlaylist[] = [
         artist: 'Laura Branigan',
         duration: 247,
         coverColor: '#9C27B0',
-        audioUrl: 'youtube:RP0_8JwvgkY'
+        audioUrl: 'youtube:RP0_8J7uxhs'
       },
       {
         id: 'ytm_tr_billie_jean',
@@ -84,7 +84,7 @@ export const YTM_CURATED_MIXES: OnDemandPlaylist[] = [
         artist: 'Gunship',
         duration: 297,
         coverColor: '#651FFF',
-        audioUrl: 'youtube:YkReWp59-00'
+        audioUrl: 'youtube:cO_etqijSVY'
       }
     ]
   },
@@ -103,7 +103,7 @@ export const YTM_CURATED_MIXES: OnDemandPlaylist[] = [
         artist: 'Megadeth',
         duration: 241,
         coverColor: '#B71C1C',
-        audioUrl: 'youtube:UjZhy9-467U'
+        audioUrl: 'youtube:LVhJy-CR64Q'
       },
       {
         id: 'ytm_rk_i_wanna_rock',
@@ -138,7 +138,7 @@ export const YTM_CURATED_MIXES: OnDemandPlaylist[] = [
         artist: 'Jan Hammer',
         duration: 212,
         coverColor: '#00E5FF',
-        audioUrl: 'youtube:TRfyP_p8gZ0'
+        audioUrl: 'youtube:Lfgf9HatIHI'
       },
       {
         id: 'ytm_nd_waiting',
@@ -146,11 +146,21 @@ export const YTM_CURATED_MIXES: OnDemandPlaylist[] = [
         artist: 'Foreigner',
         duration: 289,
         coverColor: '#7C4DFF',
-        audioUrl: 'youtube:h9O_b9_nOaE'
+        audioUrl: 'youtube:2dWmKSj5HjI'
       }
     ]
   }
 ];
+
+// Derive official YouTube thumbnails so covers exist in the wheel HUD and Discord RPC
+for (const mix of YTM_CURATED_MIXES) {
+  for (const track of mix.tracks) {
+    const videoId = track.audioUrl?.replace('youtube:', '');
+    if (videoId && !track.coverUrl) {
+      track.coverUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+    }
+  }
+}
 
 class YouTubeMusicService {
   /**
