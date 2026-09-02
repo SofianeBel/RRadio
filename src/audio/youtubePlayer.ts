@@ -13,6 +13,7 @@ declare global {
 
 export type YTPlaybackEndedCallback = () => void;
 export type YTTimeUpdateCallback = (currentTimeSeconds: number) => void;
+export type YTPlaybackErrorCallback = (code: number) => void;
 
 class YouTubePlayer {
   private player: any = null;
@@ -24,6 +25,7 @@ class YouTubePlayer {
   private isPlaying = false;
   private endedCallbacks: YTPlaybackEndedCallback[] = [];
   private timeUpdateCallbacks: YTTimeUpdateCallback[] = [];
+  private errorCallbacks: YTPlaybackErrorCallback[] = [];
   private tickerInterval: number | null = null;
   private pendingVideoId: string | null = null;
 
@@ -97,7 +99,12 @@ class YouTubePlayer {
             this.handleStateChange(event.data);
           },
           onError: (e: any) => {
-            console.warn('YouTube IFrame Player error:', e);
+            const code = e?.data ?? -1;
+            console.warn('YouTube IFrame Player error:', code, e);
+            this.isPlaying = false;
+            for (const cb of this.errorCallbacks) {
+              try { cb(code); } catch {}
+            }
           }
         }
       });
@@ -229,6 +236,14 @@ class YouTubePlayer {
       this.endedCallbacks = this.endedCallbacks.filter(c => c !== callback);
     };
   }
+
+  public subscribeError(callback: YTPlaybackErrorCallback): () => void {
+    this.errorCallbacks.push(callback);
+    return () => {
+      this.errorCallbacks = this.errorCallbacks.filter(c => c !== callback);
+    };
+  }
+
 
   public subscribeTimeUpdate(callback: YTTimeUpdateCallback): () => void {
     this.timeUpdateCallbacks.push(callback);

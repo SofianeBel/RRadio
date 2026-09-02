@@ -76,6 +76,12 @@ class RadioPlayer {
 
       this.audio.addEventListener('error', (e) => {
         console.warn('Audio stream playback error:', e);
+        if (this.currentMode === 'ondemand' && !this.isYouTube && !this.hasFiredEnded) {
+          this.hasFiredEnded = true;
+          for (const cb of this.onTrackEndedCallbacks) {
+            try { cb(); } catch {}
+          }
+        }
       });
 
       // Initialize YouTube Background Player and wire events
@@ -85,6 +91,15 @@ class RadioPlayer {
           for (const cb of this.onTrackEndedCallbacks) {
             cb();
           }
+        }
+      });
+      youtubePlayer.subscribeError((code) => {
+        if (this.currentMode !== 'ondemand' || !this.isYouTube) return;
+        console.warn('On-Demand YouTube error, skipping track (code ' + code + ')');
+        if (this.hasFiredEnded) return;
+        this.hasFiredEnded = true;
+        for (const cb of this.onTrackEndedCallbacks) {
+          try { cb(); } catch {}
         }
       });
 
@@ -131,6 +146,23 @@ class RadioPlayer {
       this.audio.volume = muted ? 0 : this.volume;
     }
     youtubePlayer.setMute(muted);
+    if (this.currentMode === 'ondemand') {
+      if (muted) {
+        this.isPlaying = false;
+        if (this.isYouTube) {
+          youtubePlayer.pause();
+        } else if (this.audio) {
+          this.audio.pause();
+        }
+      } else if (this.onDemandTrack) {
+        this.isPlaying = true;
+        if (this.isYouTube) {
+          youtubePlayer.play();
+        } else if (this.audio && this.audio.src) {
+          this.audio.play().catch(() => {});
+        }
+      }
+    }
   }
 
   public play() {
@@ -249,6 +281,12 @@ class RadioPlayer {
       youtubePlayer.loadAndPlay(videoId);
       youtubePlayer.setVolume(this.volume * 100);
       youtubePlayer.setMute(this.isMuted);
+      if (this.isMuted) {
+        youtubePlayer.pause();
+        this.isPlaying = false;
+      } else {
+        this.isPlaying = true;
+      }
 
       this.notifyTrackChange('ondemand', trackMeta, 0);
     } else if (this.audio) {
