@@ -73,8 +73,9 @@ export const App: React.FC = () => {
       youtubeMusicService.fetchUserPlaylists(cfg).then(lists => {
         if (lists && lists.length > 0) {
           setYtmPlaylists(lists);
-          // Pre-fetch tracks of the first 3 playlists so they are instantly accessible
-          lists.slice(0, 3).forEach(pl => {
+          // Load the full track list of every playlist so the queue level and
+          // Discord always carry real titles, covers, and durations
+          lists.forEach(pl => {
             if (!pl.tracks || pl.tracks.length === 0) {
               youtubeMusicService.fetchPlaylistItems(pl.id, cfg).then(tracks => {
                 if (tracks && tracks.length > 0) {
@@ -268,7 +269,7 @@ export const App: React.FC = () => {
     } else {
       // On Demand mode
       const track = activeQueueTrack;
-      large_image = track?.coverUrl || activePlaylist?.coverUrl || 'ondemand_logo';
+      large_image = track?.coverUrl || activePlaylist?.coverUrl || GTAVC_COVER_ART;
       large_text = `${activeProvider.name} • ${activePlaylist?.title || 'Lecture à la demande'}`;
       small_image = activeProvider.id;
       small_text = activeProvider.name;

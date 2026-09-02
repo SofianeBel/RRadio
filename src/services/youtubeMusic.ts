@@ -1,6 +1,33 @@
 import { OnDemandPlaylist, OnDemandTrack } from '../types/ondemand';
 import { YouTubeMusicConfig } from '../types/settings';
 
+// Boundary cast: YouTube Data API JSON, shapes per API docs (raw external input)
+interface YtListResponse<T> {
+  items?: T[];
+}
+
+interface YtThumbnails {
+  maxres?: { url?: string };
+  high?: { url?: string };
+  medium?: { url?: string };
+  default?: { url?: string };
+}
+interface YtPlaylistItem {
+  id?: string;
+  snippet?: {
+    title?: string;
+    thumbnails?: YtThumbnails;
+    videoOwnerChannelTitle?: string;
+    channelTitle?: string;
+    resourceId?: { videoId?: string };
+  };
+  contentDetails?: { videoId?: string };
+}
+interface YtVideoItem {
+  id?: string;
+  contentDetails?: { duration?: string };
+}
+
 export interface GoogleUserInfo {
   id: string;
   email: string;
@@ -254,8 +281,7 @@ class YouTubeMusicService {
         return YTM_CURATED_MIXES;
       }
 
-      const data = await res.json();
-      const items = data.items || [];
+      const items = (await res.json() as YtListResponse<YtPlaylistItem>).items || [];
 
       // Include official Liked Music playlist (LL) at the head of user library
       const likedMusicPlaylist: OnDemandPlaylist = {
@@ -269,9 +295,9 @@ class YouTubeMusicService {
         tracks: []
       };
 
-      const userPlaylists: OnDemandPlaylist[] = items.map((item: any) => {
+      const userPlaylists: OnDemandPlaylist[] = items.map((item) => {
         const thumbnails = item.snippet?.thumbnails;
-        const coverUrl = thumbnails?.high?.url || thumbnails?.medium?.url || thumbnails?.default?.url;
+        const coverUrl = thumbnails?.maxres?.url || thumbnails?.high?.url || thumbnails?.medium?.url || thumbnails?.default?.url;
         return {
           id: `ytm_${item.id}`,
           providerId: 'youtube_music',
@@ -331,28 +357,59 @@ class YouTubeMusicService {
         return [];
       }
 
-      const data = await res.json();
-      const items = data.items || [];
+      const items = (await res.json() as YtListResponse<YtPlaylistItem>).items || [];
 
-      return items
-        .filter((item: any) => {
+      const tracks: OnDemandTrack[] = items
+        .filter((item) => {
           const title = item.snippet?.title;
           return title && title !== 'Deleted video' && title !== 'Private video';
         })
-        .map((item: any, idx: number) => {
+        .map((item, idx) => {
           const videoId = item.contentDetails?.videoId || item.snippet?.resourceId?.videoId;
           const thumbnails = item.snippet?.thumbnails;
-          const coverUrl = thumbnails?.high?.url || thumbnails?.medium?.url || thumbnails?.default?.url;
+          const coverUrl = thumbnails?.maxres?.url || thumbnails?.high?.url || thumbnails?.medium?.url || thumbnails?.default?.url;
           return {
             id: `yt_${videoId || idx}`,
             title: item.snippet?.title || 'Titre inconnu',
-            artist: item.snippet?.videoOwnerChannelTitle || item.snippet?.channelTitle || 'YouTube Music',
+            artist: (item.snippet?.videoOwnerChannelTitle || item.snippet?.channelTitle || 'YouTube Music').replace(/ - Topic$/, ''),
             duration: 210,
             coverColor: '#E50914',
             coverUrl,
             audioUrl: `youtube:${videoId}`
           };
         });
+
+      // Real durations from videos.list so Discord timestamps and the queue scrubber are exact
+      try {
+        const ids = tracks.map(t => t.audioUrl?.replace('youtube:', '')).filter(Boolean) as string[];
+        for (let i = 0; i < ids.length; i += 50) {
+          const chunk = ids.slice(i, i + 50);
+          let vUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${chunk.join(',')}`;
+          const vHeaders: Record<string, string> = {};
+          if (config.accessToken) {
+            vHeaders['Authorization'] = `Bearer ${config.accessToken}`;
+          } else if (config.apiKey) {
+            vUrl += `&key=${config.apiKey}`;
+          }
+          const vRes = await fetch(vUrl, { headers: vHeaders });
+          if (!vRes.ok) continue;
+          const byId = new Map<string, number>();
+          for (const v of (await vRes.json() as YtListResponse<YtVideoItem>).items || []) {
+            const m = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/.exec(v.contentDetails?.duration || '');
+            if (m && v.id) {
+              byId.set(v.id, (+(m[1] || 0)) * 3600 + (+(m[2] || 0)) * 60 + (+(m[3] || 0)));
+            }
+          }
+          for (const t of tracks) {
+            const id = t.audioUrl?.replace('youtube:', '');
+            if (id && byId.has(id)) t.duration = byId.get(id)!;
+          }
+        }
+      } catch (e) {
+        console.warn('YouTube durations fetch failed, keeping placeholder durations:', e);
+      }
+
+      return tracks;
     } catch (e) {
       console.warn('Error fetching playlist items:', e);
       return [];
