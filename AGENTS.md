@@ -10,6 +10,7 @@
 - Discord Rich Presence should use the "Listening" activity type with music notes rather than a game controller icon, displaying album art for the main track, station logos for the badge, and a real-time progress bar resetting on every track transition.
 - Prioritize self-contained, plug-and-play solutions over manual local file setup (e.g. streaming audio directly from reliable CDNs and automated OAuth PKCE loopback servers).
 - Validate native packaging, window overlays, and tray lifecycle early before implementing and polishing complex downstream features.
+- Verification workflows must include compiling the native standalone release executable and verifying live process execution, not just frontend web bundles or headless browser checks.
 
 ## Learned Workspace Facts
 
@@ -24,3 +25,4 @@
 - Google OAuth 2.0 PKCE authentication runs via a local Rust loopback server in `src-tauri/src/oauth.rs` listening on a dynamic port to capture authorization codes for YouTube Music.
 - Discord Rich Presence socket communication (`\\.\pipe\discord-ipc-0`) runs in an isolated background thread (`discord-rpc-worker`) over a bounded Rust `sync_channel` with an 8-second backoff recovery loop to prevent UI or hotkey freezing.
 - Canonical architecture, project history, and handover details are documented in `takeOver/PROJECT_RECAP.md`.
+- Tauri embeds frontend assets from `dist/` directly into the native Windows executable (`src-tauri/target/release/rradio.exe`, ~23.6 MB) at compile time; updating frontend code requires recompiling the Rust binary for standalone execution.
