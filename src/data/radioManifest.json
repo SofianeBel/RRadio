@@ -1,0 +1,991 @@
+{
+  "v_rock": [
+    {
+      "filename": "1-01 - DJ Lazlow Intro.mp3",
+      "title": "DJ Lazlow Intro",
+      "artist": "Vice City Radio",
+      "duration": 82,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-01%20-%20DJ%20Lazlow%20Intro.mp3"
+    },
+    {
+      "filename": "1-02 - You've Got Another Thing Comin'.mp3",
+      "title": "You've Got Another Thing Comin'",
+      "artist": "Judas Priest",
+      "duration": 304,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-02%20-%20You%27ve%20Got%20Another%20Thing%20Comin%27.mp3"
+    },
+    {
+      "filename": "1-03 - Too Young to Fall in Love.mp3",
+      "title": "Too Young to Fall in Love",
+      "artist": "Motley Crue",
+      "duration": 210,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-03%20-%20Too%20Young%20to%20Fall%20in%20Love.mp3"
+    },
+    {
+      "filename": "1-04 - Peace Sells.mp3",
+      "title": "Peace Sells",
+      "artist": "Megadeth",
+      "duration": 241,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-04%20-%20Peace%20Sells.mp3"
+    },
+    {
+      "filename": "1-05 - Dangerous Bastard.mp3",
+      "title": "Dangerous Bastard",
+      "artist": "Rockstar's Love Fist",
+      "duration": 247,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-05%20-%20Dangerous%20Bastard.mp3"
+    },
+    {
+      "filename": "1-06 - Turn Up the Radio.mp3",
+      "title": "Turn Up the Radio",
+      "artist": "Autograph",
+      "duration": 272,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-06%20-%20Turn%20Up%20the%20Radio.mp3"
+    },
+    {
+      "filename": "1-07 - DJ Lazlow Halftime.mp3",
+      "title": "DJ Lazlow Halftime",
+      "artist": "Vice City Radio",
+      "duration": 42,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-07%20-%20DJ%20Lazlow%20Halftime.mp3"
+    },
+    {
+      "filename": "1-08 - I Wanna Rock.mp3",
+      "title": "I Wanna Rock",
+      "artist": "Twisted Sister",
+      "duration": 182,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-08%20-%20I%20Wanna%20Rock.mp3"
+    },
+    {
+      "filename": "1-09 - Bark at the Moon.mp3",
+      "title": "Bark at the Moon",
+      "artist": "Ozzy Osbourne",
+      "duration": 255,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-09%20-%20Bark%20at%20the%20Moon.mp3"
+    },
+    {
+      "filename": "1-10 - Madhouse.mp3",
+      "title": "Madhouse",
+      "artist": "Anthrax",
+      "duration": 257,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-10%20-%20Madhouse.mp3"
+    },
+    {
+      "filename": "1-11 - 2 Minutes to Midnight.mp3",
+      "title": "2 Minutes to Midnight",
+      "artist": "Iron Maiden",
+      "duration": 360,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-11%20-%202%20Minutes%20to%20Midnight.mp3"
+    },
+    {
+      "filename": "1-12 - Raining Blood.mp3",
+      "title": "Raining Blood",
+      "artist": "Slayer",
+      "duration": 253,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-12%20-%20Raining%20Blood.mp3"
+    },
+    {
+      "filename": "1-13 - Cumin' Atcha Live.mp3",
+      "title": "Cumin' Atcha Live",
+      "artist": "Tesla",
+      "duration": 266,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-13%20-%20Cumin%27%20Atcha%20Live.mp3"
+    },
+    {
+      "filename": "1-14 - Yankee Rose.mp3",
+      "title": "Yankee Rose",
+      "artist": "David Lee Roth",
+      "duration": 230,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-14%20-%20Yankee%20Rose.mp3"
+    },
+    {
+      "filename": "1-15 - Working for the Weekend.mp3",
+      "title": "Working for the Weekend",
+      "artist": "Loverboy",
+      "duration": 220,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-15%20-%20Working%20for%20the%20Weekend.mp3"
+    },
+    {
+      "filename": "1-16 - Cum On Feel the Noize.mp3",
+      "title": "Cum On Feel the Noize",
+      "artist": "Quiet Riot",
+      "duration": 288,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-16%20-%20Cum%20On%20Feel%20the%20Noize.mp3"
+    },
+    {
+      "filename": "1-17 - DJ Lazlow Outro.mp3",
+      "title": "DJ Lazlow Outro",
+      "artist": "Vice City Radio",
+      "duration": 19,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-17%20-%20DJ%20Lazlow%20Outro.mp3"
+    },
+    {
+      "filename": "1-18 - Commercial Exploder.mp3",
+      "title": "Commercial Exploder",
+      "artist": "Vice City Radio",
+      "duration": 80,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-18%20-%20Commercial%20Exploder.mp3"
+    },
+    {
+      "filename": "1-19 - Commercial Thor.mp3",
+      "title": "Commercial Thor",
+      "artist": "Vice City Radio",
+      "duration": 203,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-19%20-%20Commercial%20Thor.mp3"
+    }
+  ],
+  "wave_103": [
+    {
+      "filename": "2-01 - DJ Adam First Intro.mp3",
+      "title": "DJ Adam First Intro",
+      "artist": "Vice City Radio",
+      "duration": 66,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-01%20-%20DJ%20Adam%20First%20Intro.mp3"
+    },
+    {
+      "filename": "2-02 - Two Tribes.mp3",
+      "title": "Two Tribes",
+      "artist": "Frankie Goes To Hollywood",
+      "duration": 233,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-02%20-%20Two%20Tribes.mp3"
+    },
+    {
+      "filename": "2-03 - Pale Shelter.mp3",
+      "title": "Pale Shelter",
+      "artist": "Tears For Fears",
+      "duration": 264,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-03%20-%20Pale%20Shelter.mp3"
+    },
+    {
+      "filename": "2-04 - Kids in America.mp3",
+      "title": "Kids in America",
+      "artist": "Kim Wilde",
+      "duration": 202,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-04%20-%20Kids%20in%20America.mp3"
+    },
+    {
+      "filename": "2-05 - Atomic.mp3",
+      "title": "Atomic",
+      "artist": "Blondie",
+      "duration": 279,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-05%20-%20Atomic.mp3"
+    },
+    {
+      "filename": "2-06 - I Ran (So Far Away).mp3",
+      "title": "I Ran (So Far Away)",
+      "artist": "A Flock Of Seagulls",
+      "duration": 220,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-06%20-%20I%20Ran%20%28So%20Far%20Away%29.mp3"
+    },
+    {
+      "filename": "2-07 - (Keep Feeling) Fascination.mp3",
+      "title": "(Keep Feeling) Fascination",
+      "artist": "The Human League",
+      "duration": 222,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-07%20-%20%28Keep%20Feeling%29%20Fascination.mp3"
+    },
+    {
+      "filename": "2-08 - DJ Adam First Halftime.mp3",
+      "title": "DJ Adam First Halftime",
+      "artist": "Vice City Radio",
+      "duration": 29,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-08%20-%20DJ%20Adam%20First%20Halftime.mp3"
+    },
+    {
+      "filename": "2-09 - 99 Luftballons.mp3",
+      "title": "99 Luftballons",
+      "artist": "Nena",
+      "duration": 231,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-09%20-%2099%20Luftballons.mp3"
+    },
+    {
+      "filename": "2-10 - Love My Way.mp3",
+      "title": "Love My Way",
+      "artist": "The Psychedelic Furs",
+      "duration": 210,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-10%20-%20Love%20My%20Way.mp3"
+    },
+    {
+      "filename": "2-11 - Gold.mp3",
+      "title": "Gold",
+      "artist": "Spandau Ballet",
+      "duration": 228,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-11%20-%20Gold.mp3"
+    },
+    {
+      "filename": "2-12 - Japanese Boy.mp3",
+      "title": "Japanese Boy",
+      "artist": "Aneka",
+      "duration": 234,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-12%20-%20Japanese%20Boy.mp3"
+    },
+    {
+      "filename": "2-13 - Hyperactive!.mp3",
+      "title": "Hyperactive!",
+      "artist": "Thomas Dolby",
+      "duration": 250,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-13%20-%20Hyperactive%21.mp3"
+    },
+    {
+      "filename": "2-14 - Obsession.mp3",
+      "title": "Obsession",
+      "artist": "Animotion",
+      "duration": 335,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-14%20-%20Obsession.mp3"
+    },
+    {
+      "filename": "2-15 - Never Say Never.mp3",
+      "title": "Never Say Never",
+      "artist": "Romeo Void",
+      "duration": 352,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-15%20-%20Never%20Say%20Never.mp3"
+    },
+    {
+      "filename": "2-16 - Sunglasses at Night.mp3",
+      "title": "Sunglasses at Night",
+      "artist": "Corey Hart",
+      "duration": 314,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-16%20-%20Sunglasses%20at%20Night.mp3"
+    },
+    {
+      "filename": "2-17 - DJ Adam First Outro.mp3",
+      "title": "DJ Adam First Outro",
+      "artist": "Vice City Radio",
+      "duration": 40,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-17%20-%20DJ%20Adam%20First%20Outro.mp3"
+    },
+    {
+      "filename": "2-18 - Commercial Sissy Spritz.mp3",
+      "title": "Commercial Sissy Spritz",
+      "artist": "Vice City Radio",
+      "duration": 39,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-18%20-%20Commercial%20Sissy%20Spritz.mp3"
+    },
+    {
+      "filename": "2-19 - Commercial Synth & Son.mp3",
+      "title": "Commercial Synth & Son",
+      "artist": "Vice City Radio",
+      "duration": 137,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/2-19%20-%20Commercial%20Synth%20%26%20Son.mp3"
+    }
+  ],
+  "emotion_983": [
+    {
+      "filename": "3-01 - DJ Fernando Intro.mp3",
+      "title": "DJ Fernando Intro",
+      "artist": "Vice City Radio",
+      "duration": 77,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-01%20-%20DJ%20Fernando%20Intro.mp3"
+    },
+    {
+      "filename": "3-02 - Africa.mp3",
+      "title": "Africa",
+      "artist": "Toto",
+      "duration": 296,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-02%20-%20Africa.mp3"
+    },
+    {
+      "filename": "3-03 - Crockett's Theme.mp3",
+      "title": "Crockett's Theme",
+      "artist": "Jan Hammer",
+      "duration": 204,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-03%20-%20Crockett%27s%20Theme.mp3"
+    },
+    {
+      "filename": "3-04 - Missing You.mp3",
+      "title": "Missing You",
+      "artist": "John Waite",
+      "duration": 266,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-04%20-%20Missing%20You.mp3"
+    },
+    {
+      "filename": "3-05 - (I Just) Died in Your Arms.mp3",
+      "title": "(I Just) Died in Your Arms",
+      "artist": "Cutting Crew",
+      "duration": 275,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-05%20-%20%28I%20Just%29%20Died%20in%20Your%20Arms.mp3"
+    },
+    {
+      "filename": "3-06 - Waiting for a Girl Like You.mp3",
+      "title": "Waiting for a Girl Like You",
+      "artist": "Foreigner",
+      "duration": 285,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-06%20-%20Waiting%20for%20a%20Girl%20Like%20You.mp3"
+    },
+    {
+      "filename": "3-07 - Broken Wings.mp3",
+      "title": "Broken Wings",
+      "artist": "Mr. Mister",
+      "duration": 274,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-07%20-%20Broken%20Wings.mp3"
+    },
+    {
+      "filename": "3-08 - DJ Fernando Halftime.mp3",
+      "title": "DJ Fernando Halftime",
+      "artist": "Vice City Radio",
+      "duration": 27,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-08%20-%20DJ%20Fernando%20Halftime.mp3"
+    },
+    {
+      "filename": "3-09 - More Than This.mp3",
+      "title": "More Than This",
+      "artist": "Roxy Music",
+      "duration": 267,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-09%20-%20More%20Than%20This.mp3"
+    },
+    {
+      "filename": "3-10 - Tempted.mp3",
+      "title": "Tempted",
+      "artist": "Squeeze",
+      "duration": 238,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-10%20-%20Tempted.mp3"
+    },
+    {
+      "filename": "3-11 - Keep On Loving You.mp3",
+      "title": "Keep On Loving You",
+      "artist": "REO Speedwagon",
+      "duration": 200,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-11%20-%20Keep%20On%20Loving%20You.mp3"
+    },
+    {
+      "filename": "3-12 - Sister Christian.mp3",
+      "title": "Sister Christian",
+      "artist": "Night Ranger",
+      "duration": 295,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-12%20-%20Sister%20Christian.mp3"
+    },
+    {
+      "filename": "3-13 - Never Too Much.mp3",
+      "title": "Never Too Much",
+      "artist": "Luther Vandross",
+      "duration": 229,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-13%20-%20Never%20Too%20Much.mp3"
+    },
+    {
+      "filename": "3-14 - Wow.mp3",
+      "title": "Wow",
+      "artist": "Kate Bush",
+      "duration": 221,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-14%20-%20Wow.mp3"
+    },
+    {
+      "filename": "3-15 - DJ Fernando Outro.mp3",
+      "title": "DJ Fernando Outro",
+      "artist": "Vice City Radio",
+      "duration": 54,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-15%20-%20DJ%20Fernando%20Outro.mp3"
+    },
+    {
+      "filename": "3-16 - Commercial Knife After Dark.mp3",
+      "title": "Commercial Knife After Dark",
+      "artist": "Vice City Radio",
+      "duration": 23,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-16%20-%20Commercial%20Knife%20After%20Dark.mp3"
+    },
+    {
+      "filename": "3-17 - Commercial Petstuffers.mp3",
+      "title": "Commercial Petstuffers",
+      "artist": "Vice City Radio",
+      "duration": 168,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/3-17%20-%20Commercial%20Petstuffers.mp3"
+    }
+  ],
+  "flash_fm": [
+    {
+      "filename": "4-01 - DJ Toni Intro.mp3",
+      "title": "DJ Toni Intro",
+      "artist": "Vice City Radio",
+      "duration": 40,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-01%20-%20DJ%20Toni%20Intro.mp3"
+    },
+    {
+      "filename": "4-02 - Out of Touch.mp3",
+      "title": "Out of Touch",
+      "artist": "Hall & Oates",
+      "duration": 234,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-02%20-%20Out%20of%20Touch.mp3"
+    },
+    {
+      "filename": "4-03 - Four Little Diamonds.mp3",
+      "title": "Four Little Diamonds",
+      "artist": "Electric Light Orchestra",
+      "duration": 246,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-03%20-%20Four%20Little%20Diamonds.mp3"
+    },
+    {
+      "filename": "4-04 - Billie Jean.mp3",
+      "title": "Billie Jean",
+      "artist": "Michael Jackson",
+      "duration": 294,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-04%20-%20Billie%20Jean.mp3"
+    },
+    {
+      "filename": "4-05 - Your Love.mp3",
+      "title": "Your Love",
+      "artist": "The Outfield",
+      "duration": 221,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-05%20-%20Your%20Love.mp3"
+    },
+    {
+      "filename": "4-06 - Life's What You Make It.mp3",
+      "title": "Life's What You Make It",
+      "artist": "Talk Talk",
+      "duration": 265,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-06%20-%20Life%27s%20What%20You%20Make%20It.mp3"
+    },
+    {
+      "filename": "4-07 - Run to You.mp3",
+      "title": "Run to You",
+      "artist": "Bryan Adams",
+      "duration": 229,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-07%20-%20Run%20to%20You.mp3"
+    },
+    {
+      "filename": "4-08 - Dance Hall Days.mp3",
+      "title": "Dance Hall Days",
+      "artist": "Wang Chung",
+      "duration": 230,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-08%20-%20Dance%20Hall%20Days.mp3"
+    },
+    {
+      "filename": "4-09 - DJ Toni Halftime.mp3",
+      "title": "DJ Toni Halftime",
+      "artist": "Vice City Radio",
+      "duration": 38,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-09%20-%20DJ%20Toni%20Halftime.mp3"
+    },
+    {
+      "filename": "4-10 - Call Me.mp3",
+      "title": "Call Me",
+      "artist": "Go West",
+      "duration": 248,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-10%20-%20Call%20Me.mp3"
+    },
+    {
+      "filename": "4-11 - Smuggler's Blues.mp3",
+      "title": "Smuggler's Blues",
+      "artist": "Glenn Frey",
+      "duration": 227,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-11%20-%20Smuggler%27s%20Blues.mp3"
+    },
+    {
+      "filename": "4-12 - Running with the Night.mp3",
+      "title": "Running with the Night",
+      "artist": "Lionel Richie",
+      "duration": 358,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-12%20-%20Running%20with%20the%20Night.mp3"
+    },
+    {
+      "filename": "4-13 - Hold the Line.mp3",
+      "title": "Hold the Line",
+      "artist": "Toto",
+      "duration": 236,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-13%20-%20Hold%20the%20Line.mp3"
+    },
+    {
+      "filename": "4-14 - Self Control.mp3",
+      "title": "Self Control",
+      "artist": "Laura Branigan",
+      "duration": 241,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-14%20-%20Self%20Control.mp3"
+    },
+    {
+      "filename": "4-15 - I Wanna Be a Cowboy.mp3",
+      "title": "I Wanna Be a Cowboy",
+      "artist": "Boys Don't Cry",
+      "duration": 204,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-15%20-%20I%20Wanna%20Be%20a%20Cowboy.mp3"
+    },
+    {
+      "filename": "4-16 - Kiss the Dirt (Falling Down the Mountain).mp3",
+      "title": "Kiss the Dirt (Falling Down the Mountain)",
+      "artist": "Inxs",
+      "duration": 234,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-16%20-%20Kiss%20the%20Dirt%20%28Falling%20Down%20the%20Mountain%29.mp3"
+    },
+    {
+      "filename": "4-17 - Owner of a Lonely Heart.mp3",
+      "title": "Owner of a Lonely Heart",
+      "artist": "Yes",
+      "duration": 263,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-17%20-%20Owner%20of%20a%20Lonely%20Heart.mp3"
+    },
+    {
+      "filename": "4-18 - DJ Toni Outro.mp3",
+      "title": "DJ Toni Outro",
+      "artist": "Vice City Radio",
+      "duration": 29,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-18%20-%20DJ%20Toni%20Outro.mp3"
+    },
+    {
+      "filename": "4-19 - Commercial Blox.mp3",
+      "title": "Commercial Blox",
+      "artist": "Vice City Radio",
+      "duration": 69,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-19%20-%20Commercial%20Blox.mp3"
+    },
+    {
+      "filename": "4-20 - Commercial Just the Five of Us.mp3",
+      "title": "Commercial Just the Five of Us",
+      "artist": "Vice City Radio",
+      "duration": 143,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/4-20%20-%20Commercial%20Just%20the%20Five%20of%20Us.mp3"
+    }
+  ],
+  "wildstyle": [
+    {
+      "filename": "5-01 - Mr. Magic Intro.mp3",
+      "title": "Mr. Magic Intro",
+      "artist": "Vice City Radio",
+      "duration": 24,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-01%20-%20Mr.%20Magic%20Intro.mp3"
+    },
+    {
+      "filename": "5-02 - Rockit.mp3",
+      "title": "Rockit",
+      "artist": "Herbie Hancock",
+      "duration": 322,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-02%20-%20Rockit.mp3"
+    },
+    {
+      "filename": "5-03 - The Message.mp3",
+      "title": "The Message",
+      "artist": "Grandmaster Flash",
+      "duration": 430,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-03%20-%20The%20Message.mp3"
+    },
+    {
+      "filename": "5-04 - More Bounce to the Ounce.mp3",
+      "title": "More Bounce to the Ounce",
+      "artist": "Zapp & Roger",
+      "duration": 327,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-04%20-%20More%20Bounce%20to%20the%20Ounce.mp3"
+    },
+    {
+      "filename": "5-05 - Mr. Magic Interlude 1.mp3",
+      "title": "Mr. Magic Interlude 1",
+      "artist": "Vice City Radio",
+      "duration": 13,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-05%20-%20Mr.%20Magic%20Interlude%201.mp3"
+    },
+    {
+      "filename": "5-06 - One for the Treble.mp3",
+      "title": "One for the Treble",
+      "artist": "Davy DMX",
+      "duration": 393,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-06%20-%20One%20for%20the%20Treble.mp3"
+    },
+    {
+      "filename": "5-07 - Bassline.mp3",
+      "title": "Bassline",
+      "artist": "Mantronix",
+      "duration": 323,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-07%20-%20Bassline.mp3"
+    },
+    {
+      "filename": "5-08 - Mr. Magic Interlude 2.mp3",
+      "title": "Mr. Magic Interlude 2",
+      "artist": "Vice City Radio",
+      "duration": 15,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-08%20-%20Mr.%20Magic%20Interlude%202.mp3"
+    },
+    {
+      "filename": "5-09 - Hip Hop Be Bop (Don't Stop).mp3",
+      "title": "Hip Hop Be Bop (Don't Stop)",
+      "artist": "Man Parrish",
+      "duration": 342,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-09%20-%20Hip%20Hop%20Be%20Bop%20%28Don%27t%20Stop%29.mp3"
+    },
+    {
+      "filename": "5-10 - Al-Naafiysh (the Soul).mp3",
+      "title": "Al-Naafiysh (the Soul)",
+      "artist": "Hashim",
+      "duration": 463,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-10%20-%20Al-Naafiysh%20%28the%20Soul%29.mp3"
+    },
+    {
+      "filename": "5-11 - Clean.mp3",
+      "title": "Clean",
+      "artist": "Cybotron",
+      "duration": 292,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-11%20-%20Clean.mp3"
+    },
+    {
+      "filename": "5-12 - Mr. Magic Interlude 3.mp3",
+      "title": "Mr. Magic Interlude 3",
+      "artist": "Vice City Radio",
+      "duration": 10,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-12%20-%20Mr.%20Magic%20Interlude%203.mp3"
+    },
+    {
+      "filename": "5-13 - Looking for the Perfect Beat.mp3",
+      "title": "Looking for the Perfect Beat",
+      "artist": "Afrika Bambaataa & the Soulsonic Force",
+      "duration": 408,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-13%20-%20Looking%20for%20the%20Perfect%20Beat.mp3"
+    },
+    {
+      "filename": "5-14 - Mr. Magic Interlude 4.mp3",
+      "title": "Mr. Magic Interlude 4",
+      "artist": "Vice City Radio",
+      "duration": 5,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-14%20-%20Mr.%20Magic%20Interlude%204.mp3"
+    },
+    {
+      "filename": "5-15 - Rock Box.mp3",
+      "title": "Rock Box",
+      "artist": "Run DMC",
+      "duration": 329,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-15%20-%20Rock%20Box.mp3"
+    },
+    {
+      "filename": "5-16 - The Breaks.mp3",
+      "title": "The Breaks",
+      "artist": "Kurtis Blow",
+      "duration": 468,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-16%20-%20The%20Breaks.mp3"
+    },
+    {
+      "filename": "5-17 - Mr. Magic Interlude 5.mp3",
+      "title": "Mr. Magic Interlude 5",
+      "artist": "Vice City Radio",
+      "duration": 8,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-17%20-%20Mr.%20Magic%20Interlude%205.mp3"
+    },
+    {
+      "filename": "5-18 - Magic's Wand.mp3",
+      "title": "Magic's Wand",
+      "artist": "Whodini",
+      "duration": 336,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-18%20-%20Magic%27s%20Wand.mp3"
+    },
+    {
+      "filename": "5-19 - Mr. Magic Interlude 6.mp3",
+      "title": "Mr. Magic Interlude 6",
+      "artist": "Vice City Radio",
+      "duration": 24,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-19%20-%20Mr.%20Magic%20Interlude%206.mp3"
+    },
+    {
+      "filename": "5-20 - Commercial Degenerator.mp3",
+      "title": "Commercial Degenerator",
+      "artist": "Vice City Radio",
+      "duration": 68,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-20%20-%20Commercial%20Degenerator.mp3"
+    },
+    {
+      "filename": "5-21 - Commercial Maibatsu Thunder.mp3",
+      "title": "Commercial Maibatsu Thunder",
+      "artist": "Vice City Radio",
+      "duration": 53,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/5-21%20-%20Commercial%20Maibatsu%20Thunder.mp3"
+    }
+  ],
+  "fever_105": [
+    {
+      "filename": "6-01 - DJ Oliver 'Ladykiller' Biscuit Intro.mp3",
+      "title": "DJ Oliver 'Ladykiller' Biscuit Intro",
+      "artist": "Vice City",
+      "duration": 50,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-01%20-%20DJ%20Oliver%20%27Ladykiller%27%20Biscuit%20Intro.mp3"
+    },
+    {
+      "filename": "6-02 - Wanna Be Startin' Somethin'.mp3",
+      "title": "Wanna Be Startin' Somethin'",
+      "artist": "Michael Jackson",
+      "duration": 361,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-02%20-%20Wanna%20Be%20Startin%27%20Somethin%27.mp3"
+    },
+    {
+      "filename": "6-03 - Automatic.mp3",
+      "title": "Automatic",
+      "artist": "The Pointer Sisters",
+      "duration": 366,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-03%20-%20Automatic.mp3"
+    },
+    {
+      "filename": "6-04 - Act Like You Know.mp3",
+      "title": "Act Like You Know",
+      "artist": "Fat Larry's Band",
+      "duration": 388,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-04%20-%20Act%20Like%20You%20Know.mp3"
+    },
+    {
+      "filename": "6-05 - Juicy Fruit.mp3",
+      "title": "Juicy Fruit",
+      "artist": "The Pointer Sisters",
+      "duration": 352,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-05%20-%20Juicy%20Fruit.mp3"
+    },
+    {
+      "filename": "6-06 - Behind the Groove.mp3",
+      "title": "Behind the Groove",
+      "artist": "Fat Larry Band",
+      "duration": 238,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-06%20-%20Behind%20the%20Groove.mp3"
+    },
+    {
+      "filename": "6-07 - DJ Oliver 'Ladykiller' Biscuit Halftime.mp3",
+      "title": "DJ Oliver 'Ladykiller' Biscuit Halftime",
+      "artist": "Mtume",
+      "duration": 33,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-07%20-%20DJ%20Oliver%20%27Ladykiller%27%20Biscuit%20Halftime.mp3"
+    },
+    {
+      "filename": "6-08 - Get Down Saturday Night.mp3",
+      "title": "Get Down Saturday Night",
+      "artist": "Teena Marie",
+      "duration": 410,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-08%20-%20Get%20Down%20Saturday%20Night.mp3"
+    },
+    {
+      "filename": "6-09 - Ghetto Life.mp3",
+      "title": "Ghetto Life",
+      "artist": "Vice City Radio",
+      "duration": 259,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-09%20-%20Ghetto%20Life.mp3"
+    },
+    {
+      "filename": "6-10 - Shame.mp3",
+      "title": "Shame",
+      "artist": "Oliver Cheatham",
+      "duration": 391,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-10%20-%20Shame.mp3"
+    },
+    {
+      "filename": "6-11 - All Night Long.mp3",
+      "title": "All Night Long",
+      "artist": "Rick James",
+      "duration": 344,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-11%20-%20All%20Night%20Long.mp3"
+    },
+    {
+      "filename": "6-12 - Summer Madness.mp3",
+      "title": "Summer Madness",
+      "artist": "Evelyn King",
+      "duration": 255,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-12%20-%20Summer%20Madness.mp3"
+    },
+    {
+      "filename": "6-13 - I'll Be Good.mp3",
+      "title": "I'll Be Good",
+      "artist": "Mary Jane Girls",
+      "duration": 248,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-13%20-%20I%27ll%20Be%20Good.mp3"
+    },
+    {
+      "filename": "6-14 - Last Night a D.J. Saved My Life.mp3",
+      "title": "Last Night a D.J. Saved My Life",
+      "artist": "Kool & The Gang",
+      "duration": 339,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-14%20-%20Last%20Night%20a%20D.J.%20Saved%20My%20Life.mp3"
+    },
+    {
+      "filename": "6-15 - And the Beat Goes On.mp3",
+      "title": "And the Beat Goes On",
+      "artist": "Angela Winbush",
+      "duration": 455,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-15%20-%20And%20the%20Beat%20Goes%20On.mp3"
+    },
+    {
+      "filename": "6-16 - DJ Oliver 'Ladykiller' Biscuit Outro.mp3",
+      "title": "DJ Oliver 'Ladykiller' Biscuit Outro",
+      "artist": "Indeep",
+      "duration": 36,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-16%20-%20DJ%20Oliver%20%27Ladykiller%27%20Biscuit%20Outro.mp3"
+    },
+    {
+      "filename": "6-17 - Commercial Salivex.mp3",
+      "title": "Commercial Salivex",
+      "artist": "Vice City",
+      "duration": 66,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-17%20-%20Commercial%20Salivex.mp3"
+    },
+    {
+      "filename": "6-18 - Commercial Yuppie & the Alien.mp3",
+      "title": "Commercial Yuppie & the Alien",
+      "artist": "Vice City",
+      "duration": 175,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/6-18%20-%20Commercial%20Yuppie%20%26%20the%20Alien.mp3"
+    }
+  ],
+  "espantoso": [
+    {
+      "filename": "7-01 - DJ Pepe Intro.mp3",
+      "title": "DJ Pepe Intro",
+      "artist": "Vice City",
+      "duration": 61,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-01%20-%20DJ%20Pepe%20Intro.mp3"
+    },
+    {
+      "filename": "7-02 - Super Strut.mp3",
+      "title": "Super Strut",
+      "artist": "Deodato",
+      "duration": 534,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-02%20-%20Super%20Strut.mp3"
+    },
+    {
+      "filename": "7-03 - A Gozar Con Mi Combo.mp3",
+      "title": "A Gozar Con Mi Combo",
+      "artist": "Cachao",
+      "duration": 378,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-03%20-%20A%20Gozar%20Con%20Mi%20Combo.mp3"
+    },
+    {
+      "filename": "7-04 - Me and You Baby (Picao Y Tostao).mp3",
+      "title": "Me and You Baby (Picao Y Tostao)",
+      "artist": "Mongo Santamaria",
+      "duration": 300,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-04%20-%20Me%20and%20You%20Baby%20%28Picao%20Y%20Tostao%29.mp3"
+    },
+    {
+      "filename": "7-05 - Mambo Mucho Mambo.mp3",
+      "title": "Mambo Mucho Mambo",
+      "artist": "Machito & His Afro-Cuban Orchestra",
+      "duration": 180,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-05%20-%20Mambo%20Mucho%20Mambo.mp3"
+    },
+    {
+      "filename": "7-06 - Jamay.mp3",
+      "title": "Jamay",
+      "artist": "Xavier Cugat & His Orchestra",
+      "duration": 159,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-06%20-%20Jamay.mp3"
+    },
+    {
+      "filename": "7-07 - DJ Pepe Halftime.mp3",
+      "title": "DJ Pepe Halftime",
+      "artist": "Vice City",
+      "duration": 8,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-07%20-%20DJ%20Pepe%20Halftime.mp3"
+    },
+    {
+      "filename": "7-08 - Mama Papa Tu.mp3",
+      "title": "Mama Papa Tu",
+      "artist": "Mongo Santamaria",
+      "duration": 218,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-08%20-%20Mama%20Papa%20Tu.mp3"
+    },
+    {
+      "filename": "7-09 - La Vida Es Una Lenteja.mp3",
+      "title": "La Vida Es Una Lenteja",
+      "artist": "Unaesta",
+      "duration": 265,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-09%20-%20La%20Vida%20Es%20Una%20Lenteja.mp3"
+    },
+    {
+      "filename": "7-10 - Expansions.mp3",
+      "title": "Expansions",
+      "artist": "Lonnie Liston Smith",
+      "duration": 363,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-10%20-%20Expansions.mp3"
+    },
+    {
+      "filename": "7-11 - Aguanile.mp3",
+      "title": "Aguanile",
+      "artist": "Irakere",
+      "duration": 361,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-11%20-%20Aguanile.mp3"
+    },
+    {
+      "filename": "7-12 - Maracaibo Oriento.mp3",
+      "title": "Maracaibo Oriento",
+      "artist": "Beny Moré",
+      "duration": 187,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-12%20-%20Maracaibo%20Oriento.mp3"
+    },
+    {
+      "filename": "7-13 - Latin Flute.mp3",
+      "title": "Latin Flute",
+      "artist": "Deodato",
+      "duration": 286,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-13%20-%20Latin%20Flute.mp3"
+    },
+    {
+      "filename": "7-14 - Mambo Gozón.mp3",
+      "title": "Mambo Gozón",
+      "artist": "Tito Puente",
+      "duration": 165,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-14%20-%20Mambo%20Goz%C3%B3n.mp3"
+    },
+    {
+      "filename": "7-15 - DJ Pepe Outro.mp3",
+      "title": "DJ Pepe Outro",
+      "artist": "Vice City",
+      "duration": 24,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-15%20-%20DJ%20Pepe%20Outro.mp3"
+    },
+    {
+      "filename": "7-16 - Commercial Fernando's Medillion.mp3",
+      "title": "Commercial Fernando's Medillion",
+      "artist": "Vice City",
+      "duration": 56,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-16%20-%20Commercial%20Fernando%27s%20Medillion.mp3"
+    },
+    {
+      "filename": "7-17 - Commercial Think Your Way to Success.mp3",
+      "title": "Commercial Think Your Way to Success",
+      "artist": "Vice City",
+      "duration": 179,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/7-17%20-%20Commercial%20Think%20Your%20Way%20to%20Success.mp3"
+    }
+  ],
+  "kchat": [
+    {
+      "filename": "01 Opening Theme.mp3",
+      "title": "Opening Theme & Amy Intro",
+      "artist": "Amy Sheckenhausen",
+      "duration": 156,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-k-chat/01%20Opening%20Theme.mp3"
+    },
+    {
+      "filename": "02 Jezz Torrent.mp3",
+      "title": "Interview: Jezz Torrent (Love Fist)",
+      "artist": "Amy Sheckenhausen & Jezz Torrent",
+      "duration": 942,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-k-chat/02%20Jezz%20Torrent.mp3"
+    },
+    {
+      "filename": "03 Woman Who Pretended to Be a Man.mp3",
+      "title": "Caller: Woman Pretending To Be A Man",
+      "artist": "Amy Sheckenhausen",
+      "duration": 691,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-k-chat/03%20Woman%20Who%20Pretended%20to%20Be%20a%20Man.mp3"
+    },
+    {
+      "filename": "04 Mr. Zoo.mp3",
+      "title": "Interview: Mr. Zoo",
+      "artist": "Amy Sheckenhausen & Mr. Zoo",
+      "duration": 960,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-k-chat/04%20Mr.%20Zoo.mp3"
+    },
+    {
+      "filename": "05 Getsemane.mp3",
+      "title": "Interview: Gethsemanee (Spiritualist)",
+      "artist": "Amy Sheckenhausen & Gethsemanee",
+      "duration": 874,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-k-chat/05%20Getsemane.mp3"
+    },
+    {
+      "filename": "06 BJ Smith.mp3",
+      "title": "Interview: BJ Smith (Football Legend)",
+      "artist": "Amy Sheckenhausen & BJ Smith",
+      "duration": 695,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-k-chat/06%20BJ%20Smith.mp3"
+    },
+    {
+      "filename": "07 Claude Magenot from Just the 5 of Us.mp3",
+      "title": "Interview: Claude Maginot",
+      "artist": "Amy Sheckenhausen & Claude Maginot",
+      "duration": 761,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-k-chat/07%20Claude%20Magenot%20from%20Just%20the%205%20of%20Us.mp3"
+    },
+    {
+      "filename": "08 Thor.mp3",
+      "title": "Interview: Thor (Norse God of Thunder)",
+      "artist": "Amy Sheckenhausen & Thor",
+      "duration": 825,
+      "url": "https://archive.org/download/grand-theft-auto-vice-city-k-chat/08%20Thor.mp3"
+    }
+  ]
+}

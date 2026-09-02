@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root {
+    background-color: transparent !important;
+    @apply antialiased overflow-hidden select-none;
+    font-family: 'Barlow Condensed', 'Antonio', sans-serif;
+  }
+}
+
+/* Authentic GTA 6 Slender Condensed Typography */
+.gta-hud-title {
+  font-family: 'Barlow Condensed', 'Antonio', sans-serif;
+  font-weight: 600;
+  color: #F1F3F5;
+  text-shadow: 
+    -0.8px -0.8px 0 #000,
+     0.8px -0.8px 0 #000,
+    -0.8px  0.8px 0 #000,
+     0.8px  0.8px 0 #000,
+     0px    1px   2px rgba(0, 0, 0, 0.95);
+  letter-spacing: 0.02em;
+}
+
+.gta-hud-text {
+  font-family: 'Barlow Condensed', 'Antonio', sans-serif;
+  font-weight: 500;
+  color: #DDE1E5;
+  text-shadow: 
+    -0.7px -0.7px 0 #000,
+     0.7px -0.7px 0 #000,
+    -0.7px  0.7px 0 #000,
+     0.7px  0.7px 0 #000,
+     0px    1px   2px rgba(0, 0, 0, 0.9);
+  letter-spacing: 0.03em;
+}
+
+.gta-hud-subtext {
+  font-family: 'Barlow Condensed', 'Antonio', sans-serif;
+  font-weight: 500;
+  color: #9CA3AF;
+  text-shadow: 
+    -0.6px -0.6px 0 #000,
+     0.6px -0.6px 0 #000,
+    -0.6px  0.6px 0 #000,
+     0.6px  0.6px 0 #000,
+     0px    1px   2px rgba(0, 0, 0, 0.9);
+  letter-spacing: 0.04em;
+}
+
+/* Rotating Gradient Animation for Settings Beige Glass */
+@keyframes spin-gradient {
+  0% {
+    transform: rotate(0deg) scale(1.4);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.5);
+  }
+  100% {
+    transform: rotate(360deg) scale(1.4);
+  }
+}
+
+.animate-spin-gradient {
+  animation: spin-gradient 25s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Custom scrollbars hidden */
+::-webkit-scrollbar {
+  display: none;
+}

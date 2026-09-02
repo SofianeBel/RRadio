@@ -1,0 +1,31 @@
+[package]
+name = "rradio"
+version = "0.1.0"
+description = "GTA 6 Radio Overlay for PC - Vice City Edition"
+authors = ["sifly"]
+edition = "2021"
+
+[lib]
+name = "rradio_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rdev = "0.5.3"
+ureq = { version = "2.10", features = ["json"] }
+sha2 = "0.11.0"
+rand = "0.10.2"
+discord-rich-presence = "1.1.0"
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.58", features = [
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_Controls",
+    "Win32_Foundation",
+    "Win32_Graphics_Dwm"
+] }
