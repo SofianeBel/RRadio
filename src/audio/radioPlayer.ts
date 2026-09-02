@@ -17,6 +17,7 @@ class RadioPlayer {
   private currentMode: 'radio' | 'ondemand' = 'radio';
   private currentStationId: string | null = null;
   private onDemandTrack: RadioTrack | null = null;
+  private currentRadioTrack: RadioTrack | null = null;
   private isYouTube = false;
   private volume: number = 0.8;
   private isMuted: boolean = false;
@@ -192,21 +193,31 @@ class RadioPlayer {
     this.isYouTube = false;
     youtubePlayer.pause();
 
-    // Calculate synchronized live broadcast position
+    // The audio element is the single source of truth for what is on air
     const currentLiveState = this.calculateLiveStationPosition(stationId);
     if (!currentLiveState) return;
 
     const { track, offsetSeconds } = currentLiveState;
+    this.currentRadioTrack = track;
 
     try {
       this.audio.src = track.url;
-      this.audio.currentTime = offsetSeconds;
 
-      if (this.isPlaying && !this.isMuted) {
-        this.audio.play().catch(e => {
-          console.warn('Playback gesture required or stream loading:', e);
-        });
-      }
+      // Seeking before metadata is loaded silently resets to 0; seek once metadata arrives
+      this.audio.addEventListener('loadedmetadata', () => {
+        if (Number.isFinite(offsetSeconds) && offsetSeconds > 0) {
+          try {
+            this.audio!.currentTime = offsetSeconds;
+          } catch {
+            // Stream not seekable yet; play from the start rather than desync
+          }
+        }
+        if (this.isPlaying && !this.isMuted) {
+          this.audio!.play().catch(e => {
+            console.warn('Playback gesture required or stream loading:', e);
+          });
+        }
+      }, { once: true });
 
       this.notifyTrackChange(stationId, track, offsetSeconds);
     } catch (e) {
@@ -268,9 +279,27 @@ class RadioPlayer {
    * Advances to next track on the station in live radio mode
    */
   private advanceStationTrack(stationId: string) {
-    const currentLiveState = this.calculateLiveStationPosition(stationId);
-    if (currentLiveState) {
-      this.tuneToStation(stationId, false);
+    const manifestObj = radioManifest as Record<string, RadioTrack[]>;
+    const tracks = manifestObj[stationId] || [];
+    if (tracks.length === 0 || !this.audio) return;
+
+    // Advance sequentially from the track that actually just finished
+    const currentIndex = this.currentRadioTrack
+      ? tracks.findIndex(t => t.filename === this.currentRadioTrack!.filename)
+      : -1;
+    const nextTrack = tracks[(currentIndex + 1 + tracks.length) % tracks.length];
+
+    this.currentRadioTrack = nextTrack;
+    try {
+      this.audio.src = nextTrack.url;
+      if (this.isPlaying && !this.isMuted) {
+        this.audio.play().catch(e => {
+          console.warn('Radio track advance playback error:', e);
+        });
+      }
+      this.notifyTrackChange(stationId, nextTrack, 0);
+    } catch (e) {
+      console.warn('Error advancing station track stream:', e);
     }
   }
 
@@ -325,12 +354,15 @@ class RadioPlayer {
       return;
     }
 
-    // 2. In RADIO Mode: report synchronized broadcast time
+    // 2. In RADIO Mode: report the track the audio element is actually playing
     if (!this.audio || !this.currentStationId) return;
-    const liveState = this.calculateLiveStationPosition(this.currentStationId);
-    if (liveState) {
-      const progress = this.audio.currentTime || liveState.offsetSeconds;
-      this.notifyTrackChange(this.currentStationId, liveState.track, Math.floor(progress));
+    if (this.currentRadioTrack) {
+      this.notifyTrackChange(this.currentStationId, this.currentRadioTrack, Math.floor(this.audio.currentTime || 0));
+    } else {
+      const liveState = this.calculateLiveStationPosition(this.currentStationId);
+      if (liveState) {
+        this.notifyTrackChange(this.currentStationId, liveState.track, Math.floor(liveState.offsetSeconds));
+      }
     }
   }
 
