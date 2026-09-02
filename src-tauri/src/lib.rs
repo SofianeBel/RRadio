@@ -14,26 +14,24 @@ fn configure_pure_overlay_window(hwnd_raw: isize, enable_click_through: bool) {
     use windows::Win32::UI::WindowsAndMessaging::{
         GetWindowLongW, SetWindowLongW, SetWindowPos,
         GWL_EXSTYLE, GWL_STYLE,
-        HWND_TOPMOST, SWP_FRAMECHANGED, SWP_NOMOVE, SWP_NOSIZE,
-        WS_BORDER, WS_CAPTION, WS_EX_LAYERED, WS_EX_TOOLWINDOW, WS_EX_TOPMOST, WS_EX_TRANSPARENT,
-        WS_POPUP, WS_THICKFRAME, WS_VISIBLE,
+        HWND_TOPMOST, SWP_FRAMECHANGED, SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE,
+        WS_BORDER, WS_CAPTION, WS_EX_LAYERED, WS_EX_NOACTIVATE, WS_EX_TOOLWINDOW, WS_EX_TOPMOST, WS_EX_TRANSPARENT,
+        WS_POPUP, WS_THICKFRAME,
     };
 
     let hwnd = HWND(hwnd_raw as *mut _);
     unsafe {
-        // 1. Strip WS_CAPTION, WS_BORDER, WS_THICKFRAME to completely remove any non-client title bar
         let style = GetWindowLongW(hwnd, GWL_STYLE);
         let new_style = (style & !(WS_CAPTION.0 as i32 | WS_BORDER.0 as i32 | WS_THICKFRAME.0 as i32))
-            | (WS_POPUP.0 as i32)
-            | (WS_VISIBLE.0 as i32);
+            | (WS_POPUP.0 as i32);
         SetWindowLongW(hwnd, GWL_STYLE, new_style);
 
-        // 2. Apply WS_EX_TOOLWINDOW + WS_EX_TOPMOST + WS_EX_LAYERED + click-through
         let ex_style = GetWindowLongW(hwnd, GWL_EXSTYLE);
         let mut new_ex_style = ex_style
             | (WS_EX_TOOLWINDOW.0 as i32)
             | (WS_EX_TOPMOST.0 as i32)
-            | (WS_EX_LAYERED.0 as i32);
+            | (WS_EX_LAYERED.0 as i32)
+            | (WS_EX_NOACTIVATE.0 as i32);
 
         if enable_click_through {
             new_ex_style |= WS_EX_TRANSPARENT.0 as i32;
@@ -43,9 +41,6 @@ fn configure_pure_overlay_window(hwnd_raw: isize, enable_click_through: bool) {
 
         SetWindowLongW(hwnd, GWL_EXSTYLE, new_ex_style);
 
-        // 3. Extend frame into client area with -1 margins
-        // This is the official Microsoft Win32 API solution to completely eliminate
-        // the classic fallback title bar and non-client borders upon focus loss
         let margins = MARGINS {
             cxLeftWidth: -1,
             cxRightWidth: -1,
@@ -54,7 +49,6 @@ fn configure_pure_overlay_window(hwnd_raw: isize, enable_click_through: bool) {
         };
         let _ = DwmExtendFrameIntoClientArea(hwnd, &margins);
 
-        // 4. Force DWM to update frame geometry
         let _ = SetWindowPos(
             hwnd,
             HWND_TOPMOST,
@@ -62,7 +56,7 @@ fn configure_pure_overlay_window(hwnd_raw: isize, enable_click_through: bool) {
             0,
             0,
             0,
-            SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED,
+            SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED | SWP_NOACTIVATE,
         );
     }
 }
@@ -130,6 +124,9 @@ fn set_settings_window_mode(window: WebviewWindow, is_settings_open: bool, is_ra
             #[cfg(target_os = "windows")]
             if let Ok(hwnd_raw) = window.hwnd() {
                 configure_pure_overlay_window(hwnd_raw.0 as isize, false);
+                use windows::Win32::Foundation::HWND;
+                use windows::Win32::UI::WindowsAndMessaging::{ShowWindow, SW_SHOWNOACTIVATE};
+                unsafe { let _ = ShowWindow(HWND(hwnd_raw.0 as *mut _), SW_SHOWNOACTIVATE); }
             }
         } else if is_radio_open {
             let _ = window.set_size(PhysicalSize::new(screen_size.width, 340));
@@ -139,6 +136,9 @@ fn set_settings_window_mode(window: WebviewWindow, is_settings_open: bool, is_ra
             #[cfg(target_os = "windows")]
             if let Ok(hwnd_raw) = window.hwnd() {
                 configure_pure_overlay_window(hwnd_raw.0 as isize, false);
+                use windows::Win32::Foundation::HWND;
+                use windows::Win32::UI::WindowsAndMessaging::{ShowWindow, SW_SHOWNOACTIVATE};
+                unsafe { let _ = ShowWindow(HWND(hwnd_raw.0 as *mut _), SW_SHOWNOACTIVATE); }
             }
         } else {
             let _ = window.hide();
@@ -238,7 +238,7 @@ pub fn run() {
                         RegisterHotKey, MOD_NOREPEAT,
                         VK_F6, VK_F7, VK_F8, VK_F9, VK_F10,
                     };
-                    use windows::Win32::UI::WindowsAndMessaging::{GetMessageW, MSG, WM_HOTKEY};
+                    use windows::Win32::UI::WindowsAndMessaging::{GetMessageW, ShowWindow, MSG, SW_SHOWNOACTIVATE, WM_HOTKEY};
 
                     const HOTKEY_F8: i32 = 101;
                     const HOTKEY_F9: i32 = 102;
@@ -273,6 +273,7 @@ pub fn run() {
                                             #[cfg(target_os = "windows")]
                                             if let Ok(hwnd_raw) = main_win.hwnd() {
                                                 configure_pure_overlay_window(hwnd_raw.0 as isize, false);
+                                                let _ = ShowWindow(HWND(hwnd_raw.0 as *mut _), SW_SHOWNOACTIVATE);
                                             }
                                             let _ = main_win.emit("global_overlay_show", ());
                                         }
@@ -289,6 +290,7 @@ pub fn run() {
                                             #[cfg(target_os = "windows")]
                                             if let Ok(hwnd_raw) = main_win.hwnd() {
                                                 configure_pure_overlay_window(hwnd_raw.0 as isize, false);
+                                                let _ = ShowWindow(HWND(hwnd_raw.0 as *mut _), SW_SHOWNOACTIVATE);
                                             }
                                             let _ = main_win.emit("global_open_settings", ());
                                         }
