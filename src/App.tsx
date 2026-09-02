@@ -34,7 +34,6 @@ export const App: React.FC = () => {
   }, [mode]);
 
   const [virtualRadioIndex, setVirtualRadioIndex] = useState(2); // V-ROCK by default
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [trackProgress, setTrackProgress] = useState(0);
   const trackProgressRef = useRef(trackProgress);
   useEffect(() => {
@@ -836,7 +835,7 @@ export const App: React.FC = () => {
         virtualRadioIndex={virtualRadioIndex}
         onSelectOffset={handleSelectRadioOffset}
         isPlaying={isPlaying}
-        currentTrackIndex={currentTrackIndex}
+        liveTrack={activeLiveTrack}
         trackProgress={trackProgress}
         isTuning={isTuning}
         isMuted={isMuted}

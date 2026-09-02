@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { RadioStation, PlaybackMode } from '../types/radio';
 import { OnDemandProvider, OnDemandPlaylist, OnDemandTrack, OnDemandViewLevel } from '../types/ondemand';
+import { RadioTrack } from '../audio/radioPlayer';
 import { StationLogo } from './StationLogo';
 import { ProviderCard } from './ProviderCard';
 import { Settings, ArrowLeft } from 'lucide-react';
@@ -14,7 +15,7 @@ interface RadioWheelProps {
   virtualRadioIndex: number;
   onSelectOffset: (offset: number) => void;
   isPlaying: boolean;
-  currentTrackIndex: number;
+  liveTrack: RadioTrack | null;
   trackProgress: number;
   isTuning: boolean;
   isMuted: boolean;
@@ -44,7 +45,7 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
   virtualRadioIndex,
   onSelectOffset,
   isPlaying,
-  currentTrackIndex,
+  liveTrack,
   trackProgress,
   isTuning,
   isMuted,
@@ -68,8 +69,6 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
   // Radio active item
   const activeStationIndex = ((virtualRadioIndex % stations.length) + stations.length) % stations.length;
   const currentStation = stations[activeStationIndex];
-  const currentTrackList = currentStation.tracks;
-  const currentTrack = currentTrackList[currentTrackIndex % currentTrackList.length];
 
   // On Demand active items (calculated via continuous virtual indices)
   const pLen = providers.length;
@@ -505,13 +504,13 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
             )}
 
             {/* Sub-info / Live Track Info */}
-            {isRadio && !isMuted && (
+            {isRadio && !isMuted && liveTrack && (
               <div className="flex flex-col items-center leading-none mt-1">
                 <span className="gta-hud-text text-[15px] uppercase tracking-normal mt-0.5">
-                  {currentTrack.title}
+                  {liveTrack.title}
                 </span>
                 <span className="gta-hud-subtext text-[12px] uppercase tracking-wider mt-1">
-                  {currentTrack.artist}
+                  {liveTrack.artist}
                 </span>
               </div>
             )}

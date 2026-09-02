@@ -41,7 +41,6 @@ export interface RadioState {
   volume: number;
   isMuted: boolean;
   isPlaying: boolean;
-  currentTrackIndex: number;
   trackProgress: number; // in seconds
   isTuning: boolean;
 }
