@@ -1,7 +1,8 @@
 ## Learned User Preferences
 
 - Prefers technical discussions and explanations in French, with concise, practical summaries of architecture and progress.
-- Always verify visual changes with real screenshots or captures; never assume UI fidelity without validating against reference captures.
+- Verify changes against the real surface before claiming success: screenshots/captures for visual fidelity, and compiling the native release executable plus verifying live process execution for runtime behavior; web bundles or headless checks alone are not proof.
+- Defect fixes must address root causes by unifying state under a single source of truth (e.g. the audio element as sole authority for what is playing) rather than patching parallel mechanisms, and be proven with verbatim runtime output.
 - The overlay must start muted on launch, remain completely transparent to mouse clicks (`WS_EX_TRANSPARENT`) when hidden so it never interrupts game focus or desktop clicking, and only accept input when summoned via hotkeys.
 - The station selector must be a smooth horizontal sliding carousel (not a visible wrapping loop), with the active station highlighted by a beige/white border and slight scale enlargement, and no stray accent lines or side bars.
 - "Mute / Unmute" and "Radio / On-Demand" labels and buttons must be prominently sized, horizontally centered, placed close to the selector, and match the active station name text color. The "Off" state is handled by Mute rather than an empty radio station slot.
@@ -10,19 +11,18 @@
 - Discord Rich Presence should use the "Listening" activity type with music notes rather than a game controller icon, displaying album art for the main track, station logos for the badge, and a real-time progress bar resetting on every track transition.
 - Prioritize self-contained, plug-and-play solutions over manual local file setup (e.g. streaming audio directly from reliable CDNs and automated OAuth PKCE loopback servers).
 - Validate native packaging, window overlays, and tray lifecycle early before implementing and polishing complex downstream features.
-- Verification workflows must include compiling the native standalone release executable and verifying live process execution, not just frontend web bundles or headless browser checks.
 
 ## Learned Workspace Facts
 
-- The project is built with Tauri v2 (`src-tauri`), Rust 2021 edition backend (`rradio_lib`), React 19 frontend (`src/App.tsx`), TypeScript, Tailwind CSS, Vite, and Bun.
-- Rust backend configures the Tauri window with Win32 extended styles `WS_EX_LAYERED`, `WS_EX_TRANSPARENT`, `WS_EX_TOOLWINDOW`, `WS_EX_NOACTIVATE`, and DWM margins (`-1`) to achieve borderless transparency without taskbar disruption.
-- Click-through behavior is toggled via Tauri IPC command `set_click_through(enable: bool)`: enabled when overlay is hidden to pass clicks to games, disabled when menus open to receive mouse input.
+- The project is built with Tauri v2 (`src-tauri`), Rust 2021 edition backend (`rradio_lib`), React 19 frontend (`src/App.tsx`), TypeScript, Tailwind CSS, Vite, and Bun; canonical architecture, project history, and handover details live in `takeOver/PROJECT_RECAP.md`.
+- Rust backend configures the Tauri window with Win32 extended styles `WS_EX_LAYERED`, `WS_EX_TRANSPARENT`, `WS_EX_TOOLWINDOW`, `WS_EX_NOACTIVATE`, and DWM margins (`-1`) to achieve borderless transparency without taskbar disruption; click-through toggles via Tauri IPC command `set_click_through(enable: bool)` (enabled when the overlay is hidden to pass clicks to games, disabled when menus open to receive mouse input).
 - System-wide hotkeys are managed in a dedicated Win32 `RegisterHotKey` thread (`F8`/`Alt+V` for wheel, `F9`/`Alt+M` for mute, `F10`/`Alt+S` for settings, `F7`/`Alt+O` for On-Demand) and `rdev` for push-to-show keys (`Alt+Q`/`Alt+A`).
 - The application integrates into the Windows system tray with a left-click toggle and right-click context menu (`Show/Hide`, `Mute`, `Settings`, `Quit`).
-- The radio audio engine emulates 8 GTA Vice City stations (`flash_fm`, `wave_103`, `v_rock`, `emotion_983`, `fever_105`, `wildstyle`, `espantoso`, `kchat`) streaming 139 live tracks from Archive.org with continuous epoch-based live positioning.
+- The radio audio engine emulates 8 GTA Vice City stations (`flash_fm`, `wave_103`, `v_rock`, `emotion_983`, `fever_105`, `wildstyle`, `espantoso`, `kchat`) streaming 139 live tracks from Archive.org. In `src/audio/radioPlayer.ts` the audio element is the single source of truth for what is on air: a `currentRadioTrack` field reports actual playback, tracks advance sequentially on the real `ended` event, and live-broadcast seeks apply on `loadedmetadata` (seeking right after setting `src` is silently reset to 0 by browsers); the epoch clock only seeds the initial tune-in position.
 - Tuning static between radio stations is synthesized procedurally via Web Audio API (`AudioContext` bandpass filtered white noise at 1400 Hz for 200ms) without static audio sample files.
 - On-Demand audio supports 3-level drill-down navigation (Streaming Service -> Playlists/Mixes -> Track Queue) with smooth physical slide animations.
 - Google OAuth 2.0 PKCE authentication runs via a local Rust loopback server in `src-tauri/src/oauth.rs` listening on a dynamic port to capture authorization codes for YouTube Music.
-- Discord Rich Presence socket communication (`\\.\pipe\discord-ipc-0`) runs in an isolated background thread (`discord-rpc-worker`) over a bounded Rust `sync_channel` with an 8-second backoff recovery loop to prevent UI or hotkey freezing.
-- Canonical architecture, project history, and handover details are documented in `takeOver/PROJECT_RECAP.md`.
-- Tauri embeds frontend assets from `dist/` directly into the native Windows executable (`src-tauri/target/release/rradio.exe`, ~23.6 MB) at compile time; updating frontend code requires recompiling the Rust binary for standalone execution.
+- Discord Rich Presence socket communication (`\\.\pipe\discord-ipc-0`) runs in an isolated background thread (`discord-rpc-worker`) over a bounded Rust `sync_channel` with an 8-second backoff recovery loop to prevent UI or hotkey freezing; it reports the track and covers derived from the radio player's audio-element source of truth.
+- `src/data/trackCovers.json` maps `Track Title - Artist` keys to cover art; a merge of iTunes Search API results at 600x600 brought coverage to 92% of music tracks (112 entries), with 429 rate limits and missing results retried via alternate query formulations; Mr. Magic DJ interludes and songs with no iTunes match intentionally fall back to station art.
+- Runtime verification uses a Playwright harness in-repo (doctor check plus four drives; HUD-track stability across 4s, cover key match, cover HTTP 200) with evidence screenshots under `artifacts/verify-rradio/`; Node scripts must run from the repo root so `node_modules` resolves.
+- Tauri embeds frontend assets from `dist/` directly into the native Windows executable (`src-tauri/target/release/rradio.exe`) at compile time, so frontend changes require recompiling, killing stale `rradio.exe` instances before smoke tests, and verifying the live process; the repo has no remote, so commits land on local `master` as conventional commits (e.g. `fix(audio)`, `chore(verify)`).
