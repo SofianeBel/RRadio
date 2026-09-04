@@ -1,39 +1,66 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RRadio - Politique de confidentialité</title>
-<style>
-  body { font-family: system-ui, sans-serif; background: #0b0b0e; color: #f5ede4; margin: 0; padding: 4rem 1.5rem; }
-  main { max-width: 640px; margin: 0 auto; }
-  h1 { font-size: 2rem; }
-  h2 { font-size: 1.1rem; margin-top: 2rem; }
-  p, li { color: #a1a1aa; line-height: 1.6; }
-  a { color: #00e5ff; }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="rradio-logo-120.png" />
+  <title>RRadio - Politique de confidentialité / Privacy Policy</title>
+  <style>
+    :root {
+      --bg: #0b0b0e;
+      --card: #141419;
+      --border: #27272a;
+      --text: #f5ede4;
+      --muted: #a1a1aa;
+      --accent: #ff2a85;
+      --cyan: #00e5ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 3rem 1.5rem;
+      line-height: 1.6;
+    }
+    main { max-width: 680px; margin: 0 auto; }
+    h1 { font-size: 2rem; color: var(--text); }
+    h2 { font-size: 1.2rem; margin-top: 2rem; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
+    p, li { color: var(--muted); font-size: 0.95rem; }
+    a { color: var(--cyan); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; margin: 1.25rem 0; }
+    code { font-family: monospace; color: var(--cyan); }
+  </style>
 </head>
 <body>
 <main>
-  <h1>Politique de confidentialité</h1>
-  <p>Dernière mise à jour : 3 septembre 2026</p>
+  <p><a href="index.html">&larr; Retour à l'accueil / Back to Homepage</a></p>
+  <h1>Politique de confidentialité (Privacy Policy)</h1>
+  <p>Dernière mise à jour : 4 septembre 2026</p>
 
-  <h2>Données collectées</h2>
-  <p>RRadio ne collecte aucune donnée sur ses propres serveurs. L'application ne possède pas de serveur.</p>
+  <h2>1. Données collectées</h2>
+  <p>RRadio est une application de bureau locale Windows. L'application ne possède aucun serveur distant ni base de données centrale. Aucune donnée personnelle ou télémétrie n'est collectée ou vendue.</p>
 
-  <h2>Connexion Google (optionnelle)</h2>
-  <p>Si vous connectez votre compte Google, RRadio demande l'accès en lecture seule à vos playlists YouTube Music (scope <code>youtube.readonly</code>) et à votre profil de base (nom, email, photo).</p>
-  <p>Les jetons d'accès restent stockés localement sur votre ordinateur, dans le stockage local de l'application. Ils ne sont transmis qu'à Google pour rafraîchir la session. Aucune donnée n'est partagée avec un tiers.</p>
-  <p>La connexion Google est purement optionnelle. Les mixes intégrés fonctionnent sans compte.</p>
+  <h2>2. Utilisation des données Google & YouTube</h2>
+  <p>Si vous choisissez de connecter votre compte Google, RRadio demande l'accès au scope sensible :</p>
+  <p><code>https://www.googleapis.com/auth/youtube.readonly</code></p>
+  <p><strong>Finalité :</strong> Cet accès sert exclusivement à afficher vos playlists personnelles YouTube Music et leurs titres directement dans le menu de radio en jeu de RRadio.</p>
+  
+  <div class="card">
+    <p><strong>Engagement de conformité Google API (Limited Use Disclosure) :</strong></p>
+    <p>L'utilisation et le transfert par RRadio à toute autre application des informations reçues des API Google sont conformes aux <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank">Règles relatives aux données utilisateur des services d'API Google</a>, y compris les exigences d'utilisation limitée (<em>Limited Use requirements</em>).</p>
+  </div>
 
-  <h2>Services tiers</h2>
-  <p>La lecture audio utilise des flux publics (Archive.org) et YouTube. Ces services appliquent leurs propres politiques de confidentialité.</p>
+  <h2>3. Stockage et sécurité des jetons</h2>
+  <p>Les jetons d'accès OAuth (tokens) et clés de session sont stockés strictement en local sur le disque dur de votre propre ordinateur (via le stockage local sécurisé de l'application). Ils ne sont jamais partagés avec des serveurs tiers et ne transitent que directement et de façon chiffrée (HTTPS) avec les serveurs officiels de Google.</p>
 
-  <h2>Vos droits</h2>
-  <p>Vous pouvez révoquer l'accès de RRadio à tout moment depuis <a href="https://myaccount.google.com/permissions">les autorisations de votre compte Google</a> ou via la déconnexion dans les réglages de l'application.</p>
+  <h2>4. Révocation des autorisations</h2>
+  <p>Vous pouvez révoquer l'accès de RRadio à tout moment en vous déconnectant dans les paramètres de l'application ou depuis votre gestionnaire de compte Google : <a href="https://myaccount.google.com/permissions" target="_blank">Permissions de compte Google</a>.</p>
 
-  <h2>Contact</h2>
-  <p>Pour toute question : <a href="https://github.com/sifly/RRadio">dépôt GitHub RRadio</a>.</p>
+  <h2>5. Contact & Support</h2>
+  <p>Pour toute question relative à la confidentialité ou à vos données : <a href="mailto:sifly789@gmail.com">sifly789@gmail.com</a>.</p>
 </main>
 </body>
 </html>
