@@ -1,6 +1,6 @@
 [package]
 name = "rradio"
-version = "0.1.2"
+version = "0.1.3"
 description = "Transparent gaming radio overlay and On-Demand player for Windows - Vice City Edition"
 authors = ["sifly"]
 license = "GPL-3.0-or-later"
