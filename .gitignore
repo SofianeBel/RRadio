@@ -2,39 +2,72 @@
 node_modules/
 .pnp
 .pnp.js
+.yarn/
 
 # Production & Build outputs
 dist/
+dist-ssr/
 build/
+target/
 src-tauri/target/
+*.tsbuildinfo
 
 # Environment and secrets
 .env
 .env.local
 .env.*.local
 *.pem
+*.key
+*.cert
+*.pfx
+*.p12
 
 # Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 bun.lockb
 *.log
 
-# Editor & OS files
+# Editor & IDE files
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
-
-# Graphify output
-graphify-out/
 .idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.bak
+
+# Operating System files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 
-# Test captures and temporary debug frames
+# Test captures, reports, and temporary debug files
 extracted_frames/
+public/extracted_frames/
 test_results/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+scripts/*.tmp.*
+*.tmp
+*.temp
 
-# Cursor hook local state
-.cursor/hooks/state/
+# Local tooling and agent state
+graphify-out/
+.cursor/hooks/
+.cursor/rules/*.tmp
+cache/
+.cache/
