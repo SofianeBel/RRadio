@@ -5,8 +5,7 @@ Discord Rich Presence displays real-time playback information on the user's Disc
 ## Sub-features
 
 - `listening-status`: Sets the profile activity to `Listening to RRadio 🎧` instead of `Playing a game`.
-- `album-art`: Shows the high-resolution ($600 \times 600$) official cover of the currently playing track via Apple CDN.
-- `station-badge`: Displays the official GTA Vice City station logo as a small bottom-right badge.
+- `album-art`: Shows the high-resolution (600x600) official cover of the currently playing track via Apple CDN.
 - `progress-bar`: Renders an interactive time bar (`00:00 ━━━━●━━━━ 04:45`) that synchronizes and resets cleanly on every song transition.
 - `non-blocking-worker`: Rust backend delegates IPC calls to an isolated OS worker thread (`discord-rpc-worker`) with an 8-second backoff circuit breaker.
 

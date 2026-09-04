@@ -1,8 +1,9 @@
 [package]
 name = "rradio"
 version = "0.1.0"
-description = "GTA 6 Radio Overlay for PC - Vice City Edition"
+description = "Transparent gaming radio overlay and On-Demand player for Windows - Vice City Edition"
 authors = ["sifly"]
+license = "GPL-3.0-or-later"
 edition = "2021"
 
 [lib]

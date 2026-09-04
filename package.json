@@ -1,12 +1,19 @@
 {
-  "name": "rradio-gta6-prototype",
-  "private": true,
+  "name": "rradio",
   "version": "0.1.0",
+  "description": "Transparent gaming radio overlay and On-Demand player for Windows - Vice City Edition",
+  "license": "GPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sofianebel/RRadio.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "tauri:dev": "bunx tauri dev",
+    "tauri:build": "bunx tauri build"
   },
   "dependencies": {
     "clsx": "^2.1.1",

@@ -35,3 +35,6 @@ Thumbs.db
 # Test captures and temporary debug frames
 extracted_frames/
 test_results/
+
+# Cursor hook local state
+.cursor/hooks/state/

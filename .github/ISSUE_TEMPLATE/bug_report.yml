@@ -1,0 +1,59 @@
+name: Bug Report
+description: Report a defect or unexpected behavior in RRadio
+title: "fix: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug. Please fill in the details below to help us reproduce and fix it.
+  - type: input
+    id: os-version
+    attributes:
+      label: Windows Version
+      description: What version of Windows are you using?
+      placeholder: e.g. Windows 11 Pro 23H2 (Build 22631)
+    validations:
+      required: true
+  - type: input
+    id: app-version
+    attributes:
+      label: RRadio Version
+      description: What version of RRadio are you running?
+      placeholder: e.g. 0.1.0 or Git commit hash
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe what happened and what you expected to happen instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: List the exact steps to reproduce the issue.
+      placeholder: |
+        1. Launch RRadio
+        2. Press F8 to summon HUD
+        3. Switch station to Wave 103
+        4. Observe behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Terminal or DevTools Logs
+      description: Paste any error messages from the console or terminal if available.
+      render: shell
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checks
+      options:
+        - label: I have verified that this issue is not already reported in open issues.
+          required: true
+        - label: I have reviewed the [Legal Disclaimer](DISCLAIMER.md) and understand that audio streams depend on external archive availability.
+          required: true

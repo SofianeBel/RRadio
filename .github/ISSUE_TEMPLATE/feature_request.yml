@@ -1,0 +1,36 @@
+name: Feature Request
+description: Propose a new feature, enhancement, or user interface improvement
+title: "feat: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Suggest an idea for RRadio. Please keep in mind that RRadio does not bundle proprietary game assets or copyrighted audio files.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Is your feature request related to a problem or limitation?
+      placeholder: I feel that... / It is currently inconvenient to...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution or new behavior you would like to see.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe any alternative approaches or workarounds you considered.
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Confirmation
+      options:
+        - label: I understand that RRadio is an open-source fan project independent of Rockstar Games and Take-Two Interactive.
+          required: true

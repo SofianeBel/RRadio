@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version tag (e.g. v0.1.0)'
+        required: false
+        default: ''
+
+jobs:
+  publish-release:
+    name: Build & Publish Windows Installer
+    permissions:
+      contents: write
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Setup Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build frontend dist
+        run: bun run build
+
+      - name: Build and upload Tauri release artifacts
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'RRadio ${{ github.ref_name }}'
+          releaseBody: |
+            ## RRadio Windows Release ${{ github.ref_name }}
+
+            Transparent gaming radio overlay and On-Demand player for Windows.
+
+            ### What's Included
+            - Complete Vice City station selection wheel with live synced streams
+            - On-Demand streaming with YouTube Music integration
+            - Discord Rich Presence with dynamic track information
+            - Custom hotkey controls and transparent click-through overlay
+
+            ### Legal Disclaimer
+            RRadio is an independent open-source fan project. It is **not** affiliated with, authorized, or endorsed by Rockstar Games, Take-Two Interactive Software, Inc., or Google LLC.
+          releaseDraft: false
+          prerelease: false

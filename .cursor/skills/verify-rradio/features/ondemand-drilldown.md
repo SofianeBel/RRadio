@@ -20,11 +20,12 @@ Preconditions:
 - Dev server active on `http://127.0.0.1:5173`.
 - `node scripts/verify-rradio.mjs doctor` returns `PASS`.
 
-- **Open wheel and switch mode.** Press `F8` then `F7`. The carousel switches from radio logos to streaming provider cards (*YouTube Music*, *Spotify*, etc.).
+- **Open wheel and switch mode.** Press `F8` then `F7`. The carousel switches from radio logos to streaming provider cards; the drive asserts `SÉLECTIONS DISPONIBLES` is visible and records the provider title.
 - **Drill into provider.** Select a provider card. The provider cards slide upward like an elevator while playlist cards enter from the bottom.
-- **Verify proof.** Run `node scripts/verify-rradio.mjs drive ondemand-drilldown`. The artifact `artifacts/verify-rradio/ondemand-drilldown/ondemand-providers.png` captures the rendered provider selection view.
+- **Verify proof.** Run `node scripts/verify-rradio.mjs drive ondemand-drilldown` from the repo root. The artifact `artifacts/verify-rradio/ondemand-drilldown/ondemand-providers.png` captures the rendered provider selection view.
 
 ## Gotchas
 
+- Google-login flows are driven without credentials: intercept `**/youtube/v3/playlistItems**` and `**/youtube/v3/videos` with Playwright `context.route` fixture JSON and inject settings into `localStorage` (`rradio_gta6_settings_v1`) before reload. Curated mixes (`YTM_CURATED_MIXES`) need no login and are the default drive path.
+- One-off probe scripts use `scripts/*.tmp.mjs` names and are deleted after the run; proof screenshots stay under `artifacts/verify-rradio/`.
 - Returning from deeper levels (Back button or `Escape`) reverses the elevator animation so playlist covers slide down and providers reappear from above.
-- Full track playback in On-Demand requires YouTube IFrame background authorization or local mock tracks.
