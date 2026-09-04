@@ -76,30 +76,70 @@ pub fn lower_window_for_oauth(app_handle: &tauri::AppHandle) {
 pub fn lower_window_for_oauth(_app_handle: &tauri::AppHandle) {}
 
 #[cfg(target_os = "windows")]
-pub fn restore_window_after_oauth(app_handle: &tauri::AppHandle) {
+fn restore_window_now(app_handle: &tauri::AppHandle) {
     if let Some(main_win) = app_handle.get_webview_window("main") {
+        let _ = main_win.unminimize();
+        let _ = main_win.show();
+        let _ = main_win.set_focus();
+        let _ = main_win.set_always_on_top(true);
+
         if let Ok(hwnd_raw) = main_win.hwnd() {
             use windows::Win32::Foundation::HWND;
             use windows::Win32::UI::WindowsAndMessaging::{
-                GetWindowLongW, SetWindowLongW, SetWindowPos, SetForegroundWindow, ShowWindow,
-                GWL_EXSTYLE, HWND_TOPMOST, SWP_NOMOVE, SWP_NOSIZE, SWP_FRAMECHANGED, SW_SHOWNOACTIVATE,
-                WS_EX_TOPMOST,
+                GetForegroundWindow, GetWindowThreadProcessId, BringWindowToTop,
+                SetForegroundWindow, SetWindowPos, ShowWindow, SwitchToThisWindow,
+                GetWindowLongW, SetWindowLongW, GWL_EXSTYLE,
+                HWND_TOPMOST, SWP_NOMOVE, SWP_NOSIZE, SWP_SHOWWINDOW, SWP_FRAMECHANGED,
+                WS_EX_TOPMOST, WS_EX_NOACTIVATE, SW_SHOW,
             };
+            use windows::Win32::System::Threading::{AttachThreadInput, GetCurrentThreadId};
+
+            crate::configure_pure_overlay_window(hwnd_raw.0 as isize, false);
+
             let hwnd = HWND(hwnd_raw.0 as *mut _);
             unsafe {
                 let ex_style = GetWindowLongW(hwnd, GWL_EXSTYLE);
-                SetWindowLongW(hwnd, GWL_EXSTYLE, ex_style | (WS_EX_TOPMOST.0 as i32));
+                let new_ex = (ex_style | (WS_EX_TOPMOST.0 as i32)) & !(WS_EX_NOACTIVATE.0 as i32);
+                SetWindowLongW(hwnd, GWL_EXSTYLE, new_ex);
+
                 let _ = SetWindowPos(
                     hwnd,
                     HWND_TOPMOST,
                     0, 0, 0, 0,
-                    SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED,
+                    SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_FRAMECHANGED,
                 );
-                let _ = ShowWindow(hwnd, SW_SHOWNOACTIVATE);
-                let _ = SetForegroundWindow(hwnd);
+
+                let _ = ShowWindow(hwnd, SW_SHOW);
+                let _ = BringWindowToTop(hwnd);
+
+                let fg_hwnd = GetForegroundWindow();
+                let fg_thread = GetWindowThreadProcessId(fg_hwnd, None);
+                let cur_thread = GetCurrentThreadId();
+
+                if fg_thread != 0 && fg_thread != cur_thread {
+                    let _ = AttachThreadInput(cur_thread, fg_thread, true);
+                    let _ = BringWindowToTop(hwnd);
+                    let _ = SetForegroundWindow(hwnd);
+                    SwitchToThisWindow(hwnd, true);
+                    let _ = AttachThreadInput(cur_thread, fg_thread, false);
+                } else {
+                    let _ = BringWindowToTop(hwnd);
+                    let _ = SetForegroundWindow(hwnd);
+                    SwitchToThisWindow(hwnd, true);
+                }
             }
         }
     }
+}
+
+#[cfg(target_os = "windows")]
+pub fn restore_window_after_oauth(app_handle: &tauri::AppHandle) {
+    restore_window_now(app_handle);
+    let app_clone = app_handle.clone();
+    std::thread::spawn(move || {
+        std::thread::sleep(std::time::Duration::from_millis(300));
+        restore_window_now(&app_clone);
+    });
 }
 
 #[cfg(not(target_os = "windows"))]
@@ -276,6 +316,7 @@ pub fn start_oauth_flow(
                         let _ = stream.flush();
 
                         captured_code = Some(auth_code);
+                        restore_window_after_oauth(&app_handle);
                         break;
                     }
 

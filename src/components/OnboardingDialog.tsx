@@ -7,7 +7,8 @@ import {
   setNativeLanguage,
   startNativeGoogleOAuth,
   cancelNativeGoogleOAuth,
-  listenToOAuthEvents
+  listenToOAuthEvents,
+  restoreWindowFocus
 } from '../utils/tauriBridge';
 import { soundEngine } from '../audio/soundEngine';
 import {
@@ -71,6 +72,7 @@ export const OnboardingDialog: React.FC<OnboardingDialogProps> = ({
       (data) => {
         setOauthLoading(false);
         setOauthError(null);
+        restoreWindowFocus();
         soundEngine.playMechanicalClick();
         onUpdateSettings({
           ...settings,
@@ -94,10 +96,12 @@ export const OnboardingDialog: React.FC<OnboardingDialogProps> = ({
       (err) => {
         setOauthLoading(false);
         setOauthError(err);
+        restoreWindowFocus();
       },
       () => {
         setOauthLoading(false);
         setOauthError(settings.language === 'en' ? 'Connection cancelled.' : 'Connexion annulée.');
+        restoreWindowFocus();
       }
     ).then((fn) => {
       unlisten = fn;

@@ -35,6 +35,15 @@ export const setNativeSettingsMode = async (isSettingsOpen: boolean, isRadioOpen
   }
 };
 
+export const restoreWindowFocus = async () => {
+  if (!isTauri()) return;
+  try {
+    await invoke('restore_window_focus');
+  } catch (e) {
+    console.warn('Could not restore window focus:', e);
+  }
+};
+
 export interface GlobalEventCallbacks {
   onShow: () => void;
   onHide: () => void;

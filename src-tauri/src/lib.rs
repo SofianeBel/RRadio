@@ -169,6 +169,12 @@ fn set_language(_app_handle: tauri::AppHandle, _language: String) -> Result<(), 
     Ok(())
 }
 
+#[tauri::command]
+fn restore_window_focus(app_handle: tauri::AppHandle) -> Result<(), String> {
+    oauth::restore_window_after_oauth(&app_handle);
+    Ok(())
+}
+
 
 pub fn run() {
     tauri::Builder::default()
@@ -408,6 +414,7 @@ pub fn run() {
             set_window_visibility,
             start_google_oauth,
             cancel_google_oauth,
+            restore_window_focus,
             set_language,
             discord::update_discord_activity,
             discord::clear_discord_activity
