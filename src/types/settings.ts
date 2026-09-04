@@ -25,7 +25,10 @@ export interface DiscordRpcConfig {
   applicationId: string;
 }
 
+export type Language = 'fr' | 'en';
+
 export interface AppSettings {
+  language: Language;
   audio: {
     masterVolume: number; // 0 - 100
     sfxVolume: number; // 0 - 100
@@ -56,6 +59,7 @@ export interface AppSettings {
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
+  language: 'fr',
   audio: {
     masterVolume: 80,
     sfxVolume: 65,

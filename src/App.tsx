@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { STATIONS, STATION_LOGOS, STATION_COVERS, GTAVC_COVER_ART } from './data/stations';
 import trackCovers from './data/trackCovers.json';
-import { PROVIDERS, PLAYLISTS } from './data/ondemandProviders';
+import { PROVIDERS, PLAYLISTS, getLocalizedProviders } from './data/ondemandProviders';
 import { youtubeMusicService, YTM_CURATED_MIXES } from './services/youtubeMusic';
 import { PlaybackMode } from './types/radio';
 import { OnDemandViewLevel, OnDemandTrack, OnDemandPlaylist } from './types/ondemand';
@@ -96,9 +96,10 @@ export const App: React.FC = () => {
   const activeStation = STATIONS[activeStationIndex];
 
   // Dynamic active items based on continuous virtual indices
-  const pLen = PROVIDERS.length;
+  const currentProviders = React.useMemo(() => getLocalizedProviders(settings.language), [settings.language]);
+  const pLen = currentProviders.length;
   const activeProviderIndex = ((virtualProviderIndex % pLen) + pLen) % pLen;
-  const activeProvider = PROVIDERS[activeProviderIndex] || PROVIDERS[0];
+  const activeProvider = currentProviders[activeProviderIndex] || currentProviders[0];
 
   const currentPlaylists = activeProvider.id === 'youtube_music'
     ? ytmPlaylists
@@ -847,6 +848,7 @@ export const App: React.FC = () => {
       {/* GTA 6 Top-Center Radio & On Demand Selector HUD */}
       <RadioWheel
         isOpen={isOpen && !isSettingsOpen}
+        language={settings.language}
         mode={mode}
         onToggleMode={handleToggleMode}
         stations={STATIONS}
@@ -861,7 +863,7 @@ export const App: React.FC = () => {
         onOpenSettings={handleToggleSettings}
         onDemandLevel={onDemandLevel}
         onDemandDirection={onDemandDirection}
-        providers={PROVIDERS}
+        providers={currentProviders}
         virtualProviderIndex={virtualProviderIndex}
         virtualPlaylistIndex={virtualPlaylistIndex}
         virtualQueueIndex={virtualQueueIndex}

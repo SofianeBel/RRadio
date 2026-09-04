@@ -2,6 +2,8 @@ import React from 'react';
 import { OnDemandProvider, OnDemandPlaylist, OnDemandTrack } from '../types/ondemand';
 import { STATIONS } from '../data/stations';
 import { StationLogo } from './StationLogo';
+import { Language } from '../types/settings';
+import { useTranslation } from '../i18n/useTranslation';
 import { Lock, Music2, Folder, Disc, Check, Radio } from 'lucide-react';
 
 interface ProviderCardProps {
@@ -11,6 +13,7 @@ interface ProviderCardProps {
   isPlayed?: boolean;
   size?: number;
   className?: string;
+  language?: Language;
 }
 
 export const ProviderCard: React.FC<ProviderCardProps> = ({
@@ -19,8 +22,10 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({
   track,
   isPlayed = false,
   size = 100,
-  className = ''
+  className = '',
+  language = 'fr'
 }) => {
+  const { t } = useTranslation(language);
   // 1. Service Provider Card (Level 1)
   if (provider) {
     switch (provider.id) {
@@ -37,10 +42,10 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({
               <Radio className="w-6 h-6 text-[#FFD600]" />
             </div>
             <span className="font-gta6 font-black text-[13px] tracking-wide text-white uppercase drop-shadow leading-tight text-center">
-              STATIONS GTA
+              {t.providers.stationsGta}
             </span>
             <span className="text-[9px] font-mono text-[#00E5FF] font-bold tracking-widest uppercase mt-0.5">
-              VICE CITY
+              {t.providers.viceCity}
             </span>
           </div>
         );
@@ -142,7 +147,7 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({
           >
             <Folder className="w-10 h-10 text-cyan-400 mb-1" />
             <span className="font-gta6 font-black text-[13px] tracking-wider text-white uppercase">
-              FICHIERS PC
+              {t.providers.pcFiles}
             </span>
           </div>
         );
@@ -188,8 +193,8 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({
         <div className="relative z-10 w-full text-right">
           <span className="text-[10px] font-mono text-white/80 bg-black/50 px-1.5 py-0.5 rounded">
             {playlist.tracks && playlist.tracks.length > 0
-              ? `${playlist.tracks.length} TITRES`
-              : 'SYNCHRONISATION...'}
+              ? `${playlist.tracks.length} ${t.providers.tracksCount}`
+              : t.providers.syncing}
           </span>
         </div>
       </div>
@@ -218,7 +223,7 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({
           {isPlayed ? (
             <div className="flex items-center gap-0.5 px-1 py-0.5 rounded bg-black/70 text-emerald-400 text-[9px] font-mono font-bold border border-emerald-500/30">
               <Check className="w-3 h-3 stroke-[3]" />
-              <span>PASSÉ</span>
+              <span>{t.providers.played}</span>
             </div>
           ) : (
             <div className="p-1 rounded-full bg-black/50">

@@ -9,9 +9,11 @@ export const loadSettings = (): AppSettings => {
     if (!raw) return DEFAULT_SETTINGS;
     const parsed = JSON.parse(raw);
     const storedYoutubeMusic = { ...(parsed.services?.youtubeMusic || {}) } as Record<string, unknown>;
+    const language = parsed.language === 'en' || parsed.language === 'fr' ? parsed.language : DEFAULT_SETTINGS.language;
     return {
       ...DEFAULT_SETTINGS,
       ...parsed,
+      language,
       audio: { ...DEFAULT_SETTINGS.audio, ...(parsed.audio || {}) },
       overlay: { ...DEFAULT_SETTINGS.overlay, ...(parsed.overlay || {}) },
       controls: { ...DEFAULT_SETTINGS.controls, ...(parsed.controls || {}) },

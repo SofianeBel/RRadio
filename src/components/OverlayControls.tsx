@@ -1,5 +1,7 @@
 import React from 'react';
 import { Volume2, VolumeX, SkipForward, SkipBack, Play, Pause, Gamepad2, Radio, LayoutGrid, CircleDot } from 'lucide-react';
+import { Language } from '../types/settings';
+import { useTranslation } from '../i18n/useTranslation';
 
 interface OverlayControlsProps {
   isOpen: boolean;
@@ -17,6 +19,7 @@ interface OverlayControlsProps {
   uiStyle: 'gta6_ribbon' | 'gta_arc';
   onUiStyleChange: (style: 'gta6_ribbon' | 'gta_arc') => void;
   gamepadConnected: boolean;
+  language?: Language;
 }
 
 export const OverlayControls: React.FC<OverlayControlsProps> = ({
@@ -34,8 +37,10 @@ export const OverlayControls: React.FC<OverlayControlsProps> = ({
   onBgModeChange,
   uiStyle,
   onUiStyleChange,
-  gamepadConnected
+  gamepadConnected,
+  language = 'fr'
 }) => {
+  const { t } = useTranslation(language);
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-3 w-[920px] max-w-[95vw]">
       
@@ -53,13 +58,13 @@ export const OverlayControls: React.FC<OverlayControlsProps> = ({
             }`}
           >
             <Radio className="w-4 h-4" />
-            <span>{isOpen ? 'FERMER [Q]' : 'OUVRIR RADIO [Q]'}</span>
+            <span>{isOpen ? t.controlsBar.close : t.controlsBar.open}</span>
           </button>
 
           <button
             onClick={onTogglePlay}
             className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all active:scale-95"
-            title="Lecture / Pause (Espace)"
+            title={t.controlsBar.playPauseTooltip}
           >
             {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
           </button>
@@ -68,14 +73,14 @@ export const OverlayControls: React.FC<OverlayControlsProps> = ({
             <button
               onClick={onPrevTrack}
               className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-zinc-300 transition-all"
-              title="Morceau précédent"
+              title={t.controlsBar.prevTooltip}
             >
               <SkipBack className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={onNextTrack}
               className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-zinc-300 transition-all"
-              title="Morceau suivant"
+              title={t.controlsBar.nextTooltip}
             >
               <SkipForward className="w-3.5 h-3.5" />
             </button>
@@ -89,20 +94,20 @@ export const OverlayControls: React.FC<OverlayControlsProps> = ({
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all ${
               uiStyle === 'gta6_ribbon' ? 'bg-white text-black shadow' : 'text-zinc-400 hover:text-white'
             }`}
-            title="Rendu GTA 6 Officiel (Bandeau Cartes Carrées en Haut)"
+            title={t.controlsBar.gta6HudTooltip}
           >
             <LayoutGrid className="w-3.5 h-3.5" />
-            <span>GTA 6 HUD</span>
+            <span>{t.controlsBar.gta6Hud}</span>
           </button>
           <button
             onClick={() => onUiStyleChange('gta_arc')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all ${
               uiStyle === 'gta_arc' ? 'bg-white text-black shadow' : 'text-zinc-400 hover:text-white'
             }`}
-            title="Rendu Roue / Arc Flottant"
+            title={t.controlsBar.arcWheelTooltip}
           >
             <CircleDot className="w-3.5 h-3.5" />
-            <span>ROUE ARC</span>
+            <span>{t.controlsBar.arcWheel}</span>
           </button>
         </div>
 
@@ -111,7 +116,7 @@ export const OverlayControls: React.FC<OverlayControlsProps> = ({
           <button
             onClick={onToggleMute}
             className="text-zinc-300 hover:text-white transition-colors"
-            title="Mettre en sourdine (M)"
+            title={t.controlsBar.muteTooltip}
           >
             {isMuted || volume === 0 ? (
               <VolumeX className="w-4 h-4 text-red-400" />
@@ -141,7 +146,7 @@ export const OverlayControls: React.FC<OverlayControlsProps> = ({
                 bgMode === 'gameplay' ? 'bg-white text-black' : 'text-zinc-400 hover:text-white'
               }`}
             >
-              JEU
+              {t.controlsBar.game}
             </button>
             <button
               onClick={() => onBgModeChange('neon')}
@@ -149,7 +154,7 @@ export const OverlayControls: React.FC<OverlayControlsProps> = ({
                 bgMode === 'neon' ? 'bg-white text-black' : 'text-zinc-400 hover:text-white'
               }`}
             >
-              VC 80s
+              {t.controlsBar.vc80s}
             </button>
             <button
               onClick={() => onBgModeChange('transparent')}
@@ -157,7 +162,7 @@ export const OverlayControls: React.FC<OverlayControlsProps> = ({
                 bgMode === 'transparent' ? 'bg-white text-black' : 'text-zinc-400 hover:text-white'
               }`}
             >
-              OVERLAY
+              {t.controlsBar.overlay}
             </button>
           </div>
 
@@ -168,7 +173,7 @@ export const OverlayControls: React.FC<OverlayControlsProps> = ({
                 ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
                 : 'bg-white/5 border-white/10 text-zinc-500'
             }`}
-            title={gamepadConnected ? 'Manette active' : 'Clavier actif'}
+            title={gamepadConnected ? t.controlsBar.gamepadActive : t.controlsBar.keyboardActive}
           >
             <Gamepad2 className="w-3.5 h-3.5" />
           </div>

@@ -187,3 +187,13 @@ export const clearDiscordPresence = () => {
     console.warn('Could not clear Discord activity:', e);
   });
 };
+
+export const setNativeLanguage = async (language: 'fr' | 'en') => {
+  if (!isTauri()) return;
+  try {
+    await invoke('set_language', { language });
+  } catch (e) {
+    console.warn('Could not set native language:', e);
+  }
+};
+

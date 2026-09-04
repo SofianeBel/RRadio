@@ -5,10 +5,13 @@ import { OnDemandProvider, OnDemandPlaylist, OnDemandTrack, OnDemandViewLevel } 
 import { RadioTrack } from '../audio/radioPlayer';
 import { StationLogo } from './StationLogo';
 import { ProviderCard } from './ProviderCard';
+import { Language } from '../types/settings';
+import { useTranslation } from '../i18n/useTranslation';
 import { Settings, ArrowLeft } from 'lucide-react';
 
 interface RadioWheelProps {
   isOpen: boolean;
+  language?: Language;
   mode: PlaybackMode;
   onToggleMode: () => void;
   stations: RadioStation[];
@@ -39,6 +42,7 @@ interface RadioWheelProps {
 
 export const RadioWheel: React.FC<RadioWheelProps> = ({
   isOpen,
+  language = 'fr',
   mode,
   onToggleMode,
   stations,
@@ -64,6 +68,7 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
   onSelectQueueOffset,
   onNavigateBack
 }) => {
+  const { t } = useTranslation(language);
   const isRadio = mode === 'radio';
 
   // Radio active item
@@ -251,7 +256,7 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
                                   height: `${cardSize}px`
                                 }}
                               >
-                                <ProviderCard provider={providerItem} size={cardSize} />
+                                <ProviderCard provider={providerItem} size={cardSize} language={language} />
                               </div>
                             );
                           })}
@@ -303,7 +308,7 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
                                   height: `${cardSize}px`
                                 }}
                               >
-                                <ProviderCard playlist={playlistItem} size={cardSize} />
+                                <ProviderCard playlist={playlistItem} size={cardSize} language={language} />
                               </div>
                             );
                           })}
@@ -326,7 +331,7 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
                           <div className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-black/70 border border-red-500/40 shadow-lg backdrop-blur-md">
                             <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
                             <span className="font-gta6 font-bold text-sm uppercase tracking-wider text-zinc-200">
-                              SYNCHRONISATION DES TITRES YOUTUBE MUSIC...
+                              {t.hud.syncingYtm}
                             </span>
                           </div>
                         ) : (
@@ -364,7 +369,7 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
                                     height: `${cardSize}px`
                                   }}
                                 >
-                                  <ProviderCard track={trackItem} isPlayed={isPlayed} size={cardSize} />
+                                  <ProviderCard track={trackItem} isPlayed={isPlayed} size={cardSize} language={language} />
                                 </div>
                               );
                             })}
@@ -384,7 +389,7 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
               <div
                 onClick={onToggleMode}
                 className="absolute right-[calc(100%+24px)] top-1/2 -translate-y-1/2 flex items-center gap-3 cursor-pointer group hover:opacity-95 transition-opacity whitespace-nowrap z-40 pointer-events-auto"
-                title="Cliquer pour basculer entre Radio et On Demand (Touche O)"
+                title={t.hud.toggleModeTooltip}
               >
                 <div className="flex flex-col items-end text-right leading-none">
                   <span
@@ -392,14 +397,14 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
                       isRadio ? 'opacity-100' : 'opacity-40 group-hover:opacity-75'
                     }`}
                   >
-                    RADIO
+                    {t.hud.radio}
                   </span>
                   <span
                     className={`gta-hud-title text-[17px] tracking-wide uppercase mt-1.5 transition-opacity ${
                       !isRadio ? 'opacity-100' : 'opacity-40 group-hover:opacity-75'
                     }`}
                   >
-                    ON DEMAND
+                    {t.hud.onDemand}
                   </span>
                 </div>
 
@@ -430,7 +435,7 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
                 <div
                   onClick={onToggleMute}
                   className="flex items-center gap-2.5 cursor-pointer hover:opacity-90 transition-opacity"
-                  title="Cliquer pour Couper / Activer le son (Mute = Éteindre la radio)"
+                  title={t.hud.toggleMuteTooltip}
                 >
                   <div
                     className={`w-[22px] h-[22px] rounded-full border-[1.5px] border-black shadow-[0_1px_3px_rgba(0,0,0,0.9)] ${
@@ -438,14 +443,14 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
                     }`}
                   />
                   <span className="gta-hud-title text-[21px] tracking-wide uppercase">
-                    {isMuted ? 'MUTE' : 'UNMUTE'}
+                    {isMuted ? t.hud.mute : t.hud.unmute}
                   </span>
                 </div>
 
                 <button
                   onClick={onOpenSettings}
                   className="p-2 rounded-full bg-black/50 border border-white/20 text-zinc-300 hover:text-white hover:bg-white/20 transition-all active:scale-95 ml-1"
-                  title="Paramètres GTA 6 (Touche F10)"
+                  title={t.hud.settingsTooltip}
                 >
                   <Settings className="w-4 h-4" />
                 </button>
@@ -476,7 +481,7 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
                   {activeProvider.name}
                 </h1>
                 <span className="gta-hud-subtext text-[12px] uppercase tracking-wider mt-1 text-[#FFD2A4]">
-                  {activeProvider.isComingSoon ? activeProvider.comingSoonNote : `${activeProvider.playlistsCount} SÉLECTIONS DISPONIBLES • APPUYER SUR ENTRÉE`}
+                  {activeProvider.isComingSoon ? activeProvider.comingSoonNote : `${activeProvider.playlistsCount} ${t.hud.selectionsAvailable}`}
                 </span>
               </div>
             )}
@@ -487,7 +492,7 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
                   {activePlaylist.title}
                 </h1>
                 <span className="gta-hud-subtext text-[12px] uppercase tracking-wider mt-1 text-[#FFD2A4]">
-                  {activePlaylist.genre} • {activePlaylist.tracks.length} MORCEAUX • SÉLECTIONNER POUR LANCER
+                  {activePlaylist.genre} • {activePlaylist.tracks.length} {t.hud.tracksAvailable}
                 </span>
               </div>
             )}
@@ -495,10 +500,10 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
             {!isRadio && onDemandLevel === 'queue' && (
               <div className="flex flex-col items-center leading-none">
                 <h1 className="gta-hud-title text-[24px] uppercase tracking-wide leading-none">
-                  {activeQueueTrack?.title || 'TITRE'}
+                  {activeQueueTrack?.title || t.hud.trackTitlePlaceholder}
                 </h1>
                 <span className="gta-hud-subtext text-[12px] uppercase tracking-wider mt-1">
-                  {activeQueueTrack?.artist || 'ARTISTE'} • {activePlaylist.title}
+                  {activeQueueTrack?.artist || t.hud.trackArtistPlaceholder} • {activePlaylist.title}
                 </span>
               </div>
             )}
@@ -517,7 +522,7 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
 
             {isRadio && isMuted && (
               <span className="gta-hud-text text-[15px] uppercase tracking-wider text-zinc-400 mt-1">
-                [ MUTED / OFF AIR ]
+                {t.hud.offAir}
               </span>
             )}
 
@@ -546,11 +551,11 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
               <div
                 onClick={onNavigateBack}
                 className="flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full bg-black/60 border border-white/20 text-[11px] font-mono text-zinc-300 hover:text-white cursor-pointer pointer-events-auto transition-all active:scale-95"
-                title="Revenir au niveau précédent (Échap / Touche B)"
+                title={t.hud.backTooltip}
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>
-                  RETOUR : {onDemandLevel === 'queue' ? 'SÉLECTIONS' : 'SERVICES'} [ ÉCHAP / B ]
+                  {language === 'en' ? 'BACK' : 'RETOUR'} : {onDemandLevel === 'queue' ? t.hud.backSelections : t.hud.backServices} [ {language === 'en' ? 'ESC / B' : 'ÉCHAP / B'} ]
                 </span>
               </div>
             )}

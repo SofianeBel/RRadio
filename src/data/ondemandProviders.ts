@@ -2,6 +2,8 @@ import { OnDemandProvider, OnDemandPlaylist, OnDemandTrack } from '../types/onde
 import { STATIONS } from './stations';
 import radioManifest from './radioManifest.json';
 import { YTM_CURATED_MIXES } from '../services/youtubeMusic';
+import { Language } from '../types/settings';
+import { translations } from '../i18n/translations';
 
 const MANIFEST_STATION_KEY_MAP: Record<string, string> = {
   flash_fm: 'flash_fm',
@@ -21,64 +23,75 @@ const typedManifest = radioManifest as Record<string, Array<{
   url: string;
 }>>;
 
-export const PROVIDERS: OnDemandProvider[] = [
-  {
-    id: 'vice_city_radio',
-    name: 'STATIONS VICE CITY',
-    badge: 'RADIOS GTA',
-    tagline: 'Toutes les musiques des 7 radios de Vice City disponibles à la demande',
-    primaryColor: '#FF2A85',
-    accentColor: '#00E5FF',
-    playlistsCount: STATIONS.length
-  },
-  {
-    id: 'spotify',
-    name: 'SPOTIFY',
-    badge: 'CONNECT',
-    tagline: 'Playlists, Titres Likés et Spotify Connect',
-    primaryColor: '#1DB954',
-    accentColor: '#1ED760',
-    playlistsCount: 4
-  },
-  {
-    id: 'youtube_music',
-    name: 'YOUTUBE MUSIC',
-    badge: 'SUPERMIX & CLIPS',
-    tagline: 'Supermix, mixes officiels et playlists YouTube',
-    primaryColor: '#FF0000',
-    accentColor: '#FF3333',
-    playlistsCount: YTM_CURATED_MIXES.length
-  },
-  {
-    id: 'deezer',
-    name: 'DEEZER',
-    badge: 'HI-FI',
-    tagline: 'Flow, Coups de cœur et Playlists Deezer',
-    primaryColor: '#A238FF',
-    accentColor: '#FF5436',
-    playlistsCount: 3
-  },
-  {
-    id: 'apple_music',
-    name: 'APPLE MUSIC',
-    badge: 'COMING SOON',
-    tagline: 'Intégration Apple Music (Bientôt disponible)',
-    primaryColor: '#FA243C',
-    accentColor: '#FB5C74',
-    isComingSoon: true,
-    comingSoonNote: 'COMING SOON • CLEF DEV REQUISE',
-    playlistsCount: 0
-  },
-  {
-    id: 'local',
-    name: 'FICHIERS LOCAUX',
-    badge: 'PC FILES',
-    tagline: 'Dossier Musique personnel & cassettes MP3',
-    primaryColor: '#455A64',
-    accentColor: '#78909C',
-    playlistsCount: 2
-  }
-];
+export const getLocalizedProviders = (lang: Language = 'fr'): OnDemandProvider[] => {
+  const t = translations[lang] || translations.fr;
+  return [
+    {
+      id: 'vice_city_radio',
+      name: t.providerData.viceCityRadio.name,
+      badge: t.providerData.viceCityRadio.badge,
+      tagline: t.providerData.viceCityRadio.tagline,
+      primaryColor: '#FF2A85',
+      accentColor: '#00E5FF',
+      playlistsCount: STATIONS.length
+    },
+    {
+      id: 'spotify',
+      name: t.providerData.spotify.name,
+      badge: t.providerData.spotify.badge,
+      tagline: t.providerData.spotify.tagline,
+      primaryColor: '#1DB954',
+      accentColor: '#1ED760',
+      isComingSoon: true,
+      comingSoonNote: t.providerData.spotify.comingSoonNote,
+      playlistsCount: 0
+    },
+    {
+      id: 'youtube_music',
+      name: t.providerData.youtubeMusic.name,
+      badge: t.providerData.youtubeMusic.badge,
+      tagline: t.providerData.youtubeMusic.tagline,
+      primaryColor: '#FF0000',
+      accentColor: '#FF3333',
+      playlistsCount: YTM_CURATED_MIXES.length
+    },
+    {
+      id: 'deezer',
+      name: t.providerData.deezer.name,
+      badge: t.providerData.deezer.badge,
+      tagline: t.providerData.deezer.tagline,
+      primaryColor: '#A238FF',
+      accentColor: '#FF5436',
+      isComingSoon: true,
+      comingSoonNote: t.providerData.deezer.comingSoonNote,
+      playlistsCount: 0
+    },
+    {
+      id: 'apple_music',
+      name: t.providerData.appleMusic.name,
+      badge: t.providerData.appleMusic.badge,
+      tagline: t.providerData.appleMusic.tagline,
+      primaryColor: '#FA243C',
+      accentColor: '#FB5C74',
+      isComingSoon: true,
+      comingSoonNote: t.providerData.appleMusic.comingSoonNote,
+      playlistsCount: 0
+    },
+    {
+      id: 'local',
+      name: t.providerData.local.name,
+      badge: t.providerData.local.badge,
+      tagline: t.providerData.local.tagline,
+      primaryColor: '#455A64',
+      accentColor: '#78909C',
+      isComingSoon: true,
+      comingSoonNote: t.providerData.local.comingSoonNote,
+      playlistsCount: 0
+    }
+  ];
+};
+
+export const PROVIDERS: OnDemandProvider[] = getLocalizedProviders('fr');
 
 // Helper to find a real streaming URL from the Vice City manifest by title keyword
 function findRealTrackUrl(titleKeyword: string, fallbackUrl?: string): { url: string; duration: number } | null {
@@ -409,7 +422,7 @@ export const PLAYLISTS: Record<string, OnDemandPlaylist[]> = {
       id: 'loc_custom',
       providerId: 'local',
       title: 'Dossier Musique PC',
-      curator: 'C:\\Users\\Music',
+      curator: 'Dossier choisi dans les reglages',
       genre: 'Fichiers locaux MP3',
       coverColor: '#37474F',
       badgeText: 'PC',
