@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import pkg from '../../package.json';
+import { checkForUpdates, RELEASES_URL, type UpdateState } from '../services/updateChecker';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppSettings, DEFAULT_SETTINGS, Language } from '../types/settings';
 import { GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET } from '../config/googleOAuth';
@@ -59,8 +61,32 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
   const [activeTab, setActiveTab] = useState<TabType>('audio');
   const [oauthLoading, setOauthLoading] = useState(false);
   const [oauthError, setOauthError] = useState<string | null>(null);
+  const [updateState, setUpdateState] = useState<UpdateState>({ status: 'disabled', latestVersion: null, url: RELEASES_URL });
 
   const { t } = useTranslation(settings.language);
+  const APP_VERSION = typeof pkg.version === 'string' && pkg.version.length > 0 ? pkg.version : '0.1.4';
+  const releasesHref = settings.updates.releasesUrl || RELEASES_URL;
+  let releasesHost = 'github.com';
+  try {
+    releasesHost = new URL(releasesHref).host;
+  } catch {
+    releasesHost = 'github.com';
+  }
+
+  useEffect(() => {
+    if (!isOpen || !settings.updates.checkEnabled) {
+      setUpdateState({ status: 'disabled', latestVersion: null, url: RELEASES_URL });
+      return;
+    }
+    let cancelled = false;
+    setUpdateState({ status: 'checking', latestVersion: null, url: RELEASES_URL });
+    checkForUpdates(APP_VERSION, true).then((result) => {
+      if (!cancelled) setUpdateState(result);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, settings.updates.checkEnabled, APP_VERSION]);
 
   const handleSwitchLanguage = (lang: Language) => {
     soundEngine.playMechanicalClick();
@@ -542,6 +568,53 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                             className="w-5 h-5 rounded-full bg-white shadow"
                           />
                         </button>
+                      </div>
+                      {/* Auto Update Link */}
+                      <div className="h-[54px] flex items-center justify-between border-b border-white/[0.12] px-3 hover:bg-white/[0.05] transition-colors rounded-xl">
+                        <div className="flex items-center gap-3.5">
+                          <Github className="w-5 h-5 text-white/80" />
+                          <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
+                            {t.updates.checkForUpdates} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.updates.checkEnabled ? t.audio.enabled : t.audio.disabled}]</span>
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => {
+                            onUpdateSettings({
+                              ...settings,
+                              updates: { ...settings.updates, checkEnabled: !settings.updates.checkEnabled }
+                            });
+                            soundEngine.playMechanicalClick();
+                          }}
+                          className={`relative w-14 h-7 rounded-full transition-colors duration-200 p-1 ${
+                            settings.updates.checkEnabled
+                              ? 'bg-[#8B5CF6] shadow-[0_0_15px_#8B5CF6]'
+                              : 'bg-white/20'
+                          }`}
+                        >
+                          <motion.div
+                            animate={{ x: settings.updates.checkEnabled ? 26 : 0 }}
+                            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                            className="w-5 h-5 rounded-full bg-white shadow"
+                          />
+                        </button>
+                      </div>
+
+                      {/* Releases Link */}
+                      <div className="h-[54px] flex items-center justify-between border-b border-white/[0.12] px-3 hover:bg-white/[0.05] transition-colors rounded-xl">
+                        <div className="flex items-center gap-3.5">
+                          <ExternalLink className="w-5 h-5 text-white/80" />
+                          <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
+                            {t.updates.viewReleases}
+                          </span>
+                        </div>
+                        <a
+                          href={releasesHref}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-4 py-1.5 rounded-xl bg-black/50 border border-white/20 text-[#FFD2A4] font-mono font-bold text-xs hover:border-white/40 transition-colors"
+                        >
+                          {releasesHost}
+                        </a>
                       </div>
                     </>
                   )}
@@ -1360,6 +1433,26 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                     <span>{t.onboarding.replayButton}</span>
                   </button>
                 )}
+                <div className="flex items-center gap-2">
+                  <span className="px-3 py-1 rounded-full bg-white/10 text-white/60 font-mono font-bold text-[11px] border border-white/10">
+                    v{APP_VERSION}
+                  </span>
+                  {updateState.status === 'available' && (
+                    <a
+                      href={releasesHref}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 font-bold uppercase tracking-wider text-[11px] border border-amber-500/40 hover:bg-amber-500/30 transition-colors"
+                    >
+                      {t.updates.newVersionAvailable} {updateState.latestVersion}
+                    </a>
+                  )}
+                  {updateState.status === 'current' && (
+                    <span className="px-3 py-1 rounded-full bg-white/5 text-white/40 font-bold uppercase tracking-wider text-[11px] border border-white/10">
+                      {t.updates.upToDate}
+                    </span>
+                  )}
+                </div>
               </div>
 
               <button

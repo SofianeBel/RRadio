@@ -27,6 +27,11 @@ export interface DiscordRpcConfig {
 
 export type Language = 'fr' | 'en';
 
+export interface UpdatesConfig {
+  checkEnabled: boolean;
+  releasesUrl: string;
+}
+
 export interface AppSettings {
   language: Language;
   hasCompletedOnboarding: boolean;
@@ -57,6 +62,7 @@ export interface AppSettings {
     youtubeMusic: YouTubeMusicConfig;
   };
   discord: DiscordRpcConfig;
+  updates: UpdatesConfig;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -104,5 +110,9 @@ export const DEFAULT_SETTINGS: AppSettings = {
     showGitHubButton: true,
     githubUrl: 'https://github.com/SofianeBel/RRadio',
     applicationId: '1346077556094009384'
+  },
+  updates: {
+    checkEnabled: true,
+    releasesUrl: 'https://github.com/SofianeBel/RRadio/releases'
   }
 };

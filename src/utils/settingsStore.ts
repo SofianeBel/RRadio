@@ -36,6 +36,7 @@ export const loadSettings = (): AppSettings => {
         ...DEFAULT_SETTINGS.discord,
         ...(parsed.discord || {})
       },
+      updates: { ...DEFAULT_SETTINGS.updates, ...(parsed.updates || {}) },
     };
   } catch (e) {
     console.warn('Could not read settings from localStorage, using defaults:', e);

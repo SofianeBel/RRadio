@@ -32,6 +32,16 @@ export const fr = {
     hudScale: 'ÉCHELLE DU HUD',
     dynamicEqualizer: 'VISUALISEUR ÉGALISEUR DYNAMIQUE'
   },
+  updates: {
+    checkForUpdates: 'LIEN MISE À JOUR AUTO',
+    checkDesc: 'Vérifie la dernière release GitHub au démarrage',
+    viewReleases: 'VOIR LES RELEASES GITHUB',
+    newVersionAvailable: 'NOUVELLE VERSION DISPONIBLE',
+    upToDate: 'À JOUR',
+    checkFailed: 'VÉRIF ÉCHOUÉE',
+    disabled: 'DÉSACTIVÉ',
+    version: 'VERSION'
+  },
   controls: {
     gamepadCadence: 'CADENCE DÉFILEMENT MANETTE',
     toggleHotkey: 'RACCOURCI AFFICHER / MASQUER',
@@ -257,6 +267,16 @@ export const en: Translations = {
     arcStyle: 'Arc Wheel',
     hudScale: 'HUD SCALE',
     dynamicEqualizer: 'DYNAMIC EQUALIZER VISUALIZER'
+  },
+  updates: {
+    checkForUpdates: 'AUTO UPDATE LINK',
+    checkDesc: 'Check the latest GitHub release on launch',
+    viewReleases: 'VIEW GITHUB RELEASES',
+    newVersionAvailable: 'NEW VERSION AVAILABLE',
+    upToDate: 'UP TO DATE',
+    checkFailed: 'CHECK FAILED',
+    disabled: 'DISABLED',
+    version: 'VERSION'
   },
   controls: {
     gamepadCadence: 'GAMEPAD SCROLL CADENCE',
