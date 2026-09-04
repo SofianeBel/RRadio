@@ -29,6 +29,7 @@ export type Language = 'fr' | 'en';
 
 export interface AppSettings {
   language: Language;
+  hasCompletedOnboarding: boolean;
   audio: {
     masterVolume: number; // 0 - 100
     sfxVolume: number; // 0 - 100
@@ -60,6 +61,7 @@ export interface AppSettings {
 
 export const DEFAULT_SETTINGS: AppSettings = {
   language: 'fr',
+  hasCompletedOnboarding: false,
   audio: {
     masterVolume: 80,
     sfxVolume: 65,

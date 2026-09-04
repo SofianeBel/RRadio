@@ -178,6 +178,61 @@ class SoundEngine {
     if (genre.includes('HIP-HOP')) return [110.00, 220.00, 330.00]; // Bass heavy
     return [220, 277, 330];
   }
+
+  private previewAudio: HTMLAudioElement | null = null;
+  private previewStopTimeout: number | null = null;
+
+  public playVolumePreview(volumePercent: number, onStateChange?: (isPlaying: boolean) => void) {
+    this.init();
+    const normVol = Math.max(0, Math.min(1, volumePercent / 100));
+
+    if (this.previewStopTimeout !== null) {
+      window.clearTimeout(this.previewStopTimeout);
+      this.previewStopTimeout = null;
+    }
+
+    if (!this.previewAudio) {
+      this.previewAudio = new Audio('https://archive.org/download/grand-theft-auto-vice-city-official-soundtrack-box-set-exk-87009_202408/1-02%20-%20You%27ve%20Got%20Another%20Thing%20Comin%27.mp3');
+      this.previewAudio.preload = 'auto';
+    }
+
+    this.previewAudio.volume = normVol;
+
+    if (this.previewAudio.paused || this.previewAudio.currentTime < 20 || this.previewAudio.currentTime > 240) {
+      this.previewAudio.currentTime = 30;
+    }
+
+    if (onStateChange) onStateChange(true);
+
+    const playPromise = this.previewAudio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        this.setVolume(normVol);
+        this.playStationSynth('preview', 'SYNTH');
+      });
+    }
+
+    this.previewStopTimeout = window.setTimeout(() => {
+      if (this.previewAudio) {
+        this.previewAudio.pause();
+      }
+      this.stopStationSynth();
+      if (onStateChange) onStateChange(false);
+      this.previewStopTimeout = null;
+    }, 1000);
+  }
+
+  public stopVolumePreview(onStateChange?: (isPlaying: boolean) => void) {
+    if (this.previewStopTimeout !== null) {
+      window.clearTimeout(this.previewStopTimeout);
+      this.previewStopTimeout = null;
+    }
+    if (this.previewAudio) {
+      this.previewAudio.pause();
+    }
+    this.stopStationSynth();
+    if (onStateChange) onStateChange(false);
+  }
 }
 
 export const soundEngine = new SoundEngine();

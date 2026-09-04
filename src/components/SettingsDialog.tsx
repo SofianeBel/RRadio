@@ -44,6 +44,7 @@ interface SettingsDialogProps {
   onClose: () => void;
   settings: AppSettings;
   onUpdateSettings: (newSettings: AppSettings) => void;
+  onReplayOnboarding?: () => void;
 }
 
 type TabType = 'audio' | 'overlay' | 'controls' | 'discord' | 'services' | 'library';
@@ -52,7 +53,8 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
   isOpen,
   onClose,
   settings,
-  onUpdateSettings
+  onUpdateSettings,
+  onReplayOnboarding
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('audio');
   const [oauthLoading, setOauthLoading] = useState(false);
@@ -1321,13 +1323,29 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
             {/* Bottom Action Bar */}
             <div className="relative z-10 flex items-center justify-between px-8 py-3.5 bg-black/40 border-t border-white/10">
-              <button
-                onClick={handleResetDefaults}
-                className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white font-bold uppercase tracking-wider text-xs transition-colors active:scale-95"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>{t.dialog.restoreDefaults}</span>
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleResetDefaults}
+                  className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white font-bold uppercase tracking-wider text-xs transition-colors active:scale-95"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>{t.dialog.restoreDefaults}</span>
+                </button>
+
+                {onReplayOnboarding && (
+                  <button
+                    onClick={() => {
+                      soundEngine.playMechanicalClick();
+                      onReplayOnboarding();
+                    }}
+                    className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-[#FFD2A4] hover:text-white font-bold uppercase tracking-wider text-xs transition-colors active:scale-95 border border-[#FFA07A]/30"
+                    title={t.onboarding.replayTooltip}
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-[#FFA07A]" />
+                    <span>{t.onboarding.replayButton}</span>
+                  </button>
+                )}
+              </div>
 
               <button
                 onClick={handleClose}

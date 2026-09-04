@@ -9,6 +9,7 @@ import { AppSettings, YouTubeMusicConfig } from './types/settings';
 import { loadSettings, saveSettings } from './utils/settingsStore';
 import { RadioWheel } from './components/RadioWheel';
 import { SettingsDialog } from './components/SettingsDialog';
+import { OnboardingDialog } from './components/OnboardingDialog';
 import { radioPlayer, RadioTrack } from './audio/radioPlayer';
 import { soundEngine } from './audio/soundEngine';
 import {
@@ -24,6 +25,11 @@ import {
 export const App: React.FC = () => {
   const [settings, setSettings] = useState<AppSettings>(() => loadSettings());
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(() => !settings.hasCompletedOnboarding);
+  const isOnboardingOpenRef = useRef(isOnboardingOpen);
+  useEffect(() => {
+    isOnboardingOpenRef.current = isOnboardingOpen;
+  }, [isOnboardingOpen]);
   const [isOpen, setIsOpen] = useState(false);
 
   // Mode state: 'radio' or 'ondemand'
@@ -204,11 +210,12 @@ export const App: React.FC = () => {
 
   // Sync window visibility and mode
   useEffect(() => {
-    const isAnyOpen = isOpen || isSettingsOpen;
+    const isModalOpen = isSettingsOpen || isOnboardingOpen;
+    const isAnyOpen = isOpen || isModalOpen;
     setNativeWindowVisibility(isAnyOpen);
-    setNativeSettingsMode(isSettingsOpen, isOpen);
+    setNativeSettingsMode(isModalOpen, isOpen);
     setNativeClickThrough(!isAnyOpen);
-  }, [isSettingsOpen, isOpen]);
+  }, [isSettingsOpen, isOnboardingOpen, isOpen]);
 
   // Real-time Discord Rich Presence synchronization
   useEffect(() => {
@@ -678,6 +685,14 @@ export const App: React.FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
 
+      if (isOnboardingOpenRef.current) {
+        if (e.code === 'Escape') {
+          e.preventDefault();
+          setIsOnboardingOpen(false);
+        }
+        return;
+      }
+
       if (e.code === 'Escape') {
         e.preventDefault();
         if (isSettingsOpen) {
@@ -718,13 +733,13 @@ export const App: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isSettingsOpen, isRadio, onDemandLevel, handleToggleSettings, handleNext, handlePrev, handleToggleMode, handleToggleMute]);
+  }, [isSettingsOpen, isOnboardingOpen, isRadio, onDemandLevel, handleToggleSettings, handleNext, handlePrev, handleToggleMode, handleToggleMute]);
 
   // Mouse Wheel navigation
   useEffect(() => {
     let lastWheelTime = 0;
     const handleWheel = (e: WheelEvent) => {
-      if (!isOpen || isSettingsOpen) return;
+      if (!isOpen || isSettingsOpen || isOnboardingOpen) return;
       const now = Date.now();
       if (now - lastWheelTime < 180) return;
 
@@ -739,7 +754,7 @@ export const App: React.FC = () => {
 
     window.addEventListener('wheel', handleWheel, { passive: true });
     return () => window.removeEventListener('wheel', handleWheel);
-  }, [isOpen, isSettingsOpen, handleNext, handlePrev]);
+  }, [isOpen, isSettingsOpen, isOnboardingOpen, handleNext, handlePrev]);
 
   // Gamepad Loop: A (Select/Drill in), B (Back/Drill out), LB (Hold), D-Pad/Stick (Browse)
   useEffect(() => {
@@ -757,6 +772,10 @@ export const App: React.FC = () => {
     const cadence = settings.controls.gamepadCadenceMs || 250;
 
     const checkGamepad = () => {
+      if (isOnboardingOpen) {
+        animationFrameId = requestAnimationFrame(checkGamepad);
+        return;
+      }
       const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
 
       for (let i = 0; i < gamepads.length; i++) {
@@ -842,12 +861,12 @@ export const App: React.FC = () => {
   return (
     <main
       className={`relative w-screen overflow-hidden bg-transparent text-white font-sans select-none ${
-        isSettingsOpen ? 'h-screen pointer-events-auto' : 'h-[340px] pointer-events-none'
+        isSettingsOpen || isOnboardingOpen ? 'h-screen pointer-events-auto' : 'h-[340px] pointer-events-none'
       }`}
     >
       {/* GTA 6 Top-Center Radio & On Demand Selector HUD */}
       <RadioWheel
-        isOpen={isOpen && !isSettingsOpen}
+        isOpen={isOpen && !isSettingsOpen && !isOnboardingOpen}
         language={settings.language}
         mode={mode}
         onToggleMode={handleToggleMode}
@@ -879,6 +898,18 @@ export const App: React.FC = () => {
       <SettingsDialog
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
+        settings={settings}
+        onUpdateSettings={handleUpdateSettings}
+        onReplayOnboarding={() => {
+          setIsSettingsOpen(false);
+          setIsOnboardingOpen(true);
+        }}
+      />
+
+      {/* First-Launch Onboarding Configuration Wizard */}
+      <OnboardingDialog
+        isOpen={isOnboardingOpen}
+        onClose={() => setIsOnboardingOpen(false)}
         settings={settings}
         onUpdateSettings={handleUpdateSettings}
       />
