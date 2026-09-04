@@ -335,8 +335,45 @@ async function drive(feature) {
       console.log(`[EVIDENCE] Captured: ${replayedShot}`);
 
       await page.keyboard.press('Escape');
+    } else if (feature === 'oauth-client-id') {
+      console.log('[DRIVE] Pressing F10 to open settings dialog...');
+      await page.keyboard.press('F10');
+      await expectText(page, 'button:has-text("SERVICES STREAMING")', 'streaming services tab');
+
+      console.log('[DRIVE] Switching to English for OAuth check...');
+      await page.locator('button:has-text("EN")').first().click();
+      await page.waitForTimeout(300);
+
+      console.log('[DRIVE] Opening STREAMING SERVICES tab...');
+      await page.locator('button:has-text("STREAMING SERVICES")').first().click();
+      await page.waitForTimeout(400);
+
+      console.log('[DRIVE] Clicking Google Sign In button...');
+      const connectBtn = page.locator('button:has-text("SIGN IN WITH GOOGLE")').first();
+      await connectBtn.waitFor({ state: 'visible', timeout: 5000 });
+      await connectBtn.click();
+      await page.waitForTimeout(600);
+
+      const shotPath = path.join(targetDir, 'oauth-client-id-verified.png');
+      await page.screenshot({ path: shotPath });
+      console.log(`[EVIDENCE] Captured: ${shotPath}`);
+
+      const errorTextLocator = page.locator('text=This version of RRadio does not have a public Google Client ID configured.');
+      const hasError = await errorTextLocator.isVisible();
+      if (hasError) {
+        throw new Error('ASSERT FAIL: Google Client ID missing error is displayed!');
+      }
+
+      const waitingIndicator = page.locator('text=Waiting for browser (90s)...');
+      const isWaiting = await waitingIndicator.isVisible();
+      if (!isWaiting) {
+        throw new Error('ASSERT FAIL: OAuth flow was not started with public client ID!');
+      }
+
+      console.log('[ASSERT] Public Google Client ID configured and OAuth initiated cleanly without error banner');
+      await page.keyboard.press('Escape');
     } else {
-      throw new Error(`Unknown feature '${feature}' (expected radio-wheel, settings-dialog, ondemand-drilldown, discord-rpc, localization, onboarding)`);
+      throw new Error(`Unknown feature '${feature}' (expected radio-wheel, settings-dialog, ondemand-drilldown, discord-rpc, localization, onboarding, oauth-client-id)`);
     }
   } finally {
     await browser.close();

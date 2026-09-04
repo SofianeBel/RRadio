@@ -29,6 +29,9 @@ jobs:
         run: bun install --frozen-lockfile || bun install
 
       - name: Typecheck and build frontend
+        env:
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID || vars.VITE_GOOGLE_CLIENT_ID || '221860954157-g9blkjqcp5716tis8fef1v6dr79r73vj.apps.googleusercontent.com' }}
+          VITE_GOOGLE_CLIENT_SECRET: ${{ secrets.VITE_GOOGLE_CLIENT_SECRET || vars.VITE_GOOGLE_CLIENT_SECRET || '' }}
         run: bun run build
 
   rust-check:
@@ -54,6 +57,9 @@ jobs:
           bun-version: latest
 
       - name: Install dependencies and build frontend dist
+        env:
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID || vars.VITE_GOOGLE_CLIENT_ID || '221860954157-g9blkjqcp5716tis8fef1v6dr79r73vj.apps.googleusercontent.com' }}
+          VITE_GOOGLE_CLIENT_SECRET: ${{ secrets.VITE_GOOGLE_CLIENT_SECRET || vars.VITE_GOOGLE_CLIENT_SECRET || '' }}
         run: |
           bun install
           bun run build

@@ -40,12 +40,17 @@ jobs:
         run: bun install
 
       - name: Build frontend dist
+        env:
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID || vars.VITE_GOOGLE_CLIENT_ID || '221860954157-g9blkjqcp5716tis8fef1v6dr79r73vj.apps.googleusercontent.com' }}
+          VITE_GOOGLE_CLIENT_SECRET: ${{ secrets.VITE_GOOGLE_CLIENT_SECRET || vars.VITE_GOOGLE_CLIENT_SECRET || '' }}
         run: bun run build
 
       - name: Build and upload Tauri release artifacts
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID || vars.VITE_GOOGLE_CLIENT_ID || '221860954157-g9blkjqcp5716tis8fef1v6dr79r73vj.apps.googleusercontent.com' }}
+          VITE_GOOGLE_CLIENT_SECRET: ${{ secrets.VITE_GOOGLE_CLIENT_SECRET || vars.VITE_GOOGLE_CLIENT_SECRET || '' }}
         with:
           tagName: ${{ github.ref_name }}
           releaseName: 'RRadio ${{ github.ref_name }}'
