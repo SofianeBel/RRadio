@@ -1,4 +1,5 @@
 import { AppSettings, DEFAULT_SETTINGS } from '../types/settings';
+import { GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET } from '../config/googleOAuth';
 
 const STORAGE_KEY = 'rradio_gta6_settings_v1';
 
@@ -7,6 +8,7 @@ export const loadSettings = (): AppSettings => {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_SETTINGS;
     const parsed = JSON.parse(raw);
+    const storedYoutubeMusic = { ...(parsed.services?.youtubeMusic || {}) } as Record<string, unknown>;
     return {
       ...DEFAULT_SETTINGS,
       ...parsed,
@@ -19,7 +21,9 @@ export const loadSettings = (): AppSettings => {
         ...(parsed.services || {}),
         youtubeMusic: {
           ...DEFAULT_SETTINGS.services.youtubeMusic,
-          ...((parsed.services && parsed.services.youtubeMusic) || {})
+          ...storedYoutubeMusic,
+          clientId: GOOGLE_OAUTH_CLIENT_ID,
+          clientSecret: GOOGLE_OAUTH_CLIENT_SECRET
         }
       },
       discord: {

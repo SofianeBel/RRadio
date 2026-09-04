@@ -148,10 +148,16 @@ fn set_settings_window_mode(window: WebviewWindow, is_settings_open: bool, is_ra
 
     Ok(())
 }
+
 #[tauri::command]
-fn start_google_oauth(app_handle: tauri::AppHandle, client_id: String, client_secret: String) -> Result<(), String> {
+fn start_google_oauth(
+    app_handle: tauri::AppHandle,
+    client_id: String,
+    client_secret: Option<String>,
+) -> Result<(), String> {
     oauth::start_oauth_flow(app_handle, client_id, client_secret)
 }
+
 #[tauri::command]
 fn cancel_google_oauth(app_handle: tauri::AppHandle) -> Result<(), String> {
     oauth::cancel_oauth_flow(app_handle);

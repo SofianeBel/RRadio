@@ -52,13 +52,12 @@ pub fn cancel_oauth_flow(app_handle: tauri::AppHandle) {
 pub fn start_oauth_flow(
     app_handle: tauri::AppHandle,
     client_id: String,
-    client_secret: String,
+    client_secret: Option<String>,
 ) -> Result<(), String> {
     let clean_client_id = client_id.trim().to_string();
-    let clean_client_secret = client_secret.trim().to_string();
 
     if clean_client_id.is_empty() {
-        return Err("Veuillez d'abord coller votre Client ID Google ci-dessous.".to_string());
+        return Err("Aucun ID client Google public n'est configuré dans cette version.".to_string());
     }
 
     CANCEL_OAUTH.store(false, Ordering::SeqCst);
@@ -99,7 +98,7 @@ pub fn start_oauth_flow(
     }
 
     let c_id = Arc::new(clean_client_id);
-    let c_secret = Arc::new(clean_client_secret);
+    let c_secret = Arc::new(client_secret);
     let c_verifier = Arc::new(code_verifier);
     let redirect_uri_clone = redirect_uri.clone();
 
@@ -227,8 +226,11 @@ pub fn start_oauth_flow(
             ("grant_type", "authorization_code"),
         ];
 
-        if !c_secret.is_empty() {
-            form_data.push(("client_secret", c_secret.as_str()));
+        if let Some(ref sec) = *c_secret {
+            let clean_sec = sec.trim();
+            if !clean_sec.is_empty() {
+                form_data.push(("client_secret", clean_sec));
+            }
         }
 
         let token_res = ureq::post("https://oauth2.googleapis.com/token")

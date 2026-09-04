@@ -226,17 +226,20 @@ class YouTubeMusicService {
    * Exchanges the stored refresh token for a fresh access token; returns the same config on failure
    */
   public async refreshAccessToken(config: YouTubeMusicConfig): Promise<YouTubeMusicConfig> {
-    if (!config.refreshToken || !config.clientId || !config.clientSecret) return config;
+    if (!config.refreshToken || !config.clientId) return config;
     try {
+      const bodyParams: Record<string, string> = {
+        client_id: config.clientId,
+        refresh_token: config.refreshToken,
+        grant_type: 'refresh_token'
+      };
+      if (config.clientSecret) {
+        bodyParams.client_secret = config.clientSecret;
+      }
       const res = await fetch('https://oauth2.googleapis.com/token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          client_id: config.clientId,
-          client_secret: config.clientSecret,
-          refresh_token: config.refreshToken,
-          grant_type: 'refresh_token'
-        })
+        body: new URLSearchParams(bodyParams)
       });
       if (!res.ok) {
         console.warn('YouTube token refresh failed (HTTP ' + res.status + ')');

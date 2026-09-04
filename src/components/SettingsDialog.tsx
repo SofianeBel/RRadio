@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppSettings, DEFAULT_SETTINGS } from '../types/settings';
+import { GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET } from '../config/googleOAuth';
 import { STATION_LOGOS, GTA6_COVER_ART } from '../data/stations';
 import {
   Tv,
@@ -19,15 +20,12 @@ import {
   RotateCcw,
   Youtube,
   Play,
-  Shield,
   Globe,
   ExternalLink,
   Unlink,
   LogIn,
   LogOut,
   CheckCircle2,
-  Eye,
-  EyeOff,
   KeyRound,
   AlertCircle,
   Copy,
@@ -61,8 +59,6 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
   onUpdateSettings
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('audio');
-  const [showClientId, setShowClientId] = useState(false);
-  const [showClientSecret, setShowClientSecret] = useState(false);
   const [oauthLoading, setOauthLoading] = useState(false);
   const [oauthError, setOauthError] = useState<string | null>(null);
   const [copiedRedirect, setCopiedRedirect] = useState(false);
@@ -82,6 +78,8 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
             youtubeMusic: {
               ...settings.services.youtubeMusic,
               connected: true,
+              clientId: GOOGLE_OAUTH_CLIENT_ID.trim(),
+              clientSecret: GOOGLE_OAUTH_CLIENT_SECRET.trim(),
               accessToken: data.accessToken,
               refreshToken: data.refreshToken,
               tokenExpiresAt: data.expiresAt,
@@ -113,18 +111,19 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
     soundEngine.playMechanicalClick();
     setOauthError(null);
 
-    const cId = settings.services.youtubeMusic.clientId?.trim();
+    const cId = GOOGLE_OAUTH_CLIENT_ID.trim();
+    const cSecret = GOOGLE_OAUTH_CLIENT_SECRET.trim();
     if (!cId) {
-      setOauthError("Veuillez renseigner votre Client ID Google ci-dessous avant de lancer la connexion.");
+      setOauthError("Cette version de RRadio n'a pas d'ID client Google public configuré. Le mainteneur doit définir VITE_GOOGLE_CLIENT_ID avant la publication.");
       return;
     }
 
     setOauthLoading(true);
     try {
-      await startNativeGoogleOAuth(cId, settings.services.youtubeMusic.clientSecret || '');
-    } catch (e: any) {
+      await startNativeGoogleOAuth(cId, cSecret || undefined);
+    } catch (e: unknown) {
       setOauthLoading(false);
-      setOauthError(typeof e === 'string' ? e : e?.message || "Impossible d'ouvrir le port 45678");
+      setOauthError(typeof e === 'string' ? e : e instanceof Error ? e.message : "Impossible de démarrer OAuth");
     }
   };
 
@@ -1198,90 +1197,12 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                       </div>
                     </div>
 
-                    {/* GOOGLE CLIENT ID (Masked / Password Protected) */}
-                    <div className="flex flex-col gap-1.5 py-3 px-3 border-b border-white/[0.12] hover:bg-white/[0.05] transition-colors rounded-xl">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2.5">
-                          <KeyRound className="w-4 h-4 text-red-400" />
-                          <span className="font-extrabold text-[15px] tracking-wide text-white uppercase">
-                            GOOGLE CLIENT ID
-                          </span>
-                        </div>
-                        <span className="text-[10px] font-mono text-zinc-400 uppercase">
-                          Requis pour OAuth personnel
-                        </span>
-                      </div>
-                      <div className="relative flex items-center mt-1">
-                        <input
-                          type={showClientId ? 'text' : 'password'}
-                          placeholder="Collez votre Client ID (ex: 123456789-...apps.googleusercontent.com)"
-                          value={settings.services.youtubeMusic.clientId || ''}
-                          onChange={(e) => {
-                            onUpdateSettings({
-                              ...settings,
-                              services: {
-                                ...settings.services,
-                                youtubeMusic: {
-                                  ...settings.services.youtubeMusic,
-                                  clientId: e.target.value
-                                }
-                              }
-                            });
-                          }}
-                          className="w-full pl-4 pr-12 py-2.5 bg-black/60 border border-white/20 rounded-xl font-mono text-xs text-[#FFD2A4] focus:outline-none focus:border-red-500 shadow-inner"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowClientId(!showClientId)}
-                          className="absolute right-3 p-1 text-zinc-400 hover:text-white transition-colors"
-                          title={showClientId ? 'Masquer' : 'Afficher'}
-                        >
-                          {showClientId ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* GOOGLE CLIENT SECRET (Masked / Password Protected) */}
-                    <div className="flex flex-col gap-1.5 py-3 px-3 border-b border-white/[0.12] hover:bg-white/[0.05] transition-colors rounded-xl">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2.5">
-                          <Shield className="w-4 h-4 text-zinc-400" />
-                          <span className="font-extrabold text-[15px] tracking-wide text-white uppercase">
-                            GOOGLE CLIENT SECRET (OPTIONNEL)
-                          </span>
-                        </div>
-                        <span className="text-[10px] font-mono text-zinc-400 uppercase">
-                          Protégé et masqué
-                        </span>
-                      </div>
-                      <div className="relative flex items-center mt-1">
-                        <input
-                          type={showClientSecret ? 'text' : 'password'}
-                          placeholder="Collez votre Client Secret (ex: GOCSPX-...)"
-                          value={settings.services.youtubeMusic.clientSecret || ''}
-                          onChange={(e) => {
-                            onUpdateSettings({
-                              ...settings,
-                              services: {
-                                ...settings.services,
-                                youtubeMusic: {
-                                  ...settings.services.youtubeMusic,
-                                  clientSecret: e.target.value
-                                }
-                              }
-                            });
-                          }}
-                          className="w-full pl-4 pr-12 py-2.5 bg-black/60 border border-white/20 rounded-xl font-mono text-xs text-[#FFD2A4] focus:outline-none focus:border-red-500 shadow-inner"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowClientSecret(!showClientSecret)}
-                          className="absolute right-3 p-1 text-zinc-400 hover:text-white transition-colors"
-                          title={showClientSecret ? 'Masquer' : 'Afficher'}
-                        >
-                          {showClientSecret ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                        </button>
-                      </div>
+                    {/* PUBLIC GOOGLE CLIENT CONFIGURATION */}
+                    <div className="flex items-center gap-3 py-3 px-3 border-b border-white/[0.12] rounded-xl">
+                      <KeyRound className="w-4 h-4 text-red-400 shrink-0" />
+                      <span className="text-xs text-zinc-300">
+                        OAuth utilise l'ID client Google public configuré par le mainteneur dans cette version. Aucun Client ID ni Client Secret n'est demandé ici.
+                      </span>
                     </div>
 
                     {/* Google Cloud Desktop App Guide Box */}

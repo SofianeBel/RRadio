@@ -1,3 +1,5 @@
+import { GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET } from '../config/googleOAuth';
+
 export interface YouTubeMusicConfig {
   connected: boolean;
   userEmail?: string;
@@ -57,7 +59,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   audio: {
     masterVolume: 80,
     sfxVolume: 65,
-    muteOnStartup: false,
+    muteOnStartup: true,
     playTuningSound: true
   },
   overlay: {
@@ -74,7 +76,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
     gamepadMuteButton: 'RB / X / R3'
   },
   library: {
-    customMusicPath: 'C:\\Users\\sifly\\Music',
+    customMusicPath: '',
     scanSubfolders: true
   },
   services: {
@@ -82,8 +84,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
       connected: false,
       autoSyncMixes: true,
       audioQuality: 'high',
-      clientId: '',
-      clientSecret: '',
+      clientId: GOOGLE_OAUTH_CLIENT_ID,
+      clientSecret: GOOGLE_OAUTH_CLIENT_SECRET,
       apiKey: ''
     }
   },
@@ -94,7 +96,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
     showTrack: true,
     showTimeRemaining: true,
     showGitHubButton: true,
-    githubUrl: 'https://github.com/sifly/RRadio',
+    githubUrl: 'https://github.com/SofianeBel/RRadio',
     applicationId: '1346077556094009384'
   }
 };

@@ -108,10 +108,10 @@ export const listenToGlobalOverlayEvents = async (
   }
 };
 
-export const startNativeGoogleOAuth = async (clientId: string, clientSecret: string) => {
+export const startNativeGoogleOAuth = async (clientId: string, clientSecret?: string) => {
   if (!isTauri()) return;
   try {
-    await invoke('start_google_oauth', { clientId, clientSecret });
+    await invoke('start_google_oauth', { clientId, clientSecret: clientSecret || null });
   } catch (e) {
     console.warn('Could not start Google OAuth flow:', e);
     throw e;
