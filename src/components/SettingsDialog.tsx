@@ -64,7 +64,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
   const [updateState, setUpdateState] = useState<UpdateState>({ status: 'disabled', latestVersion: null, url: RELEASES_URL });
 
   const { t } = useTranslation(settings.language);
-  const APP_VERSION = typeof pkg.version === 'string' && pkg.version.length > 0 ? pkg.version : '0.1.4';
+  const APP_VERSION = typeof pkg.version === 'string' && pkg.version.length > 0 ? pkg.version : '0.1.5';
   const releasesHref = settings.updates.releasesUrl || RELEASES_URL;
   let releasesHost = 'github.com';
   try {
