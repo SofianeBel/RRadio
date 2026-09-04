@@ -47,9 +47,10 @@ The maintainers acknowledge that Take-Two Interactive Software, Inc. or any copy
 
 ## Notice and Takedown Procedure
 
-If you are a copyright or trademark owner (or an authorized agent) and believe that any content or reference within this project infringes upon your intellectual property rights, please contact the maintainers:
+If you are a copyright or trademark owner (or an authorized agent) and believe that any content or reference within this project infringes upon your intellectual property rights, please contact the maintainers directly:
 
-- Open an issue on GitHub with the title `[Legal / Takedown Request]`.
+- **Direct Legal Contact Email**: [Belkessa0102@gmail.com](mailto:Belkessa0102@gmail.com)
+- **GitHub Issue**: Open an issue titled `[Legal / Takedown Request]`.
 - Provide specific identification of the claimed copyrighted or trademarked work.
 - Provide your contact information and proof of authorization.
 

@@ -166,6 +166,7 @@ RRadio is licensed under the **GNU General Public License version 3.0 (GPL-3.0)*
 - **Warranty Disclaimer**: Software is provided "as is" without warranty of any kind.
 
 See the complete [LICENSE](LICENSE) text and the [Legal Disclaimer](DISCLAIMER.md) for full terms.
+For any legal inquiries, trademark questions, or takedown requests, contact the maintainer directly at [Belkessa0102@gmail.com](mailto:Belkessa0102@gmail.com).
 
 ---
 

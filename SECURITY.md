@@ -18,7 +18,8 @@ If you discover a security vulnerability, please do not report it through public
 Instead, please report security issues through one of the following methods:
 
 1. **GitHub Security Advisory**: Use the **Report a vulnerability** button under the **Security** tab of the GitHub repository.
-2. **Direct Contact**: If GitHub Advisories are unavailable, open a confidential issue labeled `[Security Disclosure]`.
+2. **Direct Email**: Send details directly to [Belkessa0102@gmail.com](mailto:Belkessa0102@gmail.com).
+3. **Confidential Issue**: If email is unavailable, open a confidential issue labeled `[Security Disclosure]`.
 
 ### What to Include
 
