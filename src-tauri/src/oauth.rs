@@ -40,10 +40,105 @@ struct UserInfoResponse {
     picture: Option<String>,
 }
 
+#[cfg(target_os = "windows")]
+pub fn lower_window_for_oauth(app_handle: &tauri::AppHandle) {
+    if let Some(main_win) = app_handle.get_webview_window("main") {
+        if let Ok(hwnd_raw) = main_win.hwnd() {
+            use windows::Win32::Foundation::HWND;
+            use windows::Win32::UI::WindowsAndMessaging::{
+                GetWindowLongW, SetWindowLongW, SetWindowPos, GWL_EXSTYLE,
+                HWND_NOTOPMOST, HWND_BOTTOM, SWP_NOMOVE, SWP_NOSIZE, SWP_NOACTIVATE, SWP_FRAMECHANGED,
+                WS_EX_TOPMOST, AllowSetForegroundWindow, ASFW_ANY,
+            };
+            let hwnd = HWND(hwnd_raw.0 as *mut _);
+            unsafe {
+                let _ = AllowSetForegroundWindow(ASFW_ANY);
+                let ex_style = GetWindowLongW(hwnd, GWL_EXSTYLE);
+                SetWindowLongW(hwnd, GWL_EXSTYLE, ex_style & !(WS_EX_TOPMOST.0 as i32));
+                let _ = SetWindowPos(
+                    hwnd,
+                    HWND_NOTOPMOST,
+                    0, 0, 0, 0,
+                    SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED | SWP_NOACTIVATE,
+                );
+                let _ = SetWindowPos(
+                    hwnd,
+                    HWND_BOTTOM,
+                    0, 0, 0, 0,
+                    SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE,
+                );
+            }
+        }
+    }
+}
+
+#[cfg(not(target_os = "windows"))]
+pub fn lower_window_for_oauth(_app_handle: &tauri::AppHandle) {}
+
+#[cfg(target_os = "windows")]
+pub fn restore_window_after_oauth(app_handle: &tauri::AppHandle) {
+    if let Some(main_win) = app_handle.get_webview_window("main") {
+        if let Ok(hwnd_raw) = main_win.hwnd() {
+            use windows::Win32::Foundation::HWND;
+            use windows::Win32::UI::WindowsAndMessaging::{
+                GetWindowLongW, SetWindowLongW, SetWindowPos, SetForegroundWindow, ShowWindow,
+                GWL_EXSTYLE, HWND_TOPMOST, SWP_NOMOVE, SWP_NOSIZE, SWP_FRAMECHANGED, SW_SHOWNOACTIVATE,
+                WS_EX_TOPMOST,
+            };
+            let hwnd = HWND(hwnd_raw.0 as *mut _);
+            unsafe {
+                let ex_style = GetWindowLongW(hwnd, GWL_EXSTYLE);
+                SetWindowLongW(hwnd, GWL_EXSTYLE, ex_style | (WS_EX_TOPMOST.0 as i32));
+                let _ = SetWindowPos(
+                    hwnd,
+                    HWND_TOPMOST,
+                    0, 0, 0, 0,
+                    SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED,
+                );
+                let _ = ShowWindow(hwnd, SW_SHOWNOACTIVATE);
+                let _ = SetForegroundWindow(hwnd);
+            }
+        }
+    }
+}
+
+#[cfg(not(target_os = "windows"))]
+pub fn restore_window_after_oauth(_app_handle: &tauri::AppHandle) {}
+
+pub fn open_system_browser(url: &str) {
+    #[cfg(target_os = "windows")]
+    {
+        use std::ffi::OsStr;
+        use std::os::windows::ffi::OsStrExt;
+        let wide_url: Vec<u16> = OsStr::new(url).encode_wide().chain(std::iter::once(0)).collect();
+        let wide_open: Vec<u16> = OsStr::new("open").encode_wide().chain(std::iter::once(0)).collect();
+        unsafe {
+            let h_inst = windows::Win32::UI::Shell::ShellExecuteW(
+                windows::Win32::Foundation::HWND(std::ptr::null_mut()),
+                windows::core::PCWSTR(wide_open.as_ptr()),
+                windows::core::PCWSTR(wide_url.as_ptr()),
+                windows::core::PCWSTR(std::ptr::null()),
+                windows::core::PCWSTR(std::ptr::null()),
+                windows::Win32::UI::WindowsAndMessaging::SW_SHOWNORMAL,
+            );
+            if (h_inst.0 as isize) <= 32 {
+                let _ = std::process::Command::new("rundll32")
+                    .args(["url.dll,FileProtocolHandler", url])
+                    .spawn();
+            }
+        }
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        let _ = std::process::Command::new("xdg-open").arg(url).spawn();
+    }
+}
+
 /// Cancels any in-flight OAuth loopback listener
 pub fn cancel_oauth_flow(app_handle: tauri::AppHandle) {
     CANCEL_OAUTH.store(true, Ordering::SeqCst);
     eprintln!("Signaled CANCEL_OAUTH = true");
+    restore_window_after_oauth(&app_handle);
     if let Some(main_win) = app_handle.get_webview_window("main") {
         let _ = main_win.emit("google_oauth_cancelled", "Connexion annulée par l'utilisateur.");
     }
@@ -89,13 +184,11 @@ pub fn start_oauth_flow(
         urlencoding(&code_challenge)
     );
 
-    // 4. Open default system browser
-    #[cfg(target_os = "windows")]
-    {
-        let _ = std::process::Command::new("rundll32")
-            .args(["url.dll,FileProtocolHandler", &auth_url])
-            .spawn();
-    }
+    // 4. Temporarily lower RRadio window priority so system browser appears in foreground
+    lower_window_for_oauth(&app_handle);
+
+    // 5. Open default system browser with ShellExecuteW
+    open_system_browser(&auth_url);
 
     let c_id = Arc::new(clean_client_id);
     let c_secret = Arc::new(client_secret);
@@ -113,6 +206,7 @@ pub fn start_oauth_flow(
         while start_time.elapsed() < timeout {
             if CANCEL_OAUTH.load(Ordering::SeqCst) {
                 eprintln!("OAuth loopback cancelled by user.");
+                restore_window_after_oauth(&app_handle);
                 return;
             }
 
@@ -154,6 +248,7 @@ pub fn start_oauth_flow(
                                 format!("Autorisation annulée ou refusée ({})", err),
                             );
                         }
+                        restore_window_after_oauth(&app_handle);
                         return;
                     }
 
@@ -211,6 +306,7 @@ pub fn start_oauth_flow(
                         );
                     }
                 }
+                restore_window_after_oauth(&app_handle);
                 return;
             }
         };
@@ -245,6 +341,7 @@ pub fn start_oauth_flow(
                         if let Some(main_win) = app_handle.get_webview_window("main") {
                             let _ = main_win.emit("google_oauth_error", "Impossible de lire la réponse de Google.");
                         }
+                        restore_window_after_oauth(&app_handle);
                         return;
                     }
                 };
@@ -256,6 +353,7 @@ pub fn start_oauth_flow(
                         if let Some(main_win) = app_handle.get_webview_window("main") {
                             let _ = main_win.emit("google_oauth_error", format!("Réponse Google invalide: {}", e));
                         }
+                        restore_window_after_oauth(&app_handle);
                         return;
                     }
                 };
@@ -315,6 +413,7 @@ pub fn start_oauth_flow(
                 }
             }
         }
+        restore_window_after_oauth(&app_handle);
     });
 
     Ok(())

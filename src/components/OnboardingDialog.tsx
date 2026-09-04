@@ -575,6 +575,17 @@ export const OnboardingDialog: React.FC<OnboardingDialogProps> = ({
                             )}
                           </div>
 
+                          {oauthLoading && (
+                            <div className="mt-4 p-3.5 rounded-xl bg-sky-950/60 border border-sky-400/40 text-sky-200 text-xs flex items-center gap-3 shadow-inner">
+                              <Globe className="w-4 h-4 text-sky-400 shrink-0 animate-pulse" />
+                              <span>
+                                {settings.language === 'en'
+                                  ? 'Your default web browser has been opened in the foreground. Complete the Google authorization there.'
+                                  : "Votre navigateur web par défaut s'est ouvert au premier plan. Validez la connexion sur la page Google."}
+                              </span>
+                            </div>
+                          )}
+
                           {oauthError && (
                             <div className="mt-4 p-3 rounded-xl bg-red-950/80 border border-red-500/50 text-red-200 text-xs">
                               {oauthError}
