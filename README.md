@@ -92,9 +92,12 @@ Control playback and visibility from anywhere on your PC, even while inside anot
 | **Mute / Unmute Audio** | `F9` | `Alt + M` | — |
 | **Open On-Demand Menu** | `F7` | `Alt + O` | — |
 | **Open Settings Dialog** | `F10` | `Alt + S` | — |
+| **Open / Close Phone** | `F5` | HUD phone button | — |
 
 > [!TIP]
 > The overlay starts muted by default so it never blasts unexpected sound. You can toggle default startup muting in the Settings menu (`F10`).
+
+The GTA IV theme uses a black keypad handset with an amber menu. The default theme uses a GTA V-inspired smartphone with a blue header and an app grid. Both control the same player. On the keypad, `1`–`6` open the matching menu actions, `7`/`9` adjust volume, `8` opens volume, `0` returns home, `*` goes back, and `#` toggles mute.
 
 ---
 

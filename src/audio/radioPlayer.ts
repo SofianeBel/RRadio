@@ -1,4 +1,5 @@
 import radioManifest from '../data/radioManifest.json';
+import { GTA4_MANIFEST } from '../data/gta4Stations';
 import { youtubePlayer } from './youtubePlayer';
 
 export interface RadioTrack {
@@ -318,7 +319,8 @@ class RadioPlayer {
    */
   private advanceStationTrack(stationId: string) {
     const manifestObj = radioManifest as Record<string, RadioTrack[]>;
-    const tracks = manifestObj[stationId] || [];
+    const gta4Obj = GTA4_MANIFEST as Record<string, RadioTrack[]>;
+    const tracks = manifestObj[stationId] ?? gta4Obj[stationId] ?? [];
     if (tracks.length === 0 || !this.audio) return;
 
     // Advance sequentially from the track that actually just finished
@@ -347,7 +349,8 @@ class RadioPlayer {
    */
   public calculateLiveStationPosition(stationId: string): { track: RadioTrack; offsetSeconds: number; trackIndex: number } | null {
     const manifestObj = radioManifest as Record<string, RadioTrack[]>;
-    const tracks: RadioTrack[] = manifestObj[stationId] || [];
+    const gta4Obj = GTA4_MANIFEST as Record<string, RadioTrack[]>;
+    const tracks: RadioTrack[] = manifestObj[stationId] ?? gta4Obj[stationId] ?? [];
 
     const totalCycleSeconds = tracks.reduce((acc, t) => acc + (t.duration || 240), 0);
     if (totalCycleSeconds === 0) return null;

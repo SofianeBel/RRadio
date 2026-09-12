@@ -19,7 +19,16 @@ export const loadSettings = (): AppSettings => {
       language,
       hasCompletedOnboarding,
       audio: { ...DEFAULT_SETTINGS.audio, ...(parsed.audio || {}) },
-      overlay: { ...DEFAULT_SETTINGS.overlay, ...(parsed.overlay || {}) },
+      overlay: {
+        ...DEFAULT_SETTINGS.overlay,
+        ...(parsed.overlay || {}),
+        theme: parsed.overlay?.theme === 'gta4' || parsed.overlay?.theme === 'gta6'
+          ? parsed.overlay.theme
+          : DEFAULT_SETTINGS.overlay.theme,
+        uiStyle: parsed.overlay?.uiStyle === 'gta6_ribbon' || parsed.overlay?.uiStyle === 'gta_arc'
+          ? parsed.overlay.uiStyle
+          : DEFAULT_SETTINGS.overlay.uiStyle
+      },
       controls: { ...DEFAULT_SETTINGS.controls, ...(parsed.controls || {}) },
       library: { ...DEFAULT_SETTINGS.library, ...(parsed.library || {}) },
       services: {
@@ -37,6 +46,10 @@ export const loadSettings = (): AppSettings => {
         ...(parsed.discord || {})
       },
       updates: { ...DEFAULT_SETTINGS.updates, ...(parsed.updates || {}) },
+      news: {
+        enabled: typeof parsed.news?.enabled === 'boolean' ? parsed.news.enabled : DEFAULT_SETTINGS.news.enabled,
+        soundEnabled: typeof parsed.news?.soundEnabled === 'boolean' ? parsed.news.soundEnabled : DEFAULT_SETTINGS.news.soundEnabled
+      },
     };
   } catch (e) {
     console.warn('Could not read settings from localStorage, using defaults:', e);

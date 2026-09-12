@@ -1,8 +1,9 @@
 import { OnDemandProvider, OnDemandPlaylist, OnDemandTrack } from '../types/ondemand';
 import { STATIONS } from './stations';
+import { GTA4_STATIONS, GTA4_MANIFEST } from './gta4Stations';
 import radioManifest from './radioManifest.json';
 import { YTM_CURATED_MIXES } from '../services/youtubeMusic';
-import { Language } from '../types/settings';
+import { Language, VisualTheme } from '../types/settings';
 import { translations } from '../i18n/translations';
 
 const MANIFEST_STATION_KEY_MAP: Record<string, string> = {
@@ -23,18 +24,38 @@ const typedManifest = radioManifest as Record<string, Array<{
   url: string;
 }>>;
 
-export const getLocalizedProviders = (lang: Language = 'fr'): OnDemandProvider[] => {
+const typedGta4Manifest = GTA4_MANIFEST as Record<string, Array<{
+  filename: string;
+  title: string;
+  artist: string;
+  duration: number;
+  url: string;
+}>>;
+
+export const getLocalizedProviders = (lang: Language = 'fr', theme: VisualTheme = 'gta6'): OnDemandProvider[] => {
   const t = translations[lang] || translations.fr;
+  const isGta4 = theme === 'gta4';
+  const stationProvider: OnDemandProvider = isGta4
+    ? {
+        id: 'liberty_city_radio',
+        name: t.providerData.libertyCityRadio.name,
+        badge: t.providerData.libertyCityRadio.badge,
+        tagline: t.providerData.libertyCityRadio.tagline,
+        primaryColor: '#e4b961',
+        accentColor: '#85b9d0',
+        playlistsCount: GTA4_STATIONS.length
+      }
+    : {
+        id: 'vice_city_radio',
+        name: t.providerData.viceCityRadio.name,
+        badge: t.providerData.viceCityRadio.badge,
+        tagline: t.providerData.viceCityRadio.tagline,
+        primaryColor: '#FF2A85',
+        accentColor: '#00E5FF',
+        playlistsCount: STATIONS.length
+      };
   return [
-    {
-      id: 'vice_city_radio',
-      name: t.providerData.viceCityRadio.name,
-      badge: t.providerData.viceCityRadio.badge,
-      tagline: t.providerData.viceCityRadio.tagline,
-      primaryColor: '#FF2A85',
-      accentColor: '#00E5FF',
-      playlistsCount: STATIONS.length
-    },
+    stationProvider,
     {
       id: 'spotify',
       name: t.providerData.spotify.name,
@@ -93,11 +114,19 @@ export const getLocalizedProviders = (lang: Language = 'fr'): OnDemandProvider[]
 
 export const PROVIDERS: OnDemandProvider[] = getLocalizedProviders('fr');
 
-// Helper to find a real streaming URL from the Vice City manifest by title keyword
+// Helper to find a real streaming URL from either station manifest by title keyword
 function findRealTrackUrl(titleKeyword: string, fallbackUrl?: string): { url: string; duration: number } | null {
   const normKey = titleKeyword.toLowerCase();
   for (const stationKey in typedManifest) {
     const list = typedManifest[stationKey];
+    for (const t of list) {
+      if (t.title.toLowerCase().includes(normKey) || normKey.includes(t.title.toLowerCase())) {
+        return { url: t.url, duration: t.duration };
+      }
+    }
+  }
+  for (const stationKey in typedGta4Manifest) {
+    const list = typedGta4Manifest[stationKey];
     for (const t of list) {
       if (t.title.toLowerCase().includes(normKey) || normKey.includes(t.title.toLowerCase())) {
         return { url: t.url, duration: t.duration };
@@ -136,6 +165,37 @@ export const PLAYLISTS: Record<string, OnDemandPlaylist[]> = {
       providerId: 'vice_city_radio',
       title: station.name,
       curator: station.dj ? `DJ ${station.dj}` : 'Vice City Radio',
+      genre: station.genre,
+      coverColor: station.primaryColor,
+      badgeText: station.frequency,
+      stationId: station.id,
+      tracks
+    };
+  }),
+  liberty_city_radio: GTA4_STATIONS.map(station => {
+    const manifestTracks = typedGta4Manifest[station.id] || [];
+    const tracks: OnDemandTrack[] = manifestTracks.length > 0
+      ? manifestTracks.map((mTrack, i) => ({
+          id: `${station.id}_tr_${i}`,
+          title: mTrack.title,
+          artist: mTrack.artist,
+          duration: mTrack.duration,
+          coverColor: station.primaryColor,
+          audioUrl: mTrack.url
+        }))
+      : station.tracks.map((track, i) => ({
+          id: `${station.id}_fallback_${i}`,
+          title: track.title,
+          artist: track.artist,
+          duration: track.duration,
+          coverColor: station.primaryColor,
+          audioUrl: ''
+        }));
+    return {
+      id: `lc_${station.id}`,
+      providerId: 'liberty_city_radio',
+      title: station.name,
+      curator: station.dj ? `DJ ${station.dj}` : 'Liberty City Radio',
       genre: station.genre,
       coverColor: station.primaryColor,
       badgeText: station.frequency,

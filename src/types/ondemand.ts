@@ -1,4 +1,4 @@
-export type ProviderId = 'vice_city_radio' | 'spotify' | 'youtube_music' | 'deezer' | 'apple_music' | 'local';
+export type ProviderId = 'vice_city_radio' | 'liberty_city_radio' | 'spotify' | 'youtube_music' | 'deezer' | 'apple_music' | 'local';
 
 export interface OnDemandProvider {
   id: ProviderId;

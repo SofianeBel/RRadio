@@ -146,6 +146,24 @@ export const StationLogo: React.FC<StationLogoProps> = ({
 
   // Live Radio Station Logos
   if (!station) return null;
+  if (station.logoUrl) {
+    return (
+      <div
+        className={`relative overflow-hidden flex items-center justify-center select-none w-full h-full p-2.5 ${className}`}
+        style={{
+          background: station.badgeBg || 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.5) 100%)'
+        }}
+      >
+        <img
+          src={station.logoUrl}
+          alt={station.name}
+          className="w-full h-full object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+    );
+  }
   const officialArt = STATION_LOGOS[station.id];
   if (officialArt) {
     return (

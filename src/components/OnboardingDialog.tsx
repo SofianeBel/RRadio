@@ -200,46 +200,47 @@ export const OnboardingDialog: React.FC<OnboardingDialogProps> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[110] flex flex-col items-center justify-center p-4 md:p-8 bg-transparent select-none font-gta6 pointer-events-auto"
+          className="theme-dialog fixed inset-0 z-[110] flex flex-col items-center justify-center p-4 md:p-8 bg-transparent select-none font-gta6 pointer-events-auto"
         >
           {/* Main Card Container */}
           <div
-            className="relative flex flex-col w-full max-w-4xl h-[620px] max-h-[90vh] rounded-3xl overflow-hidden shadow-[0_35px_100px_rgba(0,0,0,0.95)]"
+            className="dialog-shell relative flex flex-col w-full max-w-4xl h-[620px] max-h-[90vh] rounded-3xl overflow-hidden shadow-[0_35px_100px_rgba(0,0,0,0.95)]"
+            data-native-hit-region="rect"
             style={{
-              border: '1.5px solid rgba(245, 235, 224, 0.4)',
-              boxShadow: '0 35px 100px rgba(0,0,0,0.95), inset 0 1px 2px rgba(245, 235, 224, 0.35)'
+              border: '1.5px solid rgb(var(--theme-cream) / 0.4)',
+              boxShadow: '0 35px 100px rgba(0,0,0,0.95), inset 0 1px 2px rgb(var(--theme-cream) / 0.35)'
             }}
           >
             {/* 1. Base Frosted Glass Layer */}
-            <div className="absolute inset-0 bg-[#F5EDE4]/15 backdrop-blur-2xl pointer-events-none" />
+            <div className="dialog-base absolute inset-0 bg-[rgb(var(--theme-base))]/15 backdrop-blur-2xl pointer-events-none" />
 
-            {/* 2. Rotating Gradient Mesh Layer */}
+            {/* Gradient Mesh Layer */}
             <div
-              className="absolute -inset-[70%] opacity-45 blur-3xl animate-spin-gradient pointer-events-none"
+              className="dialog-mesh absolute -inset-[70%] opacity-45 blur-3xl animate-spin-gradient pointer-events-none"
               style={{
-                background: `conic-gradient(
+                background: `var(--dialog-mesh-background, conic-gradient(
                   from 0deg at 50% 50%,
-                  #F5EBE0 0deg,
-                  #8B5CF6 90deg,
-                  #00D4FF 180deg,
-                  #FFA07A 270deg,
-                  #F5EBE0 360deg
-                )`
+                  rgb(var(--theme-cream)) 0deg,
+                  rgb(var(--theme-purple)) 90deg,
+                  rgb(var(--theme-cyan)) 180deg,
+                  rgb(var(--theme-accent)) 270deg,
+                  rgb(var(--theme-cream)) 360deg
+                ))`
               }}
             />
 
             {/* 3. Deep Dark Balancing Veil */}
-            <div className="absolute inset-0 bg-[#140E24]/80 backdrop-blur-md pointer-events-none" />
+            <div className="dialog-veil absolute inset-0 bg-[rgb(var(--theme-veil))]/80 backdrop-blur-md pointer-events-none" />
 
             {/* Top Header with Badge and Progress Steps */}
             <div className="relative z-20 flex items-center justify-between px-8 pt-7 pb-4 border-b border-white/[0.12]">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#FFA07A] to-[#FF6584] flex items-center justify-center shadow-[0_0_15px_rgba(255,160,122,0.5)]">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[rgb(var(--theme-accent))] to-[rgb(var(--theme-rose))] flex items-center justify-center shadow-[0_0_15px_rgb(var(--theme-accent)/0.5)]">
                   <RadioTower className="w-5 h-5 text-black" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[12px] font-mono tracking-widest font-extrabold uppercase px-2 py-0.5 rounded-full bg-[#FFA07A]/20 border border-[#FFA07A]/40 text-[#FFA07A]">
+                    <span className="text-[12px] font-mono tracking-widest font-extrabold uppercase px-2 py-0.5 rounded-full bg-[rgb(var(--theme-accent))]/20 border border-[rgb(var(--theme-accent))]/40 text-[rgb(var(--theme-accent))]">
                       {t.onboarding.badge}
                     </span>
                     <span className="text-white/40 text-xs font-mono">
@@ -265,9 +266,10 @@ export const OnboardingDialog: React.FC<OnboardingDialogProps> = ({
                           soundEngine.stopVolumePreview(setIsPlayingSample);
                           setCurrentStep(step);
                         }}
-                        className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
+                        aria-current={isActive ? 'step' : undefined}
+                        className={`dialog-step flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
                           isActive
-                            ? 'bg-gradient-to-r from-[#FFA07A] to-[#FF6584] text-black shadow-[0_0_12px_rgba(255,160,122,0.6)]'
+                            ? 'bg-gradient-to-r from-[rgb(var(--theme-accent))] to-[rgb(var(--theme-rose))] text-black shadow-[0_0_12px_rgb(var(--theme-accent)/0.6)]'
                             : isDone
                             ? 'bg-white/20 text-white hover:bg-white/30'
                             : 'bg-white/5 text-white/40'
@@ -318,7 +320,7 @@ export const OnboardingDialog: React.FC<OnboardingDialogProps> = ({
                           onClick={() => handleSwitchLanguage('fr')}
                           className={`flex flex-col p-6 rounded-2xl border transition-all text-left relative overflow-hidden group ${
                             settings.language === 'fr'
-                              ? 'bg-white/15 border-[#FFA07A] shadow-[0_0_25px_rgba(255,160,122,0.3)]'
+                              ? 'bg-white/15 border-[rgb(var(--theme-accent))] shadow-[0_0_25px_rgb(var(--theme-accent)/0.3)]'
                               : 'bg-black/40 border-white/15 hover:border-white/30 hover:bg-white/5'
                           }`}
                         >
@@ -327,7 +329,7 @@ export const OnboardingDialog: React.FC<OnboardingDialogProps> = ({
                             <div
                               className={`w-6 h-6 rounded-full flex items-center justify-center border transition-all ${
                                 settings.language === 'fr'
-                                  ? 'bg-[#FFA07A] border-[#FFA07A] text-black'
+                                  ? 'bg-[rgb(var(--theme-accent))] border-[rgb(var(--theme-accent))] text-black'
                                   : 'border-white/30 text-transparent'
                               }`}
                             >
@@ -347,7 +349,7 @@ export const OnboardingDialog: React.FC<OnboardingDialogProps> = ({
                           onClick={() => handleSwitchLanguage('en')}
                           className={`flex flex-col p-6 rounded-2xl border transition-all text-left relative overflow-hidden group ${
                             settings.language === 'en'
-                              ? 'bg-white/15 border-[#FFA07A] shadow-[0_0_25px_rgba(255,160,122,0.3)]'
+                              ? 'bg-white/15 border-[rgb(var(--theme-accent))] shadow-[0_0_25px_rgb(var(--theme-accent)/0.3)]'
                               : 'bg-black/40 border-white/15 hover:border-white/30 hover:bg-white/5'
                           }`}
                         >
@@ -356,7 +358,7 @@ export const OnboardingDialog: React.FC<OnboardingDialogProps> = ({
                             <div
                               className={`w-6 h-6 rounded-full flex items-center justify-center border transition-all ${
                                 settings.language === 'en'
-                                  ? 'bg-[#FFA07A] border-[#FFA07A] text-black'
+                                  ? 'bg-[rgb(var(--theme-accent))] border-[rgb(var(--theme-accent))] text-black'
                                   : 'border-white/30 text-transparent'
                               }`}
                             >
@@ -398,7 +400,7 @@ export const OnboardingDialog: React.FC<OnboardingDialogProps> = ({
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/15">
-                              <Volume2 className="w-5 h-5 text-[#FFA07A]" />
+                              <Volume2 className="w-5 h-5 text-[rgb(var(--theme-accent))]" />
                             </div>
                             <div>
                               <span className="text-sm font-extrabold uppercase tracking-wider text-white">
@@ -414,7 +416,7 @@ export const OnboardingDialog: React.FC<OnboardingDialogProps> = ({
                           <div
                             className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
                               isPlayingSample
-                                ? 'bg-gradient-to-r from-[#FFA07A] to-[#FF6584] text-black shadow-[0_0_15px_rgba(255,160,122,0.7)] animate-pulse'
+                                ? 'bg-gradient-to-r from-[rgb(var(--theme-accent))] to-[rgb(var(--theme-rose))] text-black shadow-[0_0_15px_rgb(var(--theme-accent)/0.7)] animate-pulse'
                                 : 'bg-white/10 text-white/40'
                             }`}
                           >
@@ -442,7 +444,7 @@ export const OnboardingDialog: React.FC<OnboardingDialogProps> = ({
                               const val = parseInt(e.target.value, 10);
                               handleVolumeChange(val);
                             }}
-                            className="w-full h-3 rounded-lg appearance-none cursor-pointer bg-white/20 accent-[#FFA07A]"
+                            className="w-full h-3 rounded-lg appearance-none cursor-pointer bg-white/20 accent-[rgb(var(--theme-accent))]"
                           />
                           <div className="flex justify-between text-[11px] font-mono text-white/40">
                             <span>0% (SILENT)</span>
@@ -475,7 +477,7 @@ export const OnboardingDialog: React.FC<OnboardingDialogProps> = ({
                             }}
                             className={`relative w-14 h-7 rounded-full transition-colors duration-200 p-1 ${
                               settings.audio.muteOnStartup
-                                ? 'bg-[#8B5CF6] shadow-[0_0_15px_#8B5CF6]'
+                                ? 'bg-[rgb(var(--theme-purple))] shadow-[0_0_15px_rgb(var(--theme-purple))]'
                                 : 'bg-white/20'
                             }`}
                           >
@@ -622,60 +624,60 @@ export const OnboardingDialog: React.FC<OnboardingDialogProps> = ({
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto">
                         <div className="p-4 rounded-xl bg-black/40 border border-white/15 flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <Tv className="w-5 h-5 text-[#FFA07A]" />
+                            <Tv className="w-5 h-5 text-[rgb(var(--theme-accent))]" />
                             <span className="text-xs font-bold uppercase text-white">
                               {t.onboarding.wheelShortcut}
                             </span>
                           </div>
-                          <span className="px-2.5 py-1 rounded-lg bg-white/10 font-mono font-bold text-xs text-[#FFD2A4]">
+                          <span className="px-2.5 py-1 rounded-lg bg-white/10 font-mono font-bold text-xs text-[rgb(var(--theme-warm))]">
                             F8 / Alt + V
                           </span>
                         </div>
 
                         <div className="p-4 rounded-xl bg-black/40 border border-white/15 flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <Volume2 className="w-5 h-5 text-[#FFA07A]" />
+                            <Volume2 className="w-5 h-5 text-[rgb(var(--theme-accent))]" />
                             <span className="text-xs font-bold uppercase text-white">
                               {t.onboarding.muteShortcut}
                             </span>
                           </div>
-                          <span className="px-2.5 py-1 rounded-lg bg-white/10 font-mono font-bold text-xs text-[#FFD2A4]">
+                          <span className="px-2.5 py-1 rounded-lg bg-white/10 font-mono font-bold text-xs text-[rgb(var(--theme-warm))]">
                             F9 / Alt + M
                           </span>
                         </div>
 
                         <div className="p-4 rounded-xl bg-black/40 border border-white/15 flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <Sliders className="w-5 h-5 text-[#FFA07A]" />
+                            <Sliders className="w-5 h-5 text-[rgb(var(--theme-accent))]" />
                             <span className="text-xs font-bold uppercase text-white">
                               {t.onboarding.settingsShortcut}
                             </span>
                           </div>
-                          <span className="px-2.5 py-1 rounded-lg bg-white/10 font-mono font-bold text-xs text-[#FFD2A4]">
+                          <span className="px-2.5 py-1 rounded-lg bg-white/10 font-mono font-bold text-xs text-[rgb(var(--theme-warm))]">
                             F10 / Alt + S
                           </span>
                         </div>
 
                         <div className="p-4 rounded-xl bg-black/40 border border-white/15 flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <Radio className="w-5 h-5 text-[#FFA07A]" />
+                            <Radio className="w-5 h-5 text-[rgb(var(--theme-accent))]" />
                             <span className="text-xs font-bold uppercase text-white">
                               {t.onboarding.modeShortcut}
                             </span>
                           </div>
-                          <span className="px-2.5 py-1 rounded-lg bg-white/10 font-mono font-bold text-xs text-[#FFD2A4]">
+                          <span className="px-2.5 py-1 rounded-lg bg-white/10 font-mono font-bold text-xs text-[rgb(var(--theme-warm))]">
                             F7 / Alt + O
                           </span>
                         </div>
 
                         <div className="sm:col-span-2 p-4 rounded-xl bg-black/40 border border-white/15 flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <Gamepad2 className="w-5 h-5 text-[#FFA07A]" />
+                            <Gamepad2 className="w-5 h-5 text-[rgb(var(--theme-accent))]" />
                             <span className="text-xs font-bold uppercase text-white">
                               {t.onboarding.gamepadHoldShortcut}
                             </span>
                           </div>
-                          <span className="px-2.5 py-1 rounded-lg bg-white/10 font-mono font-bold text-xs text-[#FFD2A4]">
+                          <span className="px-2.5 py-1 rounded-lg bg-white/10 font-mono font-bold text-xs text-[rgb(var(--theme-warm))]">
                             LB (Hold) • RB / X (Mute)
                           </span>
                         </div>
@@ -706,7 +708,7 @@ export const OnboardingDialog: React.FC<OnboardingDialogProps> = ({
               {currentStepIndex === stepsOrder.length - 1 ? (
                 <button
                   onClick={handleFinishOnboarding}
-                  className="flex items-center gap-2 px-8 py-3 rounded-2xl bg-gradient-to-r from-[#FFA07A] via-[#FF6584] to-[#B053F5] hover:opacity-95 text-black font-black text-sm uppercase tracking-wider transition-all active:scale-95 shadow-[0_0_25px_rgba(255,160,122,0.6)]"
+                  className="flex items-center gap-2 px-8 py-3 rounded-2xl bg-gradient-to-r from-[rgb(var(--theme-accent))] via-[rgb(var(--theme-rose))] to-[rgb(var(--theme-violet))] hover:opacity-95 text-black font-black text-sm uppercase tracking-wider transition-all active:scale-95 shadow-[0_0_25px_rgb(var(--theme-accent)/0.6)]"
                 >
                   <Play className="w-4 h-4 fill-black" />
                   <span>{t.onboarding.finish}</span>
@@ -714,7 +716,7 @@ export const OnboardingDialog: React.FC<OnboardingDialogProps> = ({
               ) : (
                 <button
                   onClick={handleNextStep}
-                  className="flex items-center gap-2 px-7 py-2.5 rounded-xl bg-gradient-to-r from-[#FFA07A] to-[#FF6584] hover:opacity-95 text-black font-black text-xs uppercase tracking-wider transition-all active:scale-95 shadow-[0_0_20px_rgba(255,160,122,0.5)]"
+                  className="flex items-center gap-2 px-7 py-2.5 rounded-xl bg-gradient-to-r from-[rgb(var(--theme-accent))] to-[rgb(var(--theme-rose))] hover:opacity-95 text-black font-black text-xs uppercase tracking-wider transition-all active:scale-95 shadow-[0_0_20px_rgb(var(--theme-accent)/0.5)]"
                 >
                   <span>{t.onboarding.next}</span>
                   <ChevronRight className="w-4 h-4" />

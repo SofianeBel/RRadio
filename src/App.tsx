@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { STATIONS, STATION_LOGOS, STATION_COVERS, GTAVC_COVER_ART } from './data/stations';
+import { STATIONS, STATION_COVERS, GTAVC_COVER_ART } from './data/stations';
+import { GTA4_STATIONS } from './data/gta4Stations';
+import { PhoneOverlay } from './components/PhoneOverlay';
+import { useTranslation } from './i18n/useTranslation';
+import { Smartphone } from 'lucide-react';
 import trackCovers from './data/trackCovers.json';
-import { PROVIDERS, PLAYLISTS, getLocalizedProviders } from './data/ondemandProviders';
+import { PLAYLISTS, getLocalizedProviders } from './data/ondemandProviders';
 import { youtubeMusicService, YTM_CURATED_MIXES } from './services/youtubeMusic';
 import { PlaybackMode } from './types/radio';
 import { OnDemandViewLevel, OnDemandTrack, OnDemandPlaylist } from './types/ondemand';
@@ -13,6 +17,7 @@ import { OnboardingDialog } from './components/OnboardingDialog';
 import { radioPlayer, RadioTrack } from './audio/radioPlayer';
 import { soundEngine } from './audio/soundEngine';
 import {
+  isTauri,
   setNativeClickThrough,
   setNativeSettingsMode,
   setNativeWindowVisibility,
@@ -21,9 +26,15 @@ import {
   clearDiscordPresence,
   DiscordActivityPayload
 } from './utils/tauriBridge';
+import { useNativeHitRegions } from './utils/useNativeHitRegions';
+import { useNews } from './utils/useNews';
+import { NewsToast, NewsPanel } from './components/NewsPanel';
 
 export const App: React.FC = () => {
   const [settings, setSettings] = useState<AppSettings>(() => loadSettings());
+  const { t } = useTranslation(settings.language);
+  const stations = settings.overlay.theme === 'gta4' ? GTA4_STATIONS : STATIONS;
+  const [isPhoneOpen, setIsPhoneOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(() => !settings.hasCompletedOnboarding);
   const isOnboardingOpenRef = useRef(isOnboardingOpen);
@@ -31,6 +42,21 @@ export const App: React.FC = () => {
     isOnboardingOpenRef.current = isOnboardingOpen;
   }, [isOnboardingOpen]);
   const [isOpen, setIsOpen] = useState(false);
+  const isSelectorVisible = isOpen && !isSettingsOpen && !isOnboardingOpen && !isPhoneOpen;
+  const gamepadContextRef = useRef({
+    isSelectorVisible,
+    isModalOpen: isSettingsOpen || isOnboardingOpen || isPhoneOpen,
+    isOnboardingOpen,
+    cadence: settings.controls.gamepadCadenceMs
+  });
+  useEffect(() => {
+    gamepadContextRef.current = {
+      isSelectorVisible,
+      isModalOpen: isSettingsOpen || isOnboardingOpen || isPhoneOpen,
+      isOnboardingOpen,
+      cadence: settings.controls.gamepadCadenceMs
+    };
+  }, [isSelectorVisible, isSettingsOpen, isOnboardingOpen, isPhoneOpen, settings.controls.gamepadCadenceMs]);
 
   // Mode state: 'radio' or 'ondemand'
   const [mode, setMode] = useState<PlaybackMode>('radio');
@@ -48,6 +74,7 @@ export const App: React.FC = () => {
   const lastDiscordSignatureRef = useRef<string>('');
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(() => settings.audio.muteOnStartup);
+  const news = useNews(settings, isMuted, isOnboardingOpen);
   const [isTuning, setIsTuning] = useState(false);
 
   // On Demand 3-Level State with Continuous Virtual Indices (No jumping / No popping)
@@ -98,11 +125,11 @@ export const App: React.FC = () => {
   const tuningTimeoutRef = useRef<number | null>(null);
 
   const isRadio = mode === 'radio';
-  const activeStationIndex = ((virtualRadioIndex % STATIONS.length) + STATIONS.length) % STATIONS.length;
-  const activeStation = STATIONS[activeStationIndex];
+  const activeStationIndex = ((virtualRadioIndex % stations.length) + stations.length) % stations.length;
+  const activeStation = stations[activeStationIndex];
 
   // Dynamic active items based on continuous virtual indices
-  const currentProviders = React.useMemo(() => getLocalizedProviders(settings.language), [settings.language]);
+  const currentProviders = React.useMemo(() => getLocalizedProviders(settings.language, settings.overlay.theme), [settings.language, settings.overlay.theme]);
   const pLen = currentProviders.length;
   const activeProviderIndex = ((virtualProviderIndex % pLen) + pLen) % pLen;
   const activeProvider = currentProviders[activeProviderIndex] || currentProviders[0];
@@ -200,6 +227,18 @@ export const App: React.FC = () => {
 
   // Update Settings handler with persistence
   const handleUpdateSettings = (newSettings: AppSettings) => {
+    if (newSettings.overlay.theme !== settings.overlay.theme) {
+      const nextStations = newSettings.overlay.theme === 'gta4' ? GTA4_STATIONS : STATIONS;
+      setVirtualRadioIndex(0);
+      setVirtualPlaylistIndex(0);
+      setVirtualQueueIndex(0);
+      setOnDemandLevel('providers');
+      setTrackProgress(0);
+      setActiveLiveTrack(null);
+      modeRef.current = 'radio';
+      setMode('radio');
+      radioPlayer.tuneToStation(nextStations[0].id, false);
+    }
     setSettings(newSettings);
     saveSettings(newSettings);
 
@@ -210,12 +249,12 @@ export const App: React.FC = () => {
 
   // Sync window visibility and mode
   useEffect(() => {
-    const isModalOpen = isSettingsOpen || isOnboardingOpen;
+    const isModalOpen = isSettingsOpen || isOnboardingOpen || isPhoneOpen;
     const isAnyOpen = isOpen || isModalOpen;
     setNativeWindowVisibility(isAnyOpen);
-    setNativeSettingsMode(isModalOpen, isOpen);
+    setNativeSettingsMode(isModalOpen, isOpen, settings.overlay.uiStyle === 'gta_arc');
     setNativeClickThrough(!isAnyOpen);
-  }, [isSettingsOpen, isOnboardingOpen, isOpen]);
+  }, [isSettingsOpen, isOnboardingOpen, isPhoneOpen, isOpen, settings.overlay.uiStyle]);
 
   // Real-time Discord Rich Presence synchronization
   useEffect(() => {
@@ -244,9 +283,9 @@ export const App: React.FC = () => {
       const songCover = (trackCovers as Record<string, string>)[trackKey];
 
       // Real album cover of the song currently playing
-      large_image = songCover || STATION_COVERS[station.id] || GTAVC_COVER_ART;
+      large_image = songCover || STATION_COVERS[station.id] || (settings.overlay.theme === 'gta4' ? 'rradio_logo' : GTAVC_COVER_ART);
       large_text = track ? `${track.title} • ${track.artist}` : `${station.name} (${station.frequency})`;
-      small_image = STATION_COVERS[station.id] || GTAVC_COVER_ART;
+      small_image = STATION_COVERS[station.id] || (settings.overlay.theme === 'gta4' ? 'rradio_logo' : GTAVC_COVER_ART);
       small_text = `${station.name} (${station.frequency})`;
 
       if (settings.discord.showTrack) {
@@ -407,7 +446,7 @@ export const App: React.FC = () => {
 
   // Tune to station when virtualRadioIndex changes
   const switchStation = useCallback((newVirtualIndex: number) => {
-    const nextStation = STATIONS[((newVirtualIndex % STATIONS.length) + STATIONS.length) % STATIONS.length];
+    const nextStation = stations[((newVirtualIndex % stations.length) + stations.length) % stations.length];
     
     setIsTuning(true);
     if (tuningTimeoutRef.current) window.clearTimeout(tuningTimeoutRef.current);
@@ -415,7 +454,7 @@ export const App: React.FC = () => {
 
     setVirtualRadioIndex(newVirtualIndex);
     radioPlayer.tuneToStation(nextStation.id, settings.audio.playTuningSound);
-  }, [settings.audio.playTuningSound]);
+  }, [settings.audio.playTuningSound, stations]);
 
   // On Demand Offset Handlers (Continuous tape sliding on click)
   const handleSelectProviderOffset = useCallback((offset: number) => {
@@ -456,7 +495,7 @@ export const App: React.FC = () => {
     if (isRadio) return;
 
     if (onDemandLevel === 'providers') {
-      const targetProvider = PROVIDERS[activeProviderIndex];
+      const targetProvider = currentProviders[activeProviderIndex];
       if (targetProvider.isComingSoon) {
         soundEngine.playTuningNoise(120);
         return;
@@ -524,7 +563,7 @@ export const App: React.FC = () => {
         });
       }
     }
-  }, [isRadio, onDemandLevel, activeProviderIndex, currentPlaylists, activePlaylistIndex, currentQueue, activeQueueIndex]);
+  }, [isRadio, onDemandLevel, activeProviderIndex, currentProviders, currentPlaylists, activePlaylistIndex, currentQueue, activeQueueIndex]);
 
   // Navigate Back (Elevator moves DOWN)
   const handleNavigateBack = useCallback(() => {
@@ -606,17 +645,24 @@ export const App: React.FC = () => {
     });
   }, [settings.audio.masterVolume, settings.audio.playTuningSound, isRadio, activeStation]);
 
+  const handleTogglePhone = useCallback(() => {
+    if (isOnboardingOpenRef.current) return;
+    setIsSettingsOpen(false);
+    setIsPhoneOpen(open => !open);
+  }, []);
   const handleToggleSettings = useCallback(() => {
+    setIsPhoneOpen(false);
     setIsSettingsOpen(prev => !prev);
   }, []);
 
   // Stable handlers ref
   const handlersRef = useRef({
-    onShow: () => { if (!isSettingsOpen) setIsOpen(true); },
-    onHide: () => { if (!isSettingsOpen) setIsOpen(false); },
-    onToggle: () => { if (!isSettingsOpen) setIsOpen(prev => !prev); },
+    onShow: () => { if (!isSettingsOpen) { setIsPhoneOpen(false); setIsOpen(true); } },
+    onHide: () => { if (!isSettingsOpen) { setIsPhoneOpen(false); setIsOpen(false); } },
+    onToggle: () => { if (!isSettingsOpen) { setIsPhoneOpen(false); setIsOpen(prev => !prev); } },
     onToggleMute: handleToggleMute,
     onOpenSettings: handleToggleSettings,
+    onTogglePhone: handleTogglePhone,
     onNext: handleNext,
     onPrev: handlePrev,
     onToggleMode: handleToggleMode,
@@ -631,11 +677,12 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     handlersRef.current = {
-      onShow: () => { if (!isSettingsOpen) setIsOpen(true); },
-      onHide: () => { if (!isSettingsOpen) setIsOpen(false); },
-      onToggle: () => { if (!isSettingsOpen) setIsOpen(prev => !prev); },
+      onShow: () => { if (!isSettingsOpen) { setIsPhoneOpen(false); setIsOpen(true); } },
+      onHide: () => { if (!isSettingsOpen) { setIsPhoneOpen(false); setIsOpen(false); } },
+      onToggle: () => { if (!isSettingsOpen) { setIsPhoneOpen(false); setIsOpen(prev => !prev); } },
       onToggleMute: handleToggleMute,
       onOpenSettings: handleToggleSettings,
+      onTogglePhone: handleTogglePhone,
       onNext: handleNext,
       onPrev: handlePrev,
       onToggleMode: handleToggleMode,
@@ -660,6 +707,7 @@ export const App: React.FC = () => {
       onToggle: () => { if (!isCancelled) handlersRef.current.onToggle(); },
       onToggleMute: () => { if (!isCancelled) handlersRef.current.onToggleMute(); },
       onOpenSettings: () => { if (!isCancelled) handlersRef.current.onOpenSettings(); },
+      onTogglePhone: () => { if (!isCancelled) handlersRef.current.onTogglePhone(); },
       onToggleMode: () => { if (!isCancelled) handlersRef.current.onToggleMode(); },
       onNext: () => { if (!isCancelled) handlersRef.current.onNext(); },
       onPrev: () => { if (!isCancelled) handlersRef.current.onPrev(); },
@@ -693,6 +741,12 @@ export const App: React.FC = () => {
         return;
       }
 
+      if (e.code === 'F5') {
+        e.preventDefault();
+        if (!isTauri() && !e.repeat) handleTogglePhone();
+        return;
+      }
+      if (isPhoneOpen) return;
       if (e.code === 'Escape') {
         e.preventDefault();
         if (isSettingsOpen) {
@@ -733,13 +787,13 @@ export const App: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isSettingsOpen, isOnboardingOpen, isRadio, onDemandLevel, handleToggleSettings, handleNext, handlePrev, handleToggleMode, handleToggleMute]);
+  }, [isPhoneOpen, isSettingsOpen, isOnboardingOpen, isRadio, onDemandLevel, handleTogglePhone, handleToggleSettings, handleNext, handlePrev, handleToggleMode, handleToggleMute]);
 
   // Mouse Wheel navigation
   useEffect(() => {
     let lastWheelTime = 0;
     const handleWheel = (e: WheelEvent) => {
-      if (!isOpen || isSettingsOpen || isOnboardingOpen) return;
+      if (!isSelectorVisible) return;
       const now = Date.now();
       if (now - lastWheelTime < 180) return;
 
@@ -754,7 +808,7 @@ export const App: React.FC = () => {
 
     window.addEventListener('wheel', handleWheel, { passive: true });
     return () => window.removeEventListener('wheel', handleWheel);
-  }, [isOpen, isSettingsOpen, isOnboardingOpen, handleNext, handlePrev]);
+  }, [isSelectorVisible, handleNext, handlePrev]);
 
   // Gamepad Loop: A (Select/Drill in), B (Back/Drill out), LB (Hold), D-Pad/Stick (Browse)
   useEffect(() => {
@@ -768,13 +822,14 @@ export const App: React.FC = () => {
     let prevBPressed = false;
     let lastStepTime = 0;
     let gamepadOpenedOverlay = false;
-
-    const cadence = settings.controls.gamepadCadenceMs || 250;
+    let navigationArmed = false;
 
     const checkGamepad = () => {
-      if (isOnboardingOpen) {
-        animationFrameId = requestAnimationFrame(checkGamepad);
-        return;
+      const context = gamepadContextRef.current;
+      let canNavigate = context.isSelectorVisible;
+      if (!canNavigate) {
+        navigationArmed = false;
+        lastStepTime = 0;
       }
       const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
 
@@ -786,27 +841,28 @@ export const App: React.FC = () => {
 
         // 1. LB Bumper: Hold to Open / Release to Close
         const lbPressed = !!gp.buttons[4]?.pressed;
-        if (lbPressed && !prevLbPressed) {
+        if (lbPressed && !prevLbPressed && !context.isModalOpen) {
           gamepadOpenedOverlay = true;
-          if (!isSettingsOpen) setIsOpen(true);
-        } else if (!lbPressed && prevLbPressed) {
-          if (gamepadOpenedOverlay) {
-            if (!isSettingsOpen) setIsOpen(false);
-            gamepadOpenedOverlay = false;
-          }
+          setIsOpen(true);
+        } else if (!lbPressed && prevLbPressed && gamepadOpenedOverlay) {
+          setIsOpen(false);
+          gamepadOpenedOverlay = false;
+          canNavigate = false;
+          navigationArmed = false;
+          lastStepTime = 0;
         }
         prevLbPressed = lbPressed;
 
         // 2. A Button (Select / Drill Down)
         const aPressed = !!gp.buttons[0]?.pressed;
-        if (aPressed && !prevAPressed) {
+        if (canNavigate && aPressed && !prevAPressed) {
           handlersRef.current.onConfirm();
         }
         prevAPressed = aPressed;
 
         // 3. B Button (Back / Drill Up)
         const bPressed = !!gp.buttons[1]?.pressed;
-        if (bPressed && !prevBPressed) {
+        if (canNavigate && bPressed && !prevBPressed) {
           handlersRef.current.onNavigateBack();
         }
         prevBPressed = bPressed;
@@ -816,7 +872,7 @@ export const App: React.FC = () => {
         const xPressed = !!gp.buttons[2]?.pressed;
         const r3Pressed = !!gp.buttons[11]?.pressed;
 
-        if ((rbPressed && !prevRbPressed) || (xPressed && !prevXPressed) || (r3Pressed && !prevR3Pressed)) {
+        if (!context.isOnboardingOpen && ((rbPressed && !prevRbPressed) || (xPressed && !prevXPressed) || (r3Pressed && !prevR3Pressed))) {
           handlersRef.current.onToggleMute();
         }
         prevRbPressed = rbPressed;
@@ -825,7 +881,7 @@ export const App: React.FC = () => {
 
         // 5. Y Button: Toggle Radio / On Demand
         const yPressed = !!gp.buttons[3]?.pressed;
-        if (yPressed && !prevYPressed) {
+        if (canNavigate && yPressed && !prevYPressed) {
           handlersRef.current.onToggleMode();
         }
         prevYPressed = yPressed;
@@ -835,7 +891,11 @@ export const App: React.FC = () => {
         const dpadRight = !!gp.buttons[15]?.pressed;
         const axisX = gp.axes[0] || 0;
 
-        if (!isSettingsOpen && (now - lastStepTime >= cadence)) {
+        if (canNavigate && !dpadLeft && !dpadRight && Math.abs(axisX) <= 0.55) {
+          navigationArmed = true;
+          lastStepTime = 0;
+        }
+        if (canNavigate && navigationArmed && (now - lastStepTime >= context.cadence)) {
           if (dpadRight || axisX > 0.55) {
             handlersRef.current.onNext();
             lastStepTime = now;
@@ -856,21 +916,32 @@ export const App: React.FC = () => {
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isSettingsOpen, settings.controls.gamepadCadenceMs]);
+  }, []);
+
+  useNativeHitRegions([
+    isOpen,
+    isSettingsOpen,
+    isOnboardingOpen,
+    isPhoneOpen,
+    settings.overlay.uiStyle
+  ].join('|'));
 
   return (
     <main
+      data-theme={settings.overlay.theme}
       className={`relative w-screen overflow-hidden bg-transparent text-white font-sans select-none ${
-        isSettingsOpen || isOnboardingOpen ? 'h-screen pointer-events-auto' : 'h-[340px] pointer-events-none'
+        isSettingsOpen || isOnboardingOpen || isPhoneOpen ? 'h-screen pointer-events-auto' : settings.overlay.uiStyle === 'gta_arc' ? 'h-screen pointer-events-none' : 'h-[340px] pointer-events-none'
       }`}
     >
-      {/* GTA 6 Top-Center Radio & On Demand Selector HUD */}
+      {/* Shared radio and On-Demand selector */}
+      {!isTauri() && news.alert && <NewsToast item={news.alert} theme={settings.overlay.theme} language={settings.language} />}
       <RadioWheel
-        isOpen={isOpen && !isSettingsOpen && !isOnboardingOpen}
+        isOpen={isSelectorVisible}
+        uiStyle={settings.overlay.uiStyle}
         language={settings.language}
         mode={mode}
         onToggleMode={handleToggleMode}
-        stations={STATIONS}
+        stations={stations}
         virtualRadioIndex={virtualRadioIndex}
         onSelectOffset={handleSelectRadioOffset}
         isPlaying={isPlaying}
@@ -894,8 +965,50 @@ export const App: React.FC = () => {
         onNavigateBack={handleNavigateBack}
       />
 
+      {isSelectorVisible && (
+        <button className="phone-launcher" data-native-hit-region="rect" onClick={handleTogglePhone} aria-label={t.phone.open}>
+          <Smartphone size={18} /><span>{t.phone.open}</span><kbd>F5</kbd>
+        </button>
+      )}
+      {isPhoneOpen && !isSettingsOpen && !isOnboardingOpen && (
+        <PhoneOverlay
+          theme={settings.overlay.theme}
+          language={settings.language}
+          stations={stations}
+          activeStationId={activeStation.id}
+          track={activeLiveTrack}
+          progress={trackProgress}
+          mode={mode}
+          isMuted={isMuted}
+          volume={settings.audio.masterVolume}
+          onSelectStation={id => {
+            const index = stations.findIndex(station => station.id === id);
+            if (index < 0) return;
+            modeRef.current = 'radio';
+            setMode('radio');
+            switchStation(index);
+          }}
+          onToggleMute={handleToggleMute}
+          onVolumeChange={volume => handleUpdateSettings({
+            ...settings, audio: { ...settings.audio, masterVolume: volume }
+          })}
+          onOpenOnDemand={() => {
+            setIsPhoneOpen(false);
+            setIsOpen(true);
+            if (isRadio) handleToggleMode();
+          }}
+          onOpenSettings={handleToggleSettings}
+          onClose={() => setIsPhoneOpen(false)}
+        />
+      )}
+
       {/* GTA 6 Settings Dialog Modal */}
       <SettingsDialog
+        newsPanel={<NewsPanel items={news.items} error={news.error} loading={news.loading}
+          enabled={settings.news.enabled} soundEnabled={settings.news.soundEnabled} language={settings.language}
+          onEnabledChange={enabled => handleUpdateSettings({ ...settings, news: { ...settings.news, enabled } })}
+          onSoundChange={soundEnabled => handleUpdateSettings({ ...settings, news: { ...settings.news, soundEnabled } })}
+          onRefresh={() => void news.refresh()} onPreview={news.preview} onOpenArticle={news.openArticle} />}
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         settings={settings}

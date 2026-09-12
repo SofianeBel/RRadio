@@ -5,34 +5,74 @@ export const isTauri = (): boolean => {
   return typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
 };
 
+let nativeCommandQueue: Promise<void> = Promise.resolve();
+
+const enqueueNativeCommand = (command: () => Promise<void>): Promise<void> => {
+  const next = nativeCommandQueue.then(command, command);
+  nativeCommandQueue = next.then(() => undefined, () => undefined);
+  return next;
+};
+
 export const setNativeClickThrough = async (enable: boolean) => {
   if (!isTauri()) return;
-  try {
-    await invoke('set_click_through', { enable });
-  } catch (e) {
-    console.warn('Could not set native click-through:', e);
-  }
+  return enqueueNativeCommand(async () => {
+    try {
+      await invoke('set_click_through', { enable });
+    } catch (e) {
+      console.warn('Could not set native click-through:', e);
+    }
+  });
+};
+
+export type NativeHitRegionShape = 'rect' | 'ellipse';
+
+export interface NativeHitRegion {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  shape?: NativeHitRegionShape;
+}
+
+/** Coordinates are physical client pixels relative to the overlay window. */
+export const setNativeHitRegions = async (regions: NativeHitRegion[]): Promise<boolean> => {
+  if (!isTauri()) return true;
+  let applied = false;
+  await enqueueNativeCommand(async () => {
+    try {
+      await invoke('set_window_hit_regions', { regions });
+      applied = true;
+    } catch (e) {
+      console.warn('Could not set native hit regions:', e);
+    }
+  });
+  return applied;
 };
 
 export const setNativeWindowVisibility = async (visible: boolean) => {
   if (!isTauri()) return;
-  try {
-    await invoke('set_window_visibility', { visible });
-  } catch (e) {
-    console.warn('Could not set native window visibility:', e);
-  }
+  return enqueueNativeCommand(async () => {
+    try {
+      await invoke('set_window_visibility', { visible });
+    } catch (e) {
+      console.warn('Could not set native window visibility:', e);
+    }
+  });
 };
 
-export const setNativeSettingsMode = async (isSettingsOpen: boolean, isRadioOpen: boolean) => {
+export const setNativeSettingsMode = async (isSettingsOpen: boolean, isRadioOpen: boolean, isCircular: boolean) => {
   if (!isTauri()) return;
-  try {
-    await invoke('set_settings_window_mode', {
-      isSettingsOpen,
-      isRadioOpen
-    });
-  } catch (e) {
-    console.warn('Could not set settings window mode:', e);
-  }
+  return enqueueNativeCommand(async () => {
+    try {
+      await invoke('set_settings_window_mode', {
+        isSettingsOpen,
+        isRadioOpen,
+        isCircular
+      });
+    } catch (e) {
+      console.warn('Could not set settings window mode:', e);
+    }
+  });
 };
 
 export const restoreWindowFocus = async () => {
@@ -51,6 +91,7 @@ export interface GlobalEventCallbacks {
   onToggleMute: () => void;
   onOpenSettings: () => void;
   onToggleMode: () => void;
+  onTogglePhone: () => void;
   onNext?: () => void;
   onPrev?: () => void;
   onConfirm?: () => void;
@@ -82,6 +123,9 @@ export const listenToGlobalOverlayEvents = async (
     const unlistenMode = await listen('global_mode_toggle', () => {
       callbacks.onToggleMode();
     });
+    const unlistenPhone = await listen('global_phone_toggle', () => {
+      callbacks.onTogglePhone();
+    });
     const unlistenNext = await listen('global_nav_next', () => {
       if (callbacks.onNext) callbacks.onNext();
     });
@@ -105,6 +149,7 @@ export const listenToGlobalOverlayEvents = async (
       unlistenMute();
       unlistenSettings();
       unlistenMode();
+      unlistenPhone();
       unlistenNext();
       unlistenPrev();
       unlistenConfirm();

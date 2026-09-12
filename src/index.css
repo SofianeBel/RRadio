@@ -2,6 +2,92 @@
 @tailwind components;
 @tailwind utilities;
 
+[data-theme] {
+  --theme-accent: 255 160 122;
+  --theme-rose: 255 101 132;
+  --theme-purple: 139 92 246;
+  --theme-cyan: 0 212 255;
+  --theme-cream: 245 235 224;
+  --theme-warm: 255 210 164;
+  --theme-base: 245 237 228;
+  --theme-veil: 20 14 36;
+  --theme-violet: 176 83 245;
+  --theme-accent-hover: 255 180 148;
+  --theme-accent-focus: 255 162 127;
+}
+
+[data-theme='gta4'] {
+  --theme-accent: 230 230 225;
+  --theme-rose: 230 230 225;
+  --theme-purple: 195 195 190;
+  --theme-cyan: 215 215 210;
+  --theme-cream: 235 235 230;
+  --theme-warm: 225 225 220;
+  --theme-base: 48 48 48;
+  --theme-veil: 15 15 15;
+  --theme-violet: 230 230 225;
+  --theme-accent-hover: 250 250 245;
+  --theme-accent-focus: 245 245 240;
+}
+
+.theme-choice[aria-pressed='true'] {
+  background: rgb(var(--theme-accent));
+  border-color: rgb(var(--theme-accent));
+  color: #141414;
+}
+
+.theme-choice[aria-pressed='true']:hover {
+  background: rgb(var(--theme-accent-hover));
+}
+
+[data-theme='gta4'] .dialog-shell {
+  background: rgb(24 24 24 / 0.9);
+  border-radius: 4px;
+}
+
+[data-theme='gta4'] .dialog-base {
+  background: rgb(48 48 48 / 0.35);
+}
+
+[data-theme='gta4'] .dialog-veil {
+  background: rgb(15 15 15 / 0.7);
+}
+
+[data-theme='gta4'] .dialog-mesh {
+  --dialog-mesh-background: radial-gradient(ellipse at 15% 0%, rgb(255 255 255 / 0.24), transparent 65%), linear-gradient(135deg, #343434, #101010);
+  animation: none;
+  will-change: auto;
+  transform: none;
+  inset: 0;
+  filter: none;
+  opacity: 0.6;
+}
+
+[data-theme='gta4'] .dialog-accent {
+  display: none;
+}
+
+[data-theme='gta4'] .dialog-tab {
+  border: 1px solid rgb(255 255 255 / 0.25);
+  background-color: rgb(18 18 18 / 0.9);
+  box-shadow: none;
+}
+
+[data-theme='gta4'] .dialog-tab[aria-pressed='true'],
+[data-theme='gta4'] .dialog-step[aria-current='step'] {
+  box-shadow: none;
+  color: #111;
+}
+
+[data-theme='gta4'] .theme-dialog :is(.rounded-lg, .rounded-xl, .rounded-2xl, .rounded-3xl),
+[data-theme='gta4'] .theme-dialog button {
+  border-radius: 3px;
+}
+
+[data-theme='gta4'] .theme-dialog button {
+  box-shadow: none;
+}
+
 @layer base {
   html, body, #root {
     background-color: transparent !important;

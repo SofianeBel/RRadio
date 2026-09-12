@@ -19,7 +19,6 @@ import {
   Folder,
   HardDrive,
   Check,
-  ChevronDown,
   X,
   RotateCcw,
   Youtube,
@@ -42,6 +41,7 @@ import { startNativeGoogleOAuth, cancelNativeGoogleOAuth, listenToOAuthEvents, r
 import { soundEngine } from '../audio/soundEngine';
 
 interface SettingsDialogProps {
+  newsPanel?: React.ReactNode;
   isOpen: boolean;
   onClose: () => void;
   settings: AppSettings;
@@ -56,6 +56,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
   onClose,
   settings,
   onUpdateSettings,
+  newsPanel,
   onReplayOnboarding
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('audio');
@@ -200,10 +201,10 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
               handleClose();
             }
           }}
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center p-4 md:p-8 bg-transparent select-none font-gta6 pointer-events-auto"
+          className="theme-dialog fixed inset-0 z-[100] flex flex-col items-center justify-center p-4 md:p-8 bg-transparent select-none font-gta6 pointer-events-auto"
         >
           {/* Top Tabs Bar */}
-          <div className="flex items-center gap-2 md:gap-4 mb-4 px-2 py-1 overflow-x-auto max-w-5xl z-10">
+          <div className="dialog-tabs flex items-center gap-2 md:gap-4 mb-4 px-2 py-1 overflow-x-auto max-w-5xl z-10" data-native-hit-region="rect">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
@@ -213,15 +214,16 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                     setActiveTab(tab.id);
                     soundEngine.playMechanicalClick();
                   }}
-                  className={`relative px-7 py-2 rounded-2xl font-black text-[16px] tracking-wide uppercase transition-all duration-200 ${
+                  aria-pressed={isActive}
+                  className={`dialog-tab relative px-7 py-2 rounded-2xl font-black text-[16px] tracking-wide uppercase transition-all duration-200 ${
                     isActive
-                      ? 'text-black shadow-[0_4px_25px_rgba(255,160,122,0.6)]'
+                      ? 'text-black shadow-[0_4px_25px_rgb(var(--theme-accent)/0.6)]'
                       : 'text-white/85 hover:text-white hover:bg-black/30'
                   }`}
                   style={
                     isActive
                       ? {
-                          background: 'linear-gradient(90deg, #FFA07A 0%, #FF6584 50%, #B053F5 100%)'
+                          background: 'linear-gradient(90deg, rgb(var(--theme-accent)) 0%, rgb(var(--theme-rose)) 50%, rgb(var(--theme-violet)) 100%)'
                         }
                       : {}
                   }
@@ -234,38 +236,39 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
           {/* Main Card */}
           <div
-            className="relative flex flex-col w-full max-w-5xl h-[640px] max-h-[88vh] rounded-3xl overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.9)]"
+            className="dialog-shell relative flex flex-col w-full max-w-5xl h-[640px] max-h-[88vh] rounded-3xl overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.9)]"
+            data-native-hit-region="rect"
             style={{
-              border: '1.5px solid rgba(245, 235, 224, 0.35)',
-              boxShadow: '0 30px 90px rgba(0,0,0,0.9), inset 0 1px 2px rgba(245, 235, 224, 0.3)'
+              border: '1.5px solid rgb(var(--theme-cream) / 0.35)',
+              boxShadow: '0 30px 90px rgba(0,0,0,0.9), inset 0 1px 2px rgb(var(--theme-cream) / 0.3)'
             }}
           >
             {/* 1. Base Layer */}
-            <div className="absolute inset-0 bg-[#F5EDE4]/15 backdrop-blur-2xl pointer-events-none" />
+            <div className="dialog-base absolute inset-0 bg-[rgb(var(--theme-base))]/15 backdrop-blur-2xl pointer-events-none" />
 
-            {/* 2. Rotating Gradient Mesh Layer */}
+            {/* Gradient Mesh Layer */}
             <div
-              className="absolute -inset-[70%] opacity-45 blur-3xl animate-spin-gradient pointer-events-none"
+              className="dialog-mesh absolute -inset-[70%] opacity-45 blur-3xl animate-spin-gradient pointer-events-none"
               style={{
-                background: `conic-gradient(
+                background: `var(--dialog-mesh-background, conic-gradient(
                   from 0deg at 50% 50%,
-                  #F5EBE0 0deg,
-                  #8B5CF6 90deg,
-                  #00D4FF 180deg,
-                  #FFA07A 270deg,
-                  #F5EBE0 360deg
-                )`
+                  rgb(var(--theme-cream)) 0deg,
+                  rgb(var(--theme-purple)) 90deg,
+                  rgb(var(--theme-cyan)) 180deg,
+                  rgb(var(--theme-accent)) 270deg,
+                  rgb(var(--theme-cream)) 360deg
+                ))`
               }}
             />
 
             {/* 3. Deep Balancing Veil */}
-            <div className="absolute inset-0 bg-[#140E24]/75 backdrop-blur-md pointer-events-none" />
+            <div className="dialog-veil absolute inset-0 bg-[rgb(var(--theme-veil))]/75 backdrop-blur-md pointer-events-none" />
 
             {/* Right Accent Scrollbar Line */}
             <div
-              className="absolute right-3 top-6 bottom-6 w-1.5 rounded-full opacity-80 pointer-events-none z-20"
+              className="dialog-accent absolute right-3 top-6 bottom-6 w-1.5 rounded-full opacity-80 pointer-events-none z-20"
               style={{
-                background: 'linear-gradient(180deg, #F5EBE0 0%, #FFA07A 35%, #8B5CF6 70%, #00D4FF 100%)'
+                background: 'linear-gradient(180deg, rgb(var(--theme-cream)) 0%, rgb(var(--theme-accent)) 35%, rgb(var(--theme-purple)) 70%, rgb(var(--theme-cyan)) 100%)'
               }}
             />
 
@@ -279,7 +282,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                   onClick={() => handleSwitchLanguage('fr')}
                   className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-bold transition-all ${
                     settings.language === 'fr'
-                      ? 'bg-gradient-to-r from-[#FFA07A] to-[#FF6584] text-black shadow-sm'
+                      ? 'bg-gradient-to-r from-[rgb(var(--theme-accent))] to-[rgb(var(--theme-rose))] text-black shadow-sm'
                       : 'text-white/60 hover:text-white'
                   }`}
                 >
@@ -289,7 +292,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                   onClick={() => handleSwitchLanguage('en')}
                   className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-bold transition-all ${
                     settings.language === 'en'
-                      ? 'bg-gradient-to-r from-[#FFA07A] to-[#FF6584] text-black shadow-sm'
+                      ? 'bg-gradient-to-r from-[rgb(var(--theme-accent))] to-[rgb(var(--theme-rose))] text-black shadow-sm'
                       : 'text-white/60 hover:text-white'
                   }`}
                 >
@@ -326,7 +329,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <div className="flex items-center gap-3.5">
                           <Volume2 className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.audio.masterVolume} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.audio.masterVolume}%]</span>
+                            {t.audio.masterVolume} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.audio.masterVolume}%]</span>
                           </span>
                         </div>
                         <div className="flex items-center gap-4">
@@ -342,7 +345,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 audio: { ...settings.audio, masterVolume: val }
                               });
                             }}
-                            className="w-52 md:w-64 h-2 rounded-lg appearance-none cursor-pointer bg-white/20 accent-[#FFA07A]"
+                            className="w-52 md:w-64 h-2 rounded-lg appearance-none cursor-pointer bg-white/20 accent-[rgb(var(--theme-accent))]"
                           />
                         </div>
                       </div>
@@ -352,7 +355,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <div className="flex items-center gap-3.5">
                           <Radio className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.audio.fmStatic} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.audio.sfxVolume}%]</span>
+                            {t.audio.fmStatic} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.audio.sfxVolume}%]</span>
                           </span>
                         </div>
                         <div className="flex items-center gap-4">
@@ -368,7 +371,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 audio: { ...settings.audio, sfxVolume: val }
                               });
                             }}
-                            className="w-52 md:w-64 h-2 rounded-lg appearance-none cursor-pointer bg-white/20 accent-[#FFA07A]"
+                            className="w-52 md:w-64 h-2 rounded-lg appearance-none cursor-pointer bg-white/20 accent-[rgb(var(--theme-accent))]"
                           />
                         </div>
                       </div>
@@ -378,14 +381,14 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <div className="flex items-center gap-3.5">
                           <Sliders className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.audio.quality} <span className="text-[#FFD2A4] font-mono font-bold">[{t.audio.levels.ultra}]</span>
+                            {t.audio.quality} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{t.audio.levels.ultra}]</span>
                           </span>
                         </div>
                         <div className="flex items-center gap-6 font-mono text-xs text-white/60 pr-1">
                           <span className="hover:text-white cursor-pointer">{t.audio.levels.low}</span>
                           <span className="hover:text-white cursor-pointer">{t.audio.levels.medium}</span>
                           <span className="hover:text-white cursor-pointer">{t.audio.levels.high}</span>
-                          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFA07A] text-black font-extrabold shadow-md">
+                          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[rgb(var(--theme-accent))] text-black font-extrabold shadow-md">
                             <Check className="w-3.5 h-3.5 stroke-[3]" />
                             <span>{t.audio.levels.ultra}</span>
                           </div>
@@ -397,7 +400,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <div className="flex items-center gap-3.5">
                           <Sparkles className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.audio.analogTuning} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.audio.playTuningSound ? t.audio.enabled : t.audio.disabled}]</span>
+                            {t.audio.analogTuning} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.audio.playTuningSound ? t.audio.enabled : t.audio.disabled}]</span>
                           </span>
                         </div>
                         <button
@@ -410,7 +413,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                           }}
                           className={`relative w-14 h-7 rounded-full transition-colors duration-200 p-1 ${
                             settings.audio.playTuningSound
-                              ? 'bg-[#8B5CF6] shadow-[0_0_15px_#8B5CF6]'
+                              ? 'bg-[rgb(var(--theme-purple))] shadow-[0_0_15px_rgb(var(--theme-purple))]'
                               : 'bg-white/20'
                           }`}
                         >
@@ -427,7 +430,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <div className="flex items-center gap-3.5">
                           <Clock className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.audio.muteOnStartup} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.audio.muteOnStartup ? t.audio.enabled : t.audio.disabled}]</span>
+                            {t.audio.muteOnStartup} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.audio.muteOnStartup ? t.audio.enabled : t.audio.disabled}]</span>
                           </span>
                         </div>
                         <button
@@ -440,7 +443,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                           }}
                           className={`relative w-14 h-7 rounded-full transition-colors duration-200 p-1 ${
                             settings.audio.muteOnStartup
-                              ? 'bg-[#8B5CF6] shadow-[0_0_15px_#8B5CF6]'
+                              ? 'bg-[rgb(var(--theme-purple))] shadow-[0_0_15px_rgb(var(--theme-purple))]'
                               : 'bg-white/20'
                           }`}
                         >
@@ -457,12 +460,56 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                   {/* TAB 2: OVERLAY / HUD */}
                   {activeTab === 'overlay' && (
                     <>
+                      <fieldset className="min-w-0 border-b border-white/[0.12] px-3 pb-4">
+                        <legend className="mb-3 font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
+                          {t.overlay.theme}
+                        </legend>
+                        <div className="grid grid-cols-2 gap-2">
+                          <button
+                            type="button"
+                            aria-pressed={settings.overlay.theme === 'gta6'}
+                            onClick={() => {
+                              soundEngine.playMechanicalClick();
+                              onUpdateSettings({
+                                ...settings,
+                                overlay: { ...settings.overlay, theme: 'gta6' }
+                              });
+                            }}
+                            className="theme-choice min-w-0 rounded-xl border border-white/20 bg-black/30 px-3 py-3 text-left text-white transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                          >
+                            <span className="flex items-center justify-between gap-2 text-base font-black tracking-wide">
+                              GTA VI
+                              {settings.overlay.theme === 'gta6' && <Check aria-hidden="true" className="h-4 w-4 shrink-0" />}
+                            </span>
+                            <span className="mt-1 block text-xs leading-snug opacity-80">{t.overlay.gta6ThemeDescription}</span>
+                          </button>
+                          <button
+                            type="button"
+                            aria-pressed={settings.overlay.theme === 'gta4'}
+                            onClick={() => {
+                              soundEngine.playMechanicalClick();
+                              onUpdateSettings({
+                                ...settings,
+                                overlay: { ...settings.overlay, theme: 'gta4' }
+                              });
+                            }}
+                            className="theme-choice min-w-0 rounded-xl border border-white/20 bg-black/30 px-3 py-3 text-left text-white transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                          >
+                            <span className="flex items-center justify-between gap-2 text-base font-black tracking-wide">
+                              GTA IV
+                              {settings.overlay.theme === 'gta4' && <Check aria-hidden="true" className="h-4 w-4 shrink-0" />}
+                            </span>
+                            <span className="mt-1 block text-xs leading-snug opacity-80">{t.overlay.gta4ThemeDescription}</span>
+                          </button>
+                        </div>
+                      </fieldset>
+
                       {/* Language Selection Row */}
                       <div className="h-[54px] flex items-center justify-between border-b border-white/[0.12] px-3 hover:bg-white/[0.05] transition-colors rounded-xl">
                         <div className="flex items-center gap-3.5">
                           <Globe className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.overlay.language} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.language === 'fr' ? 'Français' : 'English'}]</span>
+                            {t.overlay.language} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.language === 'fr' ? 'Français' : 'English'}]</span>
                           </span>
                         </div>
                         <div className="flex items-center gap-2 bg-black/50 border border-white/20 p-1 rounded-xl">
@@ -470,7 +517,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                             onClick={() => handleSwitchLanguage('fr')}
                             className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
                               settings.language === 'fr'
-                                ? 'bg-[#FFA07A] text-black shadow font-black'
+                                ? 'bg-[rgb(var(--theme-accent))] text-black shadow font-black'
                                 : 'text-zinc-400 hover:text-white'
                             }`}
                           >
@@ -480,7 +527,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                             onClick={() => handleSwitchLanguage('en')}
                             className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
                               settings.language === 'en'
-                                ? 'bg-[#FFA07A] text-black shadow font-black'
+                                ? 'bg-[rgb(var(--theme-accent))] text-black shadow font-black'
                                 : 'text-zinc-400 hover:text-white'
                             }`}
                           >
@@ -489,36 +536,54 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         </div>
                       </div>
 
-                      {/* Selector Style */}
-                      <div className="h-[54px] flex items-center justify-between border-b border-white/[0.12] px-3 hover:bg-white/[0.05] transition-colors rounded-xl">
-                        <div className="flex items-center gap-3.5">
-                          <Tv className="w-5 h-5 text-white/80" />
-                          <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.overlay.uiStyle}
-                          </span>
+                      <fieldset className="min-w-0 border-b border-white/[0.12] px-3 pb-4">
+                        <legend className="mb-3 font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
+                          {t.overlay.uiStyle}
+                        </legend>
+                        <div className="grid grid-cols-2 gap-2">
+                          <button
+                            type="button"
+                            aria-pressed={settings.overlay.uiStyle === 'gta6_ribbon'}
+                            onClick={() => {
+                              soundEngine.playMechanicalClick();
+                              onUpdateSettings({
+                                ...settings,
+                                overlay: { ...settings.overlay, uiStyle: 'gta6_ribbon' }
+                              });
+                            }}
+                            className="theme-choice min-w-0 rounded-xl border border-white/20 bg-black/30 px-3 py-3 text-left text-white transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                          >
+                            <span className="flex items-center justify-between gap-2 text-base font-black tracking-wide">
+                              {t.overlay.ribbonStyle}
+                              {settings.overlay.uiStyle === 'gta6_ribbon' && <Check aria-hidden="true" className="h-4 w-4 shrink-0" />}
+                            </span>
+                          </button>
+                          <button
+                            type="button"
+                            aria-pressed={settings.overlay.uiStyle === 'gta_arc'}
+                            onClick={() => {
+                              soundEngine.playMechanicalClick();
+                              onUpdateSettings({
+                                ...settings,
+                                overlay: { ...settings.overlay, uiStyle: 'gta_arc' }
+                              });
+                            }}
+                            className="theme-choice min-w-0 rounded-xl border border-white/20 bg-black/30 px-3 py-3 text-left text-white transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                          >
+                            <span className="flex items-center justify-between gap-2 text-base font-black tracking-wide">
+                              {t.overlay.arcStyle}
+                              {settings.overlay.uiStyle === 'gta_arc' && <Check aria-hidden="true" className="h-4 w-4 shrink-0" />}
+                            </span>
+                          </button>
                         </div>
-                        <button
-                          onClick={() => {
-                            const next = settings.overlay.uiStyle === 'gta6_ribbon' ? 'gta_arc' : 'gta6_ribbon';
-                            onUpdateSettings({
-                              ...settings,
-                              overlay: { ...settings.overlay, uiStyle: next }
-                            });
-                            soundEngine.playMechanicalClick();
-                          }}
-                          className="flex items-center justify-between gap-4 px-6 py-2 rounded-xl bg-black/50 border border-white/20 text-[#FFD2A4] font-bold text-sm min-w-[200px] hover:border-white/40 transition-colors shadow-inner"
-                        >
-                          <span>{settings.overlay.uiStyle === 'gta6_ribbon' ? t.overlay.ribbonStyle : t.overlay.arcStyle}</span>
-                          <ChevronDown className="w-4 h-4 text-white/60" />
-                        </button>
-                      </div>
+                      </fieldset>
 
                       {/* HUD Scale */}
                       <div className="h-[54px] flex items-center justify-between border-b border-white/[0.12] px-3 hover:bg-white/[0.05] transition-colors rounded-xl">
                         <div className="flex items-center gap-3.5">
                           <Layers className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.overlay.hudScale} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.overlay.hudScale}%]</span>
+                            {t.overlay.hudScale} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.overlay.hudScale}%]</span>
                           </span>
                         </div>
                         <div className="flex items-center gap-4">
@@ -535,7 +600,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 overlay: { ...settings.overlay, hudScale: val }
                               });
                             }}
-                            className="w-52 md:w-64 h-2 rounded-lg appearance-none cursor-pointer bg-white/20 accent-[#FFA07A]"
+                            className="w-52 md:w-64 h-2 rounded-lg appearance-none cursor-pointer bg-white/20 accent-[rgb(var(--theme-accent))]"
                           />
                         </div>
                       </div>
@@ -545,7 +610,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <div className="flex items-center gap-3.5">
                           <Sparkles className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.overlay.dynamicEqualizer} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.overlay.showEqualizer ? t.audio.enabled : t.audio.disabled}]</span>
+                            {t.overlay.dynamicEqualizer} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.overlay.showEqualizer ? t.audio.enabled : t.audio.disabled}]</span>
                           </span>
                         </div>
                         <button
@@ -558,7 +623,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                           }}
                           className={`relative w-14 h-7 rounded-full transition-colors duration-200 p-1 ${
                             settings.overlay.showEqualizer
-                              ? 'bg-[#8B5CF6] shadow-[0_0_15px_#8B5CF6]'
+                              ? 'bg-[rgb(var(--theme-purple))] shadow-[0_0_15px_rgb(var(--theme-purple))]'
                               : 'bg-white/20'
                           }`}
                         >
@@ -574,7 +639,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <div className="flex items-center gap-3.5">
                           <Github className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.updates.checkForUpdates} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.updates.checkEnabled ? t.audio.enabled : t.audio.disabled}]</span>
+                            {t.updates.checkForUpdates} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.updates.checkEnabled ? t.audio.enabled : t.audio.disabled}]</span>
                           </span>
                         </div>
                         <button
@@ -587,7 +652,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                           }}
                           className={`relative w-14 h-7 rounded-full transition-colors duration-200 p-1 ${
                             settings.updates.checkEnabled
-                              ? 'bg-[#8B5CF6] shadow-[0_0_15px_#8B5CF6]'
+                              ? 'bg-[rgb(var(--theme-purple))] shadow-[0_0_15px_rgb(var(--theme-purple))]'
                               : 'bg-white/20'
                           }`}
                         >
@@ -599,6 +664,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         </button>
                       </div>
 
+                      {newsPanel}
                       {/* Releases Link */}
                       <div className="h-[54px] flex items-center justify-between border-b border-white/[0.12] px-3 hover:bg-white/[0.05] transition-colors rounded-xl">
                         <div className="flex items-center gap-3.5">
@@ -611,7 +677,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                           href={releasesHref}
                           target="_blank"
                           rel="noreferrer"
-                          className="px-4 py-1.5 rounded-xl bg-black/50 border border-white/20 text-[#FFD2A4] font-mono font-bold text-xs hover:border-white/40 transition-colors"
+                          className="px-4 py-1.5 rounded-xl bg-black/50 border border-white/20 text-[rgb(var(--theme-warm))] font-mono font-bold text-xs hover:border-white/40 transition-colors"
                         >
                           {releasesHost}
                         </a>
@@ -627,7 +693,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <div className="flex items-center gap-3.5">
                           <Gamepad2 className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.controls.gamepadCadence} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.controls.gamepadCadenceMs} ms]</span>
+                            {t.controls.gamepadCadence} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.controls.gamepadCadenceMs} ms]</span>
                           </span>
                         </div>
                         <div className="flex items-center gap-4">
@@ -644,7 +710,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 controls: { ...settings.controls, gamepadCadenceMs: val }
                               });
                             }}
-                            className="w-52 md:w-64 h-2 rounded-lg appearance-none cursor-pointer bg-white/20 accent-[#FFA07A]"
+                            className="w-52 md:w-64 h-2 rounded-lg appearance-none cursor-pointer bg-white/20 accent-[rgb(var(--theme-accent))]"
                           />
                         </div>
                       </div>
@@ -657,7 +723,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                             {t.controls.toggleHotkey}
                           </span>
                         </div>
-                        <div className="px-6 py-2 rounded-xl bg-black/50 border border-white/20 text-[#FFD2A4] font-mono font-bold text-sm min-w-[180px] text-center shadow-inner">
+                        <div className="px-6 py-2 rounded-xl bg-black/50 border border-white/20 text-[rgb(var(--theme-warm))] font-mono font-bold text-sm min-w-[180px] text-center shadow-inner">
                           {settings.controls.toggleHotkey}
                         </div>
                       </div>
@@ -670,7 +736,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                             {t.controls.muteHotkey}
                           </span>
                         </div>
-                        <div className="px-6 py-2 rounded-xl bg-black/50 border border-white/20 text-[#FFD2A4] font-mono font-bold text-sm min-w-[180px] text-center shadow-inner">
+                        <div className="px-6 py-2 rounded-xl bg-black/50 border border-white/20 text-[rgb(var(--theme-warm))] font-mono font-bold text-sm min-w-[180px] text-center shadow-inner">
                           {settings.controls.muteHotkey}
                         </div>
                       </div>
@@ -683,7 +749,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                             {t.controls.gamepadMuteButton}
                           </span>
                         </div>
-                        <div className="px-6 py-2 rounded-xl bg-black/50 border border-white/20 text-[#FFD2A4] font-mono font-bold text-sm min-w-[180px] text-center shadow-inner">
+                        <div className="px-6 py-2 rounded-xl bg-black/50 border border-white/20 text-[rgb(var(--theme-warm))] font-mono font-bold text-sm min-w-[180px] text-center shadow-inner">
                           {settings.controls.gamepadMuteButton}
                         </div>
                       </div>
@@ -696,7 +762,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                             {t.controls.holdHotkey}
                           </span>
                         </div>
-                        <div className="px-6 py-2 rounded-xl bg-black/50 border border-white/20 text-[#FFD2A4] font-mono font-bold text-sm min-w-[180px] text-center shadow-inner">
+                        <div className="px-6 py-2 rounded-xl bg-black/50 border border-white/20 text-[rgb(var(--theme-warm))] font-mono font-bold text-sm min-w-[180px] text-center shadow-inner">
                           {settings.controls.holdHotkey}
                         </div>
                       </div>
@@ -723,7 +789,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                               library: { ...settings.library, customMusicPath: e.target.value }
                             });
                           }}
-                          className="w-full px-5 py-2.5 mt-1 bg-black/50 border border-white/20 rounded-xl font-mono text-xs text-[#FFD2A4] focus:outline-none focus:border-[#FFA27F] shadow-inner"
+                          className="w-full px-5 py-2.5 mt-1 bg-black/50 border border-white/20 rounded-xl font-mono text-xs text-[rgb(var(--theme-warm))] focus:outline-none focus:border-[rgb(var(--theme-accent-focus))] shadow-inner"
                         />
                       </div>
 
@@ -732,7 +798,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <div className="flex items-center gap-3.5">
                           <HardDrive className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.library.scanSubfolders} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.library.scanSubfolders ? t.audio.enabled : t.audio.disabled}]</span>
+                            {t.library.scanSubfolders} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.library.scanSubfolders ? t.audio.enabled : t.audio.disabled}]</span>
                           </span>
                         </div>
                         <button
@@ -745,7 +811,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                           }}
                           className={`relative w-14 h-7 rounded-full transition-colors duration-200 p-1 ${
                             settings.library.scanSubfolders
-                              ? 'bg-[#8B5CF6] shadow-[0_0_15px_#8B5CF6]'
+                              ? 'bg-[rgb(var(--theme-purple))] shadow-[0_0_15px_rgb(var(--theme-purple))]'
                               : 'bg-white/20'
                           }`}
                         >
@@ -889,7 +955,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <div className="flex items-center gap-3.5">
                           <DiscordLogo className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.discord.enableToggle} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.discord.enabled ? t.audio.enabled : t.audio.disabled}]</span>
+                            {t.discord.enableToggle} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.discord.enabled ? t.audio.enabled : t.audio.disabled}]</span>
                           </span>
                         </div>
                         <button
@@ -919,7 +985,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <div className="flex items-center gap-3.5">
                           <Music className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.discord.activityType} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.discord.activityType === 'playing' ? t.discord.activityPlaying : t.discord.activityListening}]</span>
+                            {t.discord.activityType} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.discord.activityType === 'playing' ? t.discord.activityPlaying : t.discord.activityListening}]</span>
                           </span>
                         </div>
                         <div className="flex items-center gap-2 bg-black/40 p-1 rounded-xl border border-white/10">
@@ -965,7 +1031,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <div className="flex items-center gap-3.5">
                           <Radio className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.discord.showStation} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.discord.showStation ? (settings.language === 'en' ? 'Yes' : 'Oui') : (settings.language === 'en' ? 'No' : 'Non')}]</span>
+                            {t.discord.showStation} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.discord.showStation ? (settings.language === 'en' ? 'Yes' : 'Oui') : (settings.language === 'en' ? 'No' : 'Non')}]</span>
                           </span>
                         </div>
                         <button
@@ -978,7 +1044,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                           }}
                           className={`relative w-14 h-7 rounded-full transition-colors duration-200 p-1 ${
                             settings.discord.showStation
-                              ? 'bg-[#8B5CF6] shadow-[0_0_15px_#8B5CF6]'
+                              ? 'bg-[rgb(var(--theme-purple))] shadow-[0_0_15px_rgb(var(--theme-purple))]'
                               : 'bg-white/20'
                           }`}
                         >
@@ -995,7 +1061,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <div className="flex items-center gap-3.5">
                           <Music className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.discord.showTrack} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.discord.showTrack ? (settings.language === 'en' ? 'Yes' : 'Oui') : (settings.language === 'en' ? 'No' : 'Non')}]</span>
+                            {t.discord.showTrack} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.discord.showTrack ? (settings.language === 'en' ? 'Yes' : 'Oui') : (settings.language === 'en' ? 'No' : 'Non')}]</span>
                           </span>
                         </div>
                         <button
@@ -1008,7 +1074,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                           }}
                           className={`relative w-14 h-7 rounded-full transition-colors duration-200 p-1 ${
                             settings.discord.showTrack
-                              ? 'bg-[#8B5CF6] shadow-[0_0_15px_#8B5CF6]'
+                              ? 'bg-[rgb(var(--theme-purple))] shadow-[0_0_15px_rgb(var(--theme-purple))]'
                               : 'bg-white/20'
                           }`}
                         >
@@ -1025,7 +1091,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <div className="flex items-center gap-3.5">
                           <Clock className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.discord.showProgress} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.discord.showTimeRemaining ? (settings.language === 'en' ? 'Yes' : 'Oui') : (settings.language === 'en' ? 'No' : 'Non')}]</span>
+                            {t.discord.showProgress} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.discord.showTimeRemaining ? (settings.language === 'en' ? 'Yes' : 'Oui') : (settings.language === 'en' ? 'No' : 'Non')}]</span>
                           </span>
                         </div>
                         <button
@@ -1038,7 +1104,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                           }}
                           className={`relative w-14 h-7 rounded-full transition-colors duration-200 p-1 ${
                             settings.discord.showTimeRemaining
-                              ? 'bg-[#8B5CF6] shadow-[0_0_15px_#8B5CF6]'
+                              ? 'bg-[rgb(var(--theme-purple))] shadow-[0_0_15px_rgb(var(--theme-purple))]'
                               : 'bg-white/20'
                           }`}
                         >
@@ -1055,7 +1121,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <div className="flex items-center gap-3.5">
                           <Github className="w-5 h-5 text-white/80" />
                           <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                            {t.discord.githubButton} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.discord.showGitHubButton ? (settings.language === 'en' ? 'Yes' : 'Oui') : (settings.language === 'en' ? 'No' : 'Non')}]</span>
+                            {t.discord.githubButton} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.discord.showGitHubButton ? (settings.language === 'en' ? 'Yes' : 'Oui') : (settings.language === 'en' ? 'No' : 'Non')}]</span>
                           </span>
                         </div>
                         <button
@@ -1068,7 +1134,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                           }}
                           className={`relative w-14 h-7 rounded-full transition-colors duration-200 p-1 ${
                             settings.discord.showGitHubButton
-                              ? 'bg-[#8B5CF6] shadow-[0_0_15px_#8B5CF6]'
+                              ? 'bg-[rgb(var(--theme-purple))] shadow-[0_0_15px_rgb(var(--theme-purple))]'
                               : 'bg-white/20'
                           }`}
                         >
@@ -1098,7 +1164,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                               });
                               soundEngine.playMechanicalClick();
                             }}
-                            className="text-[11px] text-[#FFA07A] hover:underline font-mono"
+                            className="text-[11px] text-[rgb(var(--theme-accent))] hover:underline font-mono"
                           >
                             {t.discord.resetUrl}
                           </button>
@@ -1113,7 +1179,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                             });
                           }}
                           placeholder="https://github.com/SofianeBel/RRadio"
-                          className="w-full px-5 py-2.5 mt-1 bg-black/50 border border-white/20 rounded-xl font-mono text-xs text-[#FFD2A4] focus:outline-none focus:border-[#5865F2] shadow-inner"
+                          className="w-full px-5 py-2.5 mt-1 bg-black/50 border border-white/20 rounded-xl font-mono text-xs text-[rgb(var(--theme-warm))] focus:outline-none focus:border-[#5865F2] shadow-inner"
                         />
                       </div>
 
@@ -1135,7 +1201,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                               });
                               soundEngine.playMechanicalClick();
                             }}
-                            className="text-[11px] text-[#FFA07A] hover:underline font-mono"
+                            className="text-[11px] text-[rgb(var(--theme-accent))] hover:underline font-mono"
                           >
                             {t.discord.defaultAppId}
                           </button>
@@ -1150,7 +1216,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                             });
                           }}
                           placeholder="1346077556094009384"
-                          className="w-full px-5 py-2.5 mt-1 bg-black/50 border border-white/20 rounded-xl font-mono text-xs text-[#FFD2A4] focus:outline-none focus:border-[#5865F2] shadow-inner"
+                          className="w-full px-5 py-2.5 mt-1 bg-black/50 border border-white/20 rounded-xl font-mono text-xs text-[rgb(var(--theme-warm))] focus:outline-none focus:border-[#5865F2] shadow-inner"
                         />
                         <span className="text-zinc-400 text-[11px] mt-0.5">
                           {t.discord.rpcNotice}
@@ -1278,7 +1344,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                           <div className="flex items-center gap-3.5">
                             <Sparkles className="w-5 h-5 text-red-400" />
                             <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
-                              {t.services.autoSync} <span className="text-[#FFD2A4] font-mono font-bold">[{settings.services.youtubeMusic.autoSyncMixes ? (settings.language === 'en' ? 'Yes' : 'Oui') : (settings.language === 'en' ? 'No' : 'Non')}]</span>
+                              {t.services.autoSync} <span className="text-[rgb(var(--theme-warm))] font-mono font-bold">[{settings.services.youtubeMusic.autoSyncMixes ? (settings.language === 'en' ? 'Yes' : 'Oui') : (settings.language === 'en' ? 'No' : 'Non')}]</span>
                             </span>
                           </div>
                           <button
@@ -1426,10 +1492,10 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                       soundEngine.playMechanicalClick();
                       onReplayOnboarding();
                     }}
-                    className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-[#FFD2A4] hover:text-white font-bold uppercase tracking-wider text-xs transition-colors active:scale-95 border border-[#FFA07A]/30"
+                    className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-[rgb(var(--theme-warm))] hover:text-white font-bold uppercase tracking-wider text-xs transition-colors active:scale-95 border border-[rgb(var(--theme-accent))]/30"
                     title={t.onboarding.replayTooltip}
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-[#FFA07A]" />
+                    <Sparkles className="w-3.5 h-3.5 text-[rgb(var(--theme-accent))]" />
                     <span>{t.onboarding.replayButton}</span>
                   </button>
                 )}
@@ -1457,7 +1523,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
               <button
                 onClick={handleClose}
-                className="flex items-center gap-2 px-6 py-1.5 rounded-full bg-[#FFA07A] text-black font-black uppercase tracking-wider text-xs shadow hover:bg-[#FFB494] transition-colors active:scale-95"
+                className="flex items-center gap-2 px-6 py-1.5 rounded-full bg-[rgb(var(--theme-accent))] text-black font-black uppercase tracking-wider text-xs shadow hover:bg-[rgb(var(--theme-accent-hover))] transition-colors active:scale-95"
               >
                 <Check className="w-4 h-4" />
                 <span>{t.dialog.confirm}</span>

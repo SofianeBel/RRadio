@@ -10,6 +10,21 @@
   "app": {
     "windows": [
       {
+        "label": "news",
+        "title": "RRadio News",
+        "url": "index.html?news",
+        "width": 420,
+        "height": 160,
+        "transparent": true,
+        "decorations": false,
+        "alwaysOnTop": true,
+        "shadow": false,
+        "skipTaskbar": true,
+        "resizable": false,
+        "focus": false,
+        "visible": false
+      },
+      {
         "label": "main",
         "title": "",
         "fullscreen": false,

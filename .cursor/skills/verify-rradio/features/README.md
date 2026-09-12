@@ -30,6 +30,8 @@ Each feature file uses exactly four H2 sections in this order:
 
 ## Features
 
+- [News alerts](./news.md) covers the live feed, theme sounds, passive native pop-ups, and saved settings.
+
 - [Radio Wheel HUD](./radio-wheel.md) covers opening the wheel (`F8`), selecting stations, active station highlighting, and audio playback.
 - [Settings Dialog](./settings-dialog.md) covers opening the settings (`F10`), tab navigation, glassmorphism visuals, and persistence.
 - [On-Demand Drill-Down](./ondemand-drilldown.md) covers switching to On-Demand (`F7`), 3-level navigation (Services, Playlists, Tracks), and slide animations.

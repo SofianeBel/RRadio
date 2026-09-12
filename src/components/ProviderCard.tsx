@@ -1,6 +1,7 @@
 import React from 'react';
 import { OnDemandProvider, OnDemandPlaylist, OnDemandTrack } from '../types/ondemand';
 import { STATIONS } from '../data/stations';
+import { GTA4_STATIONS } from '../data/gta4Stations';
 import { StationLogo } from './StationLogo';
 import { Language } from '../types/settings';
 import { useTranslation } from '../i18n/useTranslation';
@@ -30,14 +31,17 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({
   if (provider) {
     switch (provider.id) {
       case 'vice_city_radio':
+      case 'liberty_city_radio': {
+        const isLiberty = provider.id === 'liberty_city_radio';
         return (
           <div
             className={`relative overflow-hidden flex flex-col items-center justify-center select-none w-full h-full text-white ${className}`}
             style={{
-              background: 'linear-gradient(135deg, #FF2A85 0%, #7C4DFF 50%, #00E5FF 100%)'
+              background: isLiberty
+                ? 'linear-gradient(135deg, #e4b961 0%, #3a4a52 50%, #85b9d0 100%)'
+                : 'linear-gradient(135deg, #FF2A85 0%, #7C4DFF 50%, #00E5FF 100%)'
             }}
           >
-            {/* Vice City Neon Radio Icon */}
             <div className="flex items-center justify-center w-11 h-11 rounded-full bg-black/40 border border-white/40 mb-0.5 shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
               <Radio className="w-6 h-6 text-[#FFD600]" />
             </div>
@@ -45,10 +49,11 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({
               {t.providers.stationsGta}
             </span>
             <span className="text-[9px] font-mono text-[#00E5FF] font-bold tracking-widest uppercase mt-0.5">
-              {t.providers.viceCity}
+              {isLiberty ? t.providers.libertyCity : t.providers.viceCity}
             </span>
           </div>
         );
+      }
 
       case 'spotify':
         return (
@@ -158,7 +163,7 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({
   if (playlist) {
     // If playlist is a Vice City Station, render its authentic StationLogo!
     if (playlist.stationId) {
-      const station = STATIONS.find(s => s.id === playlist.stationId);
+      const station = STATIONS.find(s => s.id === playlist.stationId) ?? GTA4_STATIONS.find(s => s.id === playlist.stationId);
       if (station) {
         return <StationLogo station={station} size={size} className={className} />;
       }

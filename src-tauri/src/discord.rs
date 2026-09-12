@@ -25,7 +25,7 @@ pub struct DiscordActivityPayload {
 }
 
 enum DiscordCommand {
-    Update(DiscordActivityPayload),
+    Update(Box<DiscordActivityPayload>),
     Clear,
 }
 
@@ -214,7 +214,7 @@ pub fn update_discord_activity(payload: DiscordActivityPayload) -> Result<(), St
         Err(p) => p.into_inner(),
     };
     if let Some(ref tx) = *guard {
-        match tx.try_send(DiscordCommand::Update(payload)) {
+        match tx.try_send(DiscordCommand::Update(Box::new(payload))) {
             Ok(_) => {}
             Err(TrySendError::Full(_)) => {
                 // Queue full, worker will process latest on next cycle

@@ -26,6 +26,7 @@ export interface DiscordRpcConfig {
 }
 
 export type Language = 'fr' | 'en';
+export type VisualTheme = 'gta6' | 'gta4';
 
 export interface UpdatesConfig {
   checkEnabled: boolean;
@@ -42,6 +43,7 @@ export interface AppSettings {
     playTuningSound: boolean;
   };
   overlay: {
+    theme: VisualTheme;
     hudScale: number; // 80 - 120 (%)
     uiStyle: 'gta6_ribbon' | 'gta_arc';
     showEqualizer: boolean;
@@ -63,9 +65,11 @@ export interface AppSettings {
   };
   discord: DiscordRpcConfig;
   updates: UpdatesConfig;
+  news: { enabled: boolean; soundEnabled: boolean };
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
+  news: { enabled: true, soundEnabled: true },
   language: 'fr',
   hasCompletedOnboarding: false,
   audio: {
@@ -75,6 +79,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
     playTuningSound: true
   },
   overlay: {
+    theme: 'gta6',
     hudScale: 100,
     uiStyle: 'gta6_ribbon',
     showEqualizer: true,

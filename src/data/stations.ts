@@ -8,7 +8,13 @@ export const STATION_LOGOS: Record<string, string> = {
   fever_105: 'https://static.wikia.nocookie.net/gtawiki/images/1/16/Fever105-GTAVC-Logo.png/revision/latest/scale-to-width-down/512',
   wildstyle: 'https://static.wikia.nocookie.net/gtawiki/images/6/6a/WildstylePirateRadio-GTAVC-Logo.png/revision/latest/scale-to-width-down/512',
   espantoso: 'https://static.wikia.nocookie.net/gtawiki/images/8/83/RadioEspantoso-GTAVC-Logo.svg/revision/latest/scale-to-width-down/512',
-  kchat: 'https://static.wikia.nocookie.net/gtawiki/images/4/44/KChat-GTAVC-Logo.svg/revision/latest/scale-to-width-down/512'
+  kchat: 'https://static.wikia.nocookie.net/gtawiki/images/4/44/KChat-GTAVC-Logo.svg/revision/latest/scale-to-width-down/512',
+  gta4_classics: 'https://static.wikia.nocookie.net/gtawiki/images/8/84/The_Classics-GTAIV.png/revision/latest/scale-to-width-down/512',
+  gta4_journey: 'https://static.wikia.nocookie.net/gtawiki/images/8/84/TheJourney-GTAIV-Logo.png/revision/latest/scale-to-width-down/512',
+  gta4_jazz: 'https://static.wikia.nocookie.net/gtawiki/images/d/de/JazzNationRadio-GTAIV-Logo.png/revision/latest/scale-to-width-down/512',
+  gta4_vibe: 'https://static.wikia.nocookie.net/gtawiki/images/7/7f/TheVibe98.8.png/revision/latest/scale-to-width-down/512',
+  gta4_integrity: 'https://static.wikia.nocookie.net/gtawiki/images/b/b3/Integrity-GTAIV-Logo.png/revision/latest/scale-to-width-down/512',
+  gta4_tuff_gong: 'https://static.wikia.nocookie.net/gtawiki/images/3/33/TuffGong-GTAIV-Logo.png/revision/latest/scale-to-width-down/512'
 };
 
 export const STATION_COVERS: Record<string, string> = {
