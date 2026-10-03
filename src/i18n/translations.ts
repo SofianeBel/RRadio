@@ -27,7 +27,7 @@ export const fr = {
   overlay: {
     theme: 'THÈME VISUEL',
     gta6ThemeDescription: 'Verre moderne, catalogue Vice City, smartphone tactile.',
-    gta4ThemeDescription: 'Charbon et blanc, catalogue Liberty City, téléphone à clavier.',
+    gta4ThemeDescription: 'Noir et orange façon menus GTA IV, catalogue Liberty City, téléphone à clavier.',
     language: 'LANGUE DU SYSTÈME',
     uiStyle: "MODE D'AFFICHAGE DU SÉLECTEUR",
     ribbonStyle: 'GTA VI — Horizontal',
@@ -108,7 +108,10 @@ export const fr = {
   dialog: {
     restoreDefaults: 'Restaurer par défaut',
     confirm: 'Confirmer [Échap]',
-    closeTooltip: 'Fermer (Échap)'
+    closeTooltip: 'Fermer (Échap)',
+    footerMove: 'DÉPLACER',
+    footerSelect: 'CHOISIR',
+    footerBack: 'RETOUR'
   },
   onboarding: {
     badge: 'CONFIGURATION INITIALE',
@@ -315,7 +318,7 @@ export const en: Translations = {
   overlay: {
     theme: 'VISUAL THEME',
     gta6ThemeDescription: 'Modern glass, Vice City catalogue, touch smartphone.',
-    gta4ThemeDescription: 'Charcoal and white, Liberty City catalogue, keypad handset.',
+    gta4ThemeDescription: 'Black and orange GTA IV menus, Liberty City catalogue, keypad handset.',
     language: 'SYSTEM LANGUAGE',
     uiStyle: 'SELECTOR DISPLAY MODE',
     ribbonStyle: 'GTA VI — Horizontal',
@@ -396,7 +399,10 @@ export const en: Translations = {
   dialog: {
     restoreDefaults: 'Restore defaults',
     confirm: 'Confirm [Esc]',
-    closeTooltip: 'Close (Esc)'
+    closeTooltip: 'Close (Esc)',
+    footerMove: 'MOVE',
+    footerSelect: 'SELECT',
+    footerBack: 'BACK'
   },
   onboarding: {
     badge: 'INITIAL SETUP',

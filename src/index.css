@@ -16,18 +16,24 @@
   --theme-accent-focus: 255 162 127;
 }
 
+/* GTA IV pause-menu look: black panels, grey bold Arial, orange selection, thin grey rules. */
 [data-theme='gta4'] {
-  --theme-accent: 230 230 225;
-  --theme-rose: 230 230 225;
-  --theme-purple: 195 195 190;
-  --theme-cyan: 215 215 210;
-  --theme-cream: 235 235 230;
-  --theme-warm: 225 225 220;
-  --theme-base: 48 48 48;
-  --theme-veil: 15 15 15;
-  --theme-violet: 230 230 225;
-  --theme-accent-hover: 250 250 245;
-  --theme-accent-focus: 245 245 240;
+  --gta4-orange: #f6a21c;
+  --gta4-grey: #8f8f8f;
+  --gta4-light: #b4b4b4;
+  --gta4-rule: #c4c4c4;
+  --gta4-font: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  --theme-accent: 246 162 28;
+  --theme-rose: 246 162 28;
+  --theme-purple: 246 162 28;
+  --theme-cyan: 180 180 180;
+  --theme-cream: 196 196 196;
+  --theme-warm: 246 162 28;
+  --theme-base: 0 0 0;
+  --theme-veil: 0 0 0;
+  --theme-violet: 246 162 28;
+  --theme-accent-hover: 255 184 70;
+  --theme-accent-focus: 246 162 28;
 }
 
 .theme-choice[aria-pressed='true'] {
@@ -40,52 +46,163 @@
   background: rgb(var(--theme-accent-hover));
 }
 
-[data-theme='gta4'] .dialog-shell {
-  background: rgb(24 24 24 / 0.9);
-  border-radius: 4px;
+[data-theme='gta4'] .theme-dialog {
+  font-family: var(--gta4-font);
+  background: rgb(0 0 0 / 0.55);
 }
 
-[data-theme='gta4'] .dialog-base {
-  background: rgb(48 48 48 / 0.35);
+[data-theme='gta4'] .dialog-tabs {
+  width: 100%;
+  max-width: 64rem;
+  gap: 0 28px;
+  margin-bottom: 0;
+  padding: 0 8px 10px;
+  border-bottom: 1px solid var(--gta4-rule);
 }
 
-[data-theme='gta4'] .dialog-veil {
-  background: rgb(15 15 15 / 0.7);
-}
-
-[data-theme='gta4'] .dialog-mesh {
-  --dialog-mesh-background: radial-gradient(ellipse at 15% 0%, rgb(255 255 255 / 0.24), transparent 65%), linear-gradient(135deg, #343434, #101010);
-  animation: none;
-  will-change: auto;
-  transform: none;
-  inset: 0;
-  filter: none;
-  opacity: 0.6;
-}
-
-[data-theme='gta4'] .dialog-accent {
-  display: none;
-}
-
-[data-theme='gta4'] .dialog-tab {
-  border: 1px solid rgb(255 255 255 / 0.25);
-  background-color: rgb(18 18 18 / 0.9);
+[data-theme='gta4'] .dialog-tab,
+[data-theme='gta4'] .dialog-tab[aria-pressed='true'] {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none !important;
   box-shadow: none;
+  font-family: var(--gta4-font);
+  font-size: clamp(18px, 2.4vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  white-space: nowrap;
+  color: var(--gta4-grey);
+}
+
+[data-theme='gta4'] .dialog-tab:hover {
+  background: none;
+  color: var(--gta4-light);
 }
 
 [data-theme='gta4'] .dialog-tab[aria-pressed='true'],
 [data-theme='gta4'] .dialog-step[aria-current='step'] {
+  color: var(--gta4-orange);
   box-shadow: none;
+}
+
+[data-theme='gta4'] .dialog-shell {
+  border: 0 !important;
+  border-bottom: 1px solid var(--gta4-rule) !important;
+  border-radius: 0;
+  background: rgb(0 0 0 / 0.94);
+  box-shadow: none !important;
+}
+
+[data-theme='gta4'] .dialog-base,
+[data-theme='gta4'] .dialog-mesh,
+[data-theme='gta4'] .dialog-accent {
+  display: none;
+}
+
+[data-theme='gta4'] .dialog-veil {
+  background: #000;
+  backdrop-filter: none;
+}
+
+[data-theme='gta4'] .theme-dialog :is(.rounded-lg, .rounded-xl, .rounded-2xl, .rounded-3xl, .rounded-full),
+[data-theme='gta4'] .theme-dialog button {
+  border-radius: 0;
+}
+
+[data-theme='gta4'] .theme-dialog button {
+  box-shadow: none;
+}
+
+/* Menu rows: grey bold labels, striped like the GTA IV save list, orange when hovered. */
+[data-theme='gta4'] .dialog-shell :is(.text-white, .text-white\/80, .text-white\/85, .text-white\/70) {
+  color: var(--gta4-light);
+}
+
+/* Selected choice reads like the selected menu row: orange text on a dark stripe, not an orange fill. */
+[data-theme='gta4'] .dialog-shell .theme-choice[aria-pressed='true'],
+[data-theme='gta4'] .dialog-shell .theme-choice[aria-pressed='true']:hover {
+  background: #2a2a2a;
+  border-color: var(--gta4-orange);
+  color: var(--gta4-orange);
+}
+
+[data-theme='gta4'] .dialog-shell :is(.font-extrabold, .font-black, .font-bold) {
+  font-family: var(--gta4-font);
+  letter-spacing: -0.01em;
+}
+
+[data-theme='gta4'] .dialog-shell .font-mono {
+  font-family: var(--gta4-font);
+}
+
+[data-theme='gta4'] .dialog-shell .settings-rows > div:nth-child(odd) {
+  background-color: #1d1d1d;
+}
+
+[data-theme='gta4'] .dialog-shell .settings-rows > div {
+  border-color: transparent;
+}
+
+[data-theme='gta4'] .dialog-shell .settings-rows > div:hover {
+  background-color: #2a2a2a;
+}
+
+[data-theme='gta4'] .dialog-shell .settings-rows > div:hover > div:first-child :is(span, svg) {
+  color: var(--gta4-orange);
+}
+
+[data-theme='gta4'] .dialog-shell input[type='range'] {
+  accent-color: #a8a8a8;
+}
+
+[data-theme='gta4'] .gta4-menu-footer {
+  display: flex;
+  width: 100%;
+  max-width: 64rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 8px 0;
+  font-family: var(--gta4-font);
+  font-size: 12px;
+  font-weight: 400;
+  color: #d0d0d0;
+}
+
+.gta4-menu-status {
+  color: var(--gta4-orange);
+}
+
+.gta4-menu-hints {
+  display: flex;
+  gap: 22px;
+}
+
+.gta4-menu-hints > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gta4-pad {
+  display: inline-grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 700;
   color: #111;
 }
 
-[data-theme='gta4'] .theme-dialog :is(.rounded-lg, .rounded-xl, .rounded-2xl, .rounded-3xl),
-[data-theme='gta4'] .theme-dialog button {
-  border-radius: 3px;
+.gta4-pad-a {
+  background: #5fb032;
 }
 
-[data-theme='gta4'] .theme-dialog button {
-  box-shadow: none;
+.gta4-pad-b {
+  background: #c8221d;
 }
 
 @layer base {

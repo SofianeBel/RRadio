@@ -179,7 +179,14 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
     setNativeLanguage(DEFAULT_SETTINGS.language);
   };
 
-  const tabs: Array<{ id: TabType; label: string }> = [
+  const isGta4 = settings.overlay.theme === 'gta4';
+  // GTA IV menus use title-case tab names; short acronyms (RPC, PC) stay uppercase.
+  const tabLabel = (label: string): string =>
+    isGta4
+      ? label.split(' ').map(word => (word.length <= 3 ? word : word.charAt(0) + word.slice(1).toLowerCase())).join(' ')
+      : label;
+  const now = new Date();
+  const gta4Status = `${now.toLocaleDateString(settings.language, { weekday: 'short' }).replace('.', '').toUpperCase()} / ${now.toLocaleTimeString(settings.language, { hour: '2-digit', minute: '2-digit', hour12: false })}`;  const tabs: Array<{ id: TabType; label: string }> = [
     { id: 'audio', label: t.tabs.audio },
     { id: 'overlay', label: t.tabs.overlay },
     { id: 'controls', label: t.tabs.controls },
@@ -228,7 +235,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                       : {}
                   }
                 >
-                  {tab.label}
+                  {tabLabel(tab.label)}
                 </button>
               );
             })}
@@ -318,7 +325,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.14, ease: 'easeOut' }}
-                  className="space-y-1.5"
+                  className="settings-rows space-y-1.5"
                 >
 
                   {/* TAB 1: AUDIO */}
@@ -766,6 +773,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                           {settings.controls.holdHotkey}
                         </div>
                       </div>
+
                     </>
                   )}
 
@@ -1531,6 +1539,17 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
             </div>
 
           </div>
+
+          {isGta4 && (
+            <div className="gta4-menu-footer" aria-hidden="true">
+              <span className="gta4-menu-status">{gta4Status}</span>
+              <span className="gta4-menu-hints">
+                <span>▲▼ {t.dialog.footerMove}</span>
+                <span><i className="gta4-pad gta4-pad-a">A</i>{t.dialog.footerSelect}</span>
+                <span><i className="gta4-pad gta4-pad-b">B</i>{t.dialog.footerBack}</span>
+              </span>
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

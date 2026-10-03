@@ -2,14 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ArrowLeft,
   Check,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronUp,
   Home,
   LayoutGrid,
-  Phone,
-  PhoneOff,
   Play,
   Radio,
   Settings,
@@ -521,7 +515,7 @@ export const PhoneOverlay: React.FC<PhoneOverlayProps> = ({
           <div className="phone-status">
             <span className="phone-signal" aria-hidden="true"><i /><i /><i /><i /></span>
             <time dateTime={clock.toISOString()}>
-              {isGta4 && `${clock.toLocaleDateString(language, { weekday: 'short' }).toUpperCase()} `}
+              {isGta4 && `${clock.toLocaleDateString(language, { weekday: 'short' }).replace('.', '').toUpperCase()} `}
               {clock.toLocaleTimeString(language, { hour: '2-digit', minute: '2-digit', hour12: false })}
             </time>
             <span className="phone-sound-status" title={isMuted ? t.phone.muted : t.phone.volume}>
@@ -555,17 +549,7 @@ export const PhoneOverlay: React.FC<PhoneOverlayProps> = ({
         </div>
         {isGta4 ? (
           <div data-phone="keypad" aria-label={t.phone.keypad} className="phone-keypad">
-            <div className="phone-navigation">
-              <button data-phone-key="green" aria-label={t.phone.select} onClick={activateFocused} className="phone-call green"><Phone aria-hidden="true" /></button>
-              <div className="phone-dpad">
-                <button data-phone-key="up" aria-label={t.phone.up} className="phone-key up" onClick={() => page === 'volume' ? changeVolume(5) : page === 'nowPlaying' ? stepStation(-1) : moveFocus(-1, page === 'home' ? apps.length : stations.length)}><ChevronUp /></button>
-                <button data-phone-key="left" aria-label={t.phone.left} className="phone-key left" onClick={() => page === 'volume' || page === 'nowPlaying' ? changeVolume(-5) : goBack()}><ChevronLeft /></button>
-                <button data-phone-key="select" aria-label={t.phone.select} className="phone-key ok" onClick={activateFocused}><Check /></button>
-                <button data-phone-key="right" aria-label={t.phone.right} className="phone-key right" onClick={() => page === 'volume' || page === 'nowPlaying' ? changeVolume(5) : activateFocused()}><ChevronRight /></button>
-                <button data-phone-key="down" aria-label={t.phone.down} className="phone-key down" onClick={() => page === 'volume' ? changeVolume(-5) : page === 'nowPlaying' ? stepStation(1) : moveFocus(1, page === 'home' ? apps.length : stations.length)}><ChevronDown /></button>
-              </div>
-              <button data-phone-key="red" aria-label={t.phone.end} onClick={onClose} className="phone-call red"><PhoneOff aria-hidden="true" /></button>
-            </div>
+            <button data-phone-key="green" aria-label={t.phone.select} onClick={activateFocused} className="phone-call green"><i className="phone-handset" aria-hidden="true" /></button>
             <div className="phone-number-pad" aria-label={t.phone.shortcuts}>
               {['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'].map((key, index) => {
                 const label = index < apps.length ? appMeta(apps[index].key).label : key === '*' ? t.phone.back : key === '0' ? t.phone.home : key === '#' ? (isMuted ? t.phone.unmute : t.phone.mute) : key === '7' ? t.phone.lowerVolume : key === '9' ? t.phone.raiseVolume : t.phone.volume;
@@ -580,11 +564,12 @@ export const PhoneOverlay: React.FC<PhoneOverlayProps> = ({
                       else if (key === '9') changeVolume(5);
                       else openPage('volume');
                     }}>
-                    <span>{key}</span><small>{['', 'ABC', 'DEF', 'GHI', 'JKL', 'MNO', 'PQRS', 'TUV', 'WXYZ', '', '+', ''][index]}</small>
+                    <span>{key === '*' ? '⌫' : key}</span><small>{['..', 'ABC', 'DEF', 'GHI', 'JKL', 'MNO', 'PQRS', 'TUV', 'WXYZ', '', '', ''][index]}</small>
                   </button>
                 );
               })}
             </div>
+            <button data-phone-key="red" aria-label={t.phone.end} onClick={onClose} className="phone-call red"><i className="phone-handset" aria-hidden="true" /></button>
           </div>
         ) : (
           <div data-phone="nav" className="phone-nav">

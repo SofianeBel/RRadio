@@ -520,7 +520,7 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
                       backgroundColor: isRadio ? '#F1F3F5' : '#1C2024',
                       scale: isRadio ? 1.1 : 0.95
                     }}
-                    className="radio-hud-switch-dot relative z-10 w-4 h-4 rounded-full border-[1.5px] border-black shadow-[0_1px_3px_rgba(0,0,0,0.8)]"
+                    data-active={isRadio} className="radio-hud-switch-dot relative z-10 w-4 h-4 rounded-full border-[1.5px] border-black shadow-[0_1px_3px_rgba(0,0,0,0.8)]"
                   />
 
                   <motion.div
@@ -528,7 +528,7 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
                       backgroundColor: !isRadio ? '#F1F3F5' : '#1C2024',
                       scale: !isRadio ? 1.1 : 0.95
                     }}
-                    className="radio-hud-switch-dot relative z-10 w-4 h-4 rounded-full border-[1.5px] border-black shadow-[0_1px_3px_rgba(0,0,0,0.8)]"
+                    data-active={!isRadio} className="radio-hud-switch-dot relative z-10 w-4 h-4 rounded-full border-[1.5px] border-black shadow-[0_1px_3px_rgba(0,0,0,0.8)]"
                   />
                 </div>
               </div>
@@ -541,7 +541,7 @@ export const RadioWheel: React.FC<RadioWheelProps> = ({
                   title={t.hud.toggleMuteTooltip}
                 >
                   <div
-                    className={`radio-hud-mute-dot w-[22px] h-[22px] rounded-full border-[1.5px] border-black shadow-[0_1px_3px_rgba(0,0,0,0.9)] ${
+                    data-muted={isMuted} className={`radio-hud-mute-dot w-[22px] h-[22px] rounded-full border-[1.5px] border-black shadow-[0_1px_3px_rgba(0,0,0,0.9)] ${
                       isMuted ? 'bg-zinc-600' : 'bg-[#F1F3F5]'
                     }`}
                   />
