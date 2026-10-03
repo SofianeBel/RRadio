@@ -85,8 +85,7 @@ class RadioPlayer {
         }
       });
 
-      // Initialize YouTube Background Player and wire events
-      youtubePlayer.init();
+      // Wire events now; load the iframe only when a YouTube track is selected.
       youtubePlayer.subscribeEnded(() => {
         if (this.currentMode === 'ondemand' && this.isYouTube) {
           for (const cb of this.onTrackEndedCallbacks) {
@@ -279,6 +278,7 @@ class RadioPlayer {
       }
 
       const videoId = targetUrl.replace('youtube:', '');
+      youtubePlayer.init();
       youtubePlayer.loadAndPlay(videoId);
       youtubePlayer.setVolume(this.volume * 100);
       youtubePlayer.setMute(this.isMuted);

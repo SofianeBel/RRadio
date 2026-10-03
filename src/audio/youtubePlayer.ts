@@ -18,6 +18,7 @@ export type YTPlaybackErrorCallback = (code: number) => void;
 class YouTubePlayer {
   private player: any = null;
   private isApiReady = false;
+  private isLoadingApi = false;
   private containerId = 'yt-background-player-container';
   private currentVideoId: string | null = null;
   private isMuted = false;
@@ -34,7 +35,8 @@ class YouTubePlayer {
   }
 
   public init() {
-    if (this.isApiReady || typeof window === 'undefined') return;
+    if (this.isApiReady || this.isLoadingApi || typeof window === 'undefined') return;
+    this.isLoadingApi = true;
 
     // 1. Create hidden off-screen container if not exists
     let container = document.getElementById(this.containerId);
@@ -53,9 +55,10 @@ class YouTubePlayer {
     }
 
     // 2. Load YouTube IFrame API script
-    if (!window.YT) {
+    if (!window.YT?.Player) {
       const tag = document.createElement('script');
       tag.src = 'https://www.youtube.com/iframe_api';
+      tag.onerror = () => { this.isLoadingApi = false; };
       const firstScriptTag = document.getElementsByTagName('script')[0];
       if (firstScriptTag && firstScriptTag.parentNode) {
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
@@ -66,13 +69,14 @@ class YouTubePlayer {
       window.onYouTubeIframeAPIReady = () => {
         this.onApiReady();
       };
-    } else if (window.YT && window.YT.Player) {
+    } else {
       this.onApiReady();
     }
   }
 
   private onApiReady() {
     this.isApiReady = true;
+    this.isLoadingApi = false;
     try {
       this.player = new window.YT.Player(this.containerId, {
         height: '1',

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { STATIONS, STATION_COVERS, GTAVC_COVER_ART } from './data/stations';
 import { GTA4_STATIONS } from './data/gta4Stations';
-import { PhoneOverlay } from './components/PhoneOverlay';
 import { useTranslation } from './i18n/useTranslation';
 import { Smartphone } from 'lucide-react';
 import trackCovers from './data/trackCovers.json';
@@ -12,8 +11,6 @@ import { OnDemandViewLevel, OnDemandTrack, OnDemandPlaylist } from './types/onde
 import { AppSettings, YouTubeMusicConfig } from './types/settings';
 import { loadSettings, saveSettings } from './utils/settingsStore';
 import { RadioWheel } from './components/RadioWheel';
-import { SettingsDialog } from './components/SettingsDialog';
-import { OnboardingDialog } from './components/OnboardingDialog';
 import { radioPlayer, RadioTrack } from './audio/radioPlayer';
 import { soundEngine } from './audio/soundEngine';
 import {
@@ -30,16 +27,34 @@ import { useNativeHitRegions } from './utils/useNativeHitRegions';
 import { useNews } from './utils/useNews';
 import { NewsToast, NewsPanel } from './components/NewsPanel';
 
+const PhoneOverlay = React.lazy(() =>
+  import('./components/PhoneOverlay').then(module => ({ default: module.PhoneOverlay }))
+);
+const SettingsDialog = React.lazy(() =>
+  import('./components/SettingsDialog').then(module => ({ default: module.SettingsDialog }))
+);
+const OnboardingDialog = React.lazy(() =>
+  import('./components/OnboardingDialog').then(module => ({ default: module.OnboardingDialog }))
+);
+
 export const App: React.FC = () => {
   const [settings, setSettings] = useState<AppSettings>(() => loadSettings());
   const { t } = useTranslation(settings.language);
   const stations = settings.overlay.theme === 'gta4' ? GTA4_STATIONS : STATIONS;
   const [isPhoneOpen, setIsPhoneOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [hasOpenedSettings, setHasOpenedSettings] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(() => !settings.hasCompletedOnboarding);
+  const [hasOpenedOnboarding, setHasOpenedOnboarding] = useState(isOnboardingOpen);
   const isOnboardingOpenRef = useRef(isOnboardingOpen);
   useEffect(() => {
     isOnboardingOpenRef.current = isOnboardingOpen;
+  }, [isOnboardingOpen]);
+  useEffect(() => {
+    if (isSettingsOpen) setHasOpenedSettings(true);
+  }, [isSettingsOpen]);
+  useEffect(() => {
+    if (isOnboardingOpen) setHasOpenedOnboarding(true);
   }, [isOnboardingOpen]);
   const [isOpen, setIsOpen] = useState(false);
   const isSelectorVisible = isOpen && !isSettingsOpen && !isOnboardingOpen && !isPhoneOpen;
@@ -102,24 +117,31 @@ export const App: React.FC = () => {
 
   // Fetch YouTube Music playlists whenever account/settings update
   useEffect(() => {
-    ensureFreshYtmConfig().then(cfg => {
-      youtubeMusicService.fetchUserPlaylists(cfg).then(lists => {
-        if (lists && lists.length > 0) {
-          setYtmPlaylists(lists);
-          // Load the full track list of every playlist so the queue level and
-          // Discord always carry real titles, covers, and durations
-          lists.forEach(pl => {
-            if (!pl.tracks || pl.tracks.length === 0) {
-              youtubeMusicService.fetchPlaylistItems(pl.id, cfg).then(tracks => {
-                if (tracks && tracks.length > 0) {
-                  setYtmPlaylists(prev => prev.map(p => p.id === pl.id ? { ...p, tracks } : p));
-                }
-              });
-            }
-          });
+    let cancelled = false;
+    const loadPlaylists = async () => {
+      const cfg = await ensureFreshYtmConfig();
+      if (cancelled) return;
+      const lists = await youtubeMusicService.fetchUserPlaylists(cfg);
+      if (cancelled || lists.length === 0) return;
+      setYtmPlaylists(lists);
+
+      // Preserve full queue metadata without opening every API request at once.
+      const queue = lists.filter(pl => !pl.tracks || pl.tracks.length === 0);
+      let next = 0;
+      const worker = async () => {
+        while (!cancelled && next < queue.length) {
+          const pl = queue[next++];
+          const tracks = await youtubeMusicService.fetchPlaylistItems(pl.id, cfg);
+          if (cancelled) return;
+          if (tracks.length > 0) {
+            setYtmPlaylists(prev => prev.map(p => p.id === pl.id ? { ...p, tracks } : p));
+          }
         }
-      });
-    });
+      };
+      await Promise.all([worker(), worker()]);
+    };
+    void loadPlaylists().catch(error => console.warn('Could not load YouTube playlists:', error));
+    return () => { cancelled = true; };
   }, [settings.services.youtubeMusic]);
 
   const tuningTimeoutRef = useRef<number | null>(null);
@@ -810,9 +832,9 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('wheel', handleWheel);
   }, [isSelectorVisible, handleNext, handlePrev]);
 
-  // Gamepad Loop: A (Select/Drill in), B (Back/Drill out), LB (Hold), D-Pad/Stick (Browse)
+  // Gamepad Loop: keep hidden-window buttons responsive without a 60 FPS idle loop.
   useEffect(() => {
-    let animationFrameId: number;
+    let pollTimeoutId: number;
     let prevLbPressed = false;
     let prevRbPressed = false;
     let prevXPressed = false;
@@ -832,10 +854,12 @@ export const App: React.FC = () => {
         lastStepTime = 0;
       }
       const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let hasGamepad = false;
 
       for (let i = 0; i < gamepads.length; i++) {
         const gp = gamepads[i];
         if (!gp) continue;
+        hasGamepad = true;
 
         const now = Date.now();
 
@@ -908,13 +932,13 @@ export const App: React.FC = () => {
         break;
       }
 
-      animationFrameId = requestAnimationFrame(checkGamepad);
+      pollTimeoutId = window.setTimeout(checkGamepad, hasGamepad ? 50 : 250);
     };
 
-    animationFrameId = requestAnimationFrame(checkGamepad);
+    checkGamepad();
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      clearTimeout(pollTimeoutId);
     };
   }, []);
 
@@ -971,7 +995,7 @@ export const App: React.FC = () => {
         </button>
       )}
       {isPhoneOpen && !isSettingsOpen && !isOnboardingOpen && (
-        <PhoneOverlay
+        <React.Suspense fallback={null}><PhoneOverlay
           theme={settings.overlay.theme}
           language={settings.language}
           stations={stations}
@@ -999,11 +1023,11 @@ export const App: React.FC = () => {
           }}
           onOpenSettings={handleToggleSettings}
           onClose={() => setIsPhoneOpen(false)}
-        />
+        /></React.Suspense>
       )}
 
       {/* GTA 6 Settings Dialog Modal */}
-      <SettingsDialog
+      {(hasOpenedSettings || isSettingsOpen) && <React.Suspense fallback={null}><SettingsDialog
         newsPanel={<NewsPanel items={news.items} error={news.error} loading={news.loading}
           enabled={settings.news.enabled} soundEnabled={settings.news.soundEnabled} language={settings.language}
           onEnabledChange={enabled => handleUpdateSettings({ ...settings, news: { ...settings.news, enabled } })}
@@ -1017,15 +1041,15 @@ export const App: React.FC = () => {
           setIsSettingsOpen(false);
           setIsOnboardingOpen(true);
         }}
-      />
+      /></React.Suspense>}
 
       {/* First-Launch Onboarding Configuration Wizard */}
-      <OnboardingDialog
+      {(hasOpenedOnboarding || isOnboardingOpen) && <React.Suspense fallback={null}><OnboardingDialog
         isOpen={isOnboardingOpen}
         onClose={() => setIsOnboardingOpen(false)}
         settings={settings}
         onUpdateSettings={handleUpdateSettings}
-      />
+      /></React.Suspense>}
     </main>
   );
 };
