@@ -29,7 +29,10 @@ import {
   KeyRound,
   AlertCircle,
   Github,
-  Music
+  Music,
+  Smartphone,
+  Settings,
+  SkipForward
 } from 'lucide-react';
 
 const DiscordLogo: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
@@ -774,6 +777,25 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         </div>
                       </div>
 
+                      {/* Fixed global hotkeys registered natively in src-tauri/src/lib.rs */}
+                      {[
+                        { id: 'phone', Icon: Smartphone, label: t.controls.phoneHotkey, keys: 'F5' },
+                        { id: 'mode', Icon: Radio, label: t.controls.modeHotkey, keys: 'F7 / Alt + O' },
+                        { id: 'settings', Icon: Settings, label: t.controls.settingsHotkey, keys: 'F10 / Alt + S' },
+                        { id: 'seek-end', Icon: SkipForward, label: t.controls.seekEndHotkey, keys: 'F6' }
+                      ].map(({ id, Icon, label, keys }) => (
+                        <div key={id} className="h-[54px] flex items-center justify-between border-b border-white/[0.12] px-3 hover:bg-white/[0.05] transition-colors rounded-xl">
+                          <div className="flex items-center gap-3.5">
+                            <Icon className="w-5 h-5 text-white/80" />
+                            <span className="font-extrabold text-[16px] md:text-[17px] tracking-wide text-white uppercase">
+                              {label}
+                            </span>
+                          </div>
+                          <div className="px-6 py-2 rounded-xl bg-black/50 border border-white/20 text-[rgb(var(--theme-warm))] font-mono font-bold text-sm min-w-[180px] text-center shadow-inner">
+                            {keys}
+                          </div>
+                        </div>
+                      ))}
                     </>
                   )}
 

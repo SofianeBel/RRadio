@@ -50,7 +50,11 @@ export const fr = {
     toggleHotkey: 'RACCOURCI AFFICHER / MASQUER',
     muteHotkey: 'RACCOURCI MUTE / UNMUTE',
     gamepadMuteButton: 'BOUTONS MUTE MANETTE',
-    holdHotkey: 'MAINTIEN GTA (HOLD TO PEEK)'
+    holdHotkey: 'MAINTIEN GTA (HOLD TO PEEK)',
+    phoneHotkey: 'RACCOURCI TÉLÉPHONE',
+    modeHotkey: 'RACCOURCI RADIO / ON-DEMAND',
+    settingsHotkey: 'RACCOURCI PARAMÈTRES',
+    seekEndHotkey: 'ALLER À LA FIN DU MORCEAU (ON-DEMAND)'
   },
   library: {
     customPath: 'DOSSIER MUSIQUES PERSONNELLES',
@@ -341,7 +345,11 @@ export const en: Translations = {
     toggleHotkey: 'TOGGLE OVERLAY HOTKEY',
     muteHotkey: 'MUTE / UNMUTE HOTKEY',
     gamepadMuteButton: 'GAMEPAD MUTE BUTTONS',
-    holdHotkey: 'GTA HOLD TO PEEK'
+    holdHotkey: 'GTA HOLD TO PEEK',
+    phoneHotkey: 'PHONE HOTKEY',
+    modeHotkey: 'RADIO / ON-DEMAND HOTKEY',
+    settingsHotkey: 'SETTINGS HOTKEY',
+    seekEndHotkey: 'SKIP TO TRACK END (ON-DEMAND)'
   },
   library: {
     customPath: 'CUSTOM MUSIC DIRECTORY',
