@@ -43,7 +43,11 @@ export const loadSettings = (): AppSettings => {
       },
       discord: {
         ...DEFAULT_SETTINGS.discord,
-        ...(parsed.discord || {})
+        ...(parsed.discord || {}),
+        // The original placeholder ID never existed at Discord: move stored copies to the real app
+        ...(parsed.discord?.applicationId === '1346077556094009384'
+          ? { applicationId: DEFAULT_SETTINGS.discord.applicationId }
+          : {})
       },
       updates: { ...DEFAULT_SETTINGS.updates, ...(parsed.updates || {}) },
       news: {

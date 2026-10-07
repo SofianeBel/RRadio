@@ -114,7 +114,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
     showTimeRemaining: true,
     showGitHubButton: true,
     githubUrl: 'https://github.com/SofianeBel/RRadio',
-    applicationId: '1346077556094009384'
+    applicationId: '1544561243615002624'
   },
   updates: {
     checkEnabled: true,

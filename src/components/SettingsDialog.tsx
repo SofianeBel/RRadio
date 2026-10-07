@@ -919,7 +919,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                             </span>
                           </div>
                           <span className="text-[10px] font-mono text-zinc-400">
-                            ID App : {settings.discord.applicationId || '1346077556094009384'}
+                            ID App : {settings.discord.applicationId || '1544561243615002624'}
                           </span>
                         </div>
 
@@ -1245,7 +1245,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                             onClick={() => {
                               onUpdateSettings({
                                 ...settings,
-                                discord: { ...settings.discord, applicationId: '1346077556094009384' }
+                                discord: { ...settings.discord, applicationId: '1544561243615002624' }
                               });
                               soundEngine.playMechanicalClick();
                             }}
@@ -1263,7 +1263,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                               discord: { ...settings.discord, applicationId: e.target.value }
                             });
                           }}
-                          placeholder="1346077556094009384"
+                          placeholder="1544561243615002624"
                           className="w-full px-5 py-2.5 mt-1 bg-black/50 border border-white/20 rounded-xl font-mono text-xs text-[rgb(var(--theme-warm))] focus:outline-none focus:border-[#5865F2] shadow-inner"
                         />
                         <span className="text-zinc-400 text-[11px] mt-0.5">

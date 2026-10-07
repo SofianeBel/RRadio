@@ -400,7 +400,7 @@ export const App: React.FC = () => {
 
     const payload: DiscordActivityPayload = {
       enabled: true,
-      application_id: settings.discord.applicationId?.trim() || '1346077556094009384',
+      application_id: settings.discord.applicationId?.trim() || '1544561243615002624',
       details,
       state,
       activity_type: settings.discord.activityType || 'listening',

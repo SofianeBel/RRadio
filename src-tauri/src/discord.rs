@@ -5,7 +5,7 @@ use discord_rich_presence::{activity, DiscordIpc, DiscordIpcClient};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
-const DEFAULT_APP_ID: &str = "1346077556094009384";
+const DEFAULT_APP_ID: &str = "1544561243615002624";
 const RETRY_DELAY: Duration = Duration::from_secs(8);
 // Discord rejects the whole activity when a text field is outside 2..=128 chars
 const MAX_TEXT_CHARS: usize = 128;
