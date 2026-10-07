@@ -167,6 +167,20 @@ export const App: React.FC = () => {
   const qLen = currentQueue.length || 1;
   const activeQueueIndex = ((virtualQueueIndex % qLen) + qLen) % qLen;
   const activeQueueTrack = currentQueue[activeQueueIndex] || activePlaylist?.tracks[0];
+
+  // What the player is actually playing (not what the carousel is browsing), found by its audio URL
+  const playingOnDemand = React.useMemo(() => {
+    const url = activeLiveTrack?.url;
+    if (mode !== 'ondemand' || !url) return null;
+    for (const provider of currentProviders) {
+      const lists = provider.id === 'youtube_music' ? ytmPlaylists : (PLAYLISTS[provider.id] || []);
+      for (const playlist of lists) {
+        const track = playlist.tracks?.find(t => t.audioUrl === url);
+        if (track) return { provider, playlist, track };
+      }
+    }
+    return null;
+  }, [mode, activeLiveTrack?.url, currentProviders, ytmPlaylists]);
   // Auto-fetch tracks for active YouTube Music playlist if empty
   useEffect(() => {
     if (activeProvider.id !== 'youtube_music') return;
@@ -336,12 +350,17 @@ export const App: React.FC = () => {
         end_timestamp = start_timestamp + duration;
       }
     } else {
-      // On Demand mode
-      const track = activeQueueTrack;
-      large_image = track?.coverUrl || activePlaylist?.coverUrl || GTAVC_COVER_ART;
-      large_text = `${activeProvider.name} • ${activePlaylist?.title || 'Lecture à la demande'}`;
-      small_image = activeProvider.id;
-      small_text = activeProvider.name;
+      // On Demand mode: report the track the player is playing, not the one the carousel shows
+      const track = activeLiveTrack;
+      const provider = playingOnDemand?.provider ?? activeProvider;
+      const playlist = playingOnDemand?.playlist;
+      const videoId = track?.url.startsWith('youtube:') ? track.url.slice('youtube:'.length) : '';
+      large_image = playingOnDemand?.track.coverUrl
+        || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : playlist?.coverUrl)
+        || GTAVC_COVER_ART;
+      large_text = `${provider.name} • ${playlist?.title || 'Lecture à la demande'}`;
+      small_image = provider.id;
+      small_text = provider.name;
 
       if (settings.discord.showTrack) {
         if (track && track.title) {
@@ -352,7 +371,7 @@ export const App: React.FC = () => {
       }
 
       if (settings.discord.showStation) {
-        state = `🎧 ${activeProvider.name} • ${activePlaylist?.title || 'Playlist'}`;
+        state = `🎧 ${provider.name} • ${playlist?.title || 'Playlist'}`;
       }
 
       if (settings.discord.showTimeRemaining && track && track.duration) {
@@ -374,6 +393,9 @@ export const App: React.FC = () => {
       } else {
         details = '[En sourdine]';
       }
+      // Muted On-Demand is paused: a running progress bar would lie
+      start_timestamp = undefined;
+      end_timestamp = undefined;
     }
 
     const payload: DiscordActivityPayload = {
@@ -402,7 +424,7 @@ export const App: React.FC = () => {
       large_image,
       isMuted,
       appId: settings.discord?.applicationId,
-      track: mode === 'radio' ? activeLiveTrack?.title : activeQueueTrack?.title,
+      track: activeLiveTrack?.url,
       startBucket: start_timestamp ? Math.round(start_timestamp / 10) : 0
     });
 
@@ -421,14 +443,10 @@ export const App: React.FC = () => {
     activeLiveTrack?.title,
     activeLiveTrack?.artist,
     activeLiveTrack?.duration,
+    activeLiveTrack?.url,
     activeProvider.id,
     activeProvider.name,
-    activePlaylist?.id,
-    activePlaylist?.title,
-    activeQueueTrack?.title,
-    activeQueueTrack?.artist,
-    activeQueueTrack?.duration,
-    activeQueueTrack?.coverUrl,
+    playingOnDemand,
     isMuted,
     settings.discord
   ]);
@@ -445,6 +463,7 @@ export const App: React.FC = () => {
     soundEngine.playMechanicalClick();
     setMode(prev => {
       const nextMode = prev === 'radio' ? 'ondemand' : 'radio';
+      modeRef.current = nextMode;
       setTrackProgress(0);
 
       if (nextMode === 'radio') {
@@ -597,6 +616,7 @@ export const App: React.FC = () => {
       setOnDemandDirection(-1); // Elevator moves DOWN
       setOnDemandLevel('providers');
     } else if (onDemandLevel === 'providers') {
+      modeRef.current = 'radio';
       setMode('radio');
       radioPlayer.tuneToStation(activeStation.id, false);
     }
