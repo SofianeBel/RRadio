@@ -687,7 +687,8 @@ pub fn run() {
             restore_window_focus,
             set_language,
             discord::update_discord_activity,
-            discord::clear_discord_activity
+            discord::clear_discord_activity,
+            discord::get_discord_status
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

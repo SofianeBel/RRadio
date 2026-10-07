@@ -235,6 +235,15 @@ export const updateDiscordPresence = (payload: DiscordActivityPayload) => {
   });
 };
 
+export const getDiscordStatus = async (): Promise<string | null> => {
+  if (!isTauri()) return null;
+  try {
+    return await invoke<string | null>('get_discord_status');
+  } catch {
+    return null;
+  }
+};
+
 export const clearDiscordPresence = () => {
   if (!isTauri()) return;
   invoke('clear_discord_activity').catch((e) => {

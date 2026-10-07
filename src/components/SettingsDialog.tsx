@@ -6,7 +6,7 @@ import { AppSettings, DEFAULT_SETTINGS, Language } from '../types/settings';
 import { GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET } from '../config/googleOAuth';
 import { STATION_LOGOS } from '../data/stations';
 import { useTranslation } from '../i18n/useTranslation';
-import { setNativeLanguage } from '../utils/tauriBridge';
+import { setNativeLanguage, getDiscordStatus } from '../utils/tauriBridge';
 import {
   Tv,
   Sliders,
@@ -91,6 +91,19 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
       cancelled = true;
     };
   }, [isOpen, settings.updates.checkEnabled, APP_VERSION]);
+
+  // Poll the native worker so a rejected presence (bad client ID, Discord closed) is visible
+  const [discordError, setDiscordError] = useState<string | null>(null);
+  useEffect(() => {
+    if (!isOpen || activeTab !== 'discord' || !settings.discord.enabled) {
+      setDiscordError(null);
+      return;
+    }
+    const poll = () => getDiscordStatus().then(setDiscordError);
+    poll();
+    const id = window.setInterval(poll, 2000);
+    return () => window.clearInterval(id);
+  }, [isOpen, activeTab, settings.discord.enabled]);
 
   const handleSwitchLanguage = (lang: Language) => {
     soundEngine.playMechanicalClick();
@@ -885,10 +898,15 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                           </div>
 
                           <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-mono text-zinc-300">
-                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                            <span className={`w-2 h-2 rounded-full animate-pulse ${discordError ? 'bg-red-500' : 'bg-emerald-400'}`} />
                             <span>IPC PIPE WINDOWS</span>
                           </div>
                         </div>
+                        {discordError && (
+                          <span data-discord-status="error" className="mt-3 px-3 py-2 rounded-lg bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-mono break-words">
+                            Discord : {discordError}
+                          </span>
+                        )}
                       </div>
 
                       {/* Live Preview Card */}
